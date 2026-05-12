@@ -225,7 +225,7 @@ bool CallbackRegistry::wait(double timeoutSecs, bool recursive) const {
       waitFor = 2;
     }
     condvar->timedwait(waitFor);
-    cpp4r::check_user_interrupt();
+    R_CheckUserInterrupt();
   }
 
   return due();
