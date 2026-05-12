@@ -8,6 +8,7 @@
 #include <cpp4r.hpp>
 #include <functional>
 #include <memory>
+#include <set>
 
 // Callback is an abstract class with two subclasses. The reason that there
 // are two subclasses is because one of them is for C++ (std::function)
@@ -50,7 +51,18 @@ public:
   void invoke() const {
     // See https://github.com/r-lib/later/issues/191 and
     // https://github.com/r-lib/later/pull/241
-    cpp4r::unwind_protect([this]() { func(); });
+    // C++ exceptions from C callbacks must be converted to R errors before
+    // they can propagate: raw C++ exceptions through R_UnwindProtect corrupt
+    // R's internal context stack, causing crashes.
+    cpp4r::unwind_protect([this]() {
+      try {
+        func();
+      } catch (const std::exception& e) {
+        cpp4r::stop(e.what());
+      } catch (...) {
+        cpp4r::stop("C++ exception of unknown type");
+      }
+    });
   }
 
   cpp4r::sexp rRepresentation() const;
@@ -63,7 +75,7 @@ class cpp4rFunctionCallback : public Callback {
 public:
   cpp4rFunctionCallback(Timestamp when, SEXP func);
 
-  void invoke() const { cpp4r::function(func)(); }
+  void invoke() const { cpp4r::function{static_cast<SEXP>(func)}(); }
 
   cpp4r::sexp rRepresentation() const;
 
