@@ -152,14 +152,16 @@ can, however, perform such operations in the constructor (assuming you
 perform construction only from the main R thread) and `complete` method.
 Pass values between the constructor and methods using fields.
 
-``` rcpp
-#include <Rcpp.h>
+``` cpp
+#include "cpp4r.hpp"
 #include <later_api.h>
+
+using namespace cpp4r;
 
 class MyTask : public later::BackgroundTask {
 public:
-  MyTask(Rcpp::NumericVector vec) :
-    inputVals(Rcpp::as<std::vector<double> >(vec)) {
+  MyTask(doubles vec) :
+    inputVals(as_cpp<std::vector<double>>(vec)) {
   }
 
 protected:
@@ -189,8 +191,7 @@ e.g. `(new MyTask(vec))->begin()`. There’s no need to keep track of the
 pointer; the task object will delete itself when the task is complete.
 
 ``` r
-// [[Rcpp::export]]
-void asyncMean(Rcpp::NumericVector data) {
+[[cpp4r::register]] void asyncMean(Rcpp::NumericVector data) {
   (new MyTask(data))->begin();
 }
 ```
