@@ -59,7 +59,7 @@ uint64_t execLaterNative2(void (*)(void*), void*, double, int);
 int execLaterFdNative(void (*)(int *, void *), void *, int, struct pollfd *, double, int);
 int apiVersion(void);
 
-void R_init_later(DllInfo *dll) {
+void later_c_init(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
   R_forceSymbols(dll, TRUE);

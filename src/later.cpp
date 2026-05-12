@@ -348,4 +348,10 @@ extern "C" uint64_t execLaterNative2(void (*func)(void *), void *data,
   return callbackRegistryTable.scheduleCallback(func, data, delaySecs, loop_id);
 }
 
+extern "C" void later_c_init(DllInfo *dll);
+
+[[cpp4r::init]] void later_init(DllInfo *dll) {
+  later_c_init(dll);
+}
+
 extern "C" int apiVersion() { return LATER_DLL_API_VERSION; }
