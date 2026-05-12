@@ -248,8 +248,7 @@ void deInitialize() {
 uint64_t doExecLater(std::shared_ptr<CallbackRegistry> callbackRegistry,
                      SEXP callback, double delaySecs, bool resetTimer) {
   ASSERT_MAIN_THREAD()
-  uint64_t callback_id =
-      callbackRegistry->add(Rcpp::Function(callback), delaySecs);
+  uint64_t callback_id = callbackRegistry->add(callback, delaySecs);
 
   // The timer needs to be reset only if we're using the global loop, because
   // this usage of the timer is relevant only when the event loop is driven by

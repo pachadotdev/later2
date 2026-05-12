@@ -1,8 +1,8 @@
 #ifndef _LATER_H_
 #define _LATER_H_
 
-#include <memory>
 #include "callback_registry.h"
+#include <memory>
 
 // This should be kept in sync with LATER_H_API_VERSION in
 // inst/include/later_api.h. Whenever the interface between
@@ -25,7 +25,10 @@ void ensureInitialized();
 // and later_win32.cpp.
 void ensureAutorunnerInitialized();
 
-uint64_t doExecLater(std::shared_ptr<CallbackRegistry> callbackRegistry, Rcpp::Function callback, double delaySecs, bool resetTimer);
-uint64_t doExecLater(std::shared_ptr<CallbackRegistry> callbackRegistry, void (*callback)(void*), void* data, double delaySecs, bool resetTimer);
+uint64_t doExecLater(std::shared_ptr<CallbackRegistry> callbackRegistry,
+                     SEXP callback, double delaySecs, bool resetTimer);
+uint64_t doExecLater(std::shared_ptr<CallbackRegistry> callbackRegistry,
+                     void (*callback)(void *), void *data, double delaySecs,
+                     bool resetTimer);
 
 #endif // _LATER_H_
