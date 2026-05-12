@@ -27,7 +27,7 @@
 #include <R_ext/libextern.h>
 LibExtern Rboolean R_interrupts_suspended;
 LibExtern int R_interrupts_pending;
-extern void Rf_onintr(void);
+extern "C" void Rf_onintr(void);
 LibExtern Rboolean mbcslocale;
 #endif
 
