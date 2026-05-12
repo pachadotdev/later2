@@ -160,7 +160,7 @@ shared_ptr<CallbackRegistry> getGlobalRegistry() {
   return callbackRegistryTable.exists(id);
 }
 
-[[cpp4r::register]] list list_queue_(int id) {
+[[cpp4r::register]] cpp4r::sexp list_queue_(int id) {
   ASSERT_MAIN_THREAD()
   shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(id);
   if (registry == nullptr) {
