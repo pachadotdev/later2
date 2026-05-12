@@ -1,35 +1,24 @@
 #ifndef _OPTIONAL_H_
 #define _OPTIONAL_H_
 
-template<class T>
-class Optional {
+template <class T> class Optional {
   bool has;
   T value;
 
 public:
-  Optional() : has(false), value() {
-  }
+  Optional() : has(false), value() {}
 
-  Optional(const T& val) : has(true), value(val) {
-  }
+  Optional(const T &val) : has(true), value(val) {}
 
-  const T& operator*() const {
-    return this->value;
-  }
-  T& operator*() {
-    return this->value;
-  }
-  T* operator->() {
-    return &this->value;
-  }
-  void operator=(const T& value) {
+  const T &operator*() const { return this->value; }
+  T &operator*() { return this->value; }
+  T *operator->() { return &this->value; }
+  void operator=(const T &value) {
     this->value = value;
     this->has = true;
   }
 
-  bool has_value() const {
-    return has;
-  }
+  bool has_value() const { return has; }
 
   void reset() {
     // Creating a new object may be problematic or expensive for some classes;
@@ -37,7 +26,7 @@ public:
     // for more types in the future, we could switch to a different
     // implementation of optional.
     this->value = T();
-    this->has= false;
+    this->has = false;
   }
 };
 
