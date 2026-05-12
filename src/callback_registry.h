@@ -49,20 +49,25 @@ public:
   StdFunctionCallback(Timestamp when, std::function<void(void)> func);
 
   void invoke() const {
-    // See https://github.com/r-lib/later/issues/191 and
-    // https://github.com/r-lib/later/pull/241
-    // C++ exceptions from C callbacks must be converted to R errors before
-    // they can propagate: raw C++ exceptions through R_UnwindProtect corrupt
-    // R's internal context stack, causing crashes.
-    cpp4r::unwind_protect([this]() {
-      try {
-        func();
-      } catch (const std::exception& e) {
-        cpp4r::stop(e.what());
-      } catch (...) {
-        cpp4r::stop("C++ exception of unknown type");
-      }
-    });
+    // Do NOT use cpp4r::unwind_protect here. Nesting R_UnwindProtect calls that
+    // share the same static token (as cpp4r's unwind_protect does per compilation
+    // unit) causes the outer RCNTXT to be left dangling on R's context chain when
+    // a C++ exception propagates through the outer R_UnwindProtect C frame without
+    // endcontext() being called. This corrupts R's context chain and causes crashes.
+    //
+    // Instead, let C++ exceptions propagate naturally: END_CPP4R (the generated
+    // wrapper around execCallbacks) catches std::exception and unwind_exception and
+    // handles them correctly. R errors (Rf_error longjmps) propagate directly to
+    // R's nearest tryCatch handler.
+    try {
+      func();
+    } catch (const cpp4r::unwind_exception&) {
+      throw;
+    } catch (const std::exception&) {
+      throw;
+    } catch (...) {
+      throw std::runtime_error("C++ exception of unknown type");
+    }
   }
 
   cpp4r::sexp rRepresentation() const;
