@@ -4,8 +4,7 @@
 class PromiseTask : public later::BackgroundTask {
 public:
   PromiseTask(Rcpp::Function resolve, Rcpp::Function reject)
-      : resolve(resolve), reject(reject) {
-  }
+      : resolve(resolve), reject(reject) {}
 
 protected:
   virtual void execute() = 0;
@@ -31,12 +30,9 @@ long fib(long x) {
 class FibonacciTask : public PromiseTask {
 public:
   FibonacciTask(Rcpp::Function resolve, Rcpp::Function reject, double x)
-      : PromiseTask(resolve, reject), x(x) {
-  }
+      : PromiseTask(resolve, reject), x(x) {}
 
-  void execute() {
-    result = fib((long)x);
-  }
+  void execute() { result = fib((long)x); }
 
   Rcpp::RObject get_result() {
     Rcpp::NumericVector res(1);
@@ -52,7 +48,7 @@ private:
 // [[Rcpp::depends(later)]]
 // [[Rcpp::export]]
 void asyncFib(Rcpp::Function resolve, Rcpp::Function reject, double x) {
-  FibonacciTask* fib = new FibonacciTask(resolve, reject, x);
+  FibonacciTask *fib = new FibonacciTask(resolve, reject, x);
   fib->begin();
 }
 

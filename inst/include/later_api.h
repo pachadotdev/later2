@@ -48,13 +48,13 @@ namespace later {
 #define LATER_H_API_VERSION 3
 #define GLOBAL_LOOP 0
 
-
 // Gets the version of the later API that's provided by the _actually installed_
 // version of later.
 // # nocov start
 // tested by cpp-version-mismatch job on CI
 static int apiVersionRuntime() {
-  int (*dll_api_version)(void) = (int (*)(void)) R_GetCCallable("later", "apiVersion");
+  int (*dll_api_version)(void) =
+      (int (*)(void))R_GetCCallable("later", "apiVersion");
   return (*dll_api_version)();
 }
 // # nocov end
@@ -63,7 +63,7 @@ static int apiVersionRuntime() {
 // Schedule a C function to execute on the main R thread after a delay.
 // Safe to call from any thread.
 
-inline void later(void (*func)(void*), void* data, double secs, int loop_id) {
+inline void later(void (*func)(void *), void *data, double secs, int loop_id) {
   // This function works by retrieving the later::execLaterNative2 function
   // pointer using R_GetCCallable the first time it's called (per compilation
   // unit, since it's inline). execLaterNative2 is designed to be safe to call
@@ -78,7 +78,7 @@ inline void later(void (*func)(void*), void* data, double secs, int loop_id) {
   // definitely do not want the static initialization to happen there.
 
   // The function type for the real execLaterNative2
-  typedef void (*elnfun)(void (*func)(void*), void*, double, int);
+  typedef void (*elnfun)(void (*func)(void *), void *, double, int);
   static elnfun eln = NULL;
   if (!eln) {
     // Initialize if necessary
@@ -86,8 +86,7 @@ inline void later(void (*func)(void*), void* data, double secs, int loop_id) {
       // We're not initialized but someone's trying to actually schedule
       // some code to be executed!
       REprintf(
-        "Warning: later::execLaterNative2 called in uninitialized state.\n"
-      );
+          "Warning: later::execLaterNative2 called in uninitialized state.\n");
     }
     eln = (elnfun)R_GetCCallable("later", "execLaterNative2");
   }
@@ -100,7 +99,7 @@ inline void later(void (*func)(void*), void* data, double secs, int loop_id) {
   eln(func, data, secs, loop_id);
 }
 
-inline void later(void (*func)(void*), void* data, double secs) {
+inline void later(void (*func)(void *), void *data, double secs) {
   later(func, data, secs, GLOBAL_LOOP);
 }
 
@@ -110,17 +109,27 @@ inline void later(void (*func)(void*), void* data, double secs) {
 
 // # nocov start
 // tested by cpp-version-mismatch job on CI
-static void later_fd_version_error(void (*func)(int *, void *), void *data, int num_fds, struct pollfd *fds, double secs, int loop_id) {
-  (void) func; (void) data; (void) num_fds; (void) fds; (void) secs; (void) loop_id;
-  (Rf_error)("later_fd called, but installed version of the 'later' package is too old; please upgrade 'later' to 1.4.1 or above");
+static void later_fd_version_error(void (*func)(int *, void *), void *data,
+                                   int num_fds, struct pollfd *fds, double secs,
+                                   int loop_id) {
+  (void)func;
+  (void)data;
+  (void)num_fds;
+  (void)fds;
+  (void)secs;
+  (void)loop_id;
+  (Rf_error)("later_fd called, but installed version of the 'later' package is "
+             "too old; please upgrade 'later' to 1.4.1 or above");
 }
 // # nocov end
 
-inline void later_fd(void (*func)(int *, void *), void *data, int num_fds, struct pollfd *fds, double secs, int loop_id) {
+inline void later_fd(void (*func)(int *, void *), void *data, int num_fds,
+                     struct pollfd *fds, double secs, int loop_id) {
   // See above note for later()
 
   // The function type for the real execLaterFdNative
-  typedef void (*elfdnfun)(void (*)(int *, void *), void *, int, struct pollfd *, double, int);
+  typedef void (*elfdnfun)(void (*)(int *, void *), void *, int,
+                           struct pollfd *, double, int);
   static elfdnfun elfdn = NULL;
   if (!elfdn) {
     // Initialize if necessary
@@ -128,12 +137,11 @@ inline void later_fd(void (*func)(int *, void *), void *data, int num_fds, struc
       // We're not initialized but someone's trying to actually schedule
       // some code to be executed!
       REprintf(
-        "Warning: later::execLaterFdNative called in uninitialized state.\n"
-      );
+          "Warning: later::execLaterFdNative called in uninitialized state.\n");
     }
     if (apiVersionRuntime() >= 3) {
       // Only later API version 3 supports execLaterFdNative
-      elfdn = (elfdnfun) R_GetCCallable("later", "execLaterFdNative");
+      elfdn = (elfdnfun)R_GetCCallable("later", "execLaterFdNative");
     } else {
       // The installed version is too old and doesn't offer execLaterFdNative.
       elfdn = later_fd_version_error;
@@ -148,10 +156,10 @@ inline void later_fd(void (*func)(int *, void *), void *data, int num_fds, struc
   elfdn(func, data, num_fds, fds, secs, loop_id);
 }
 
-inline void later_fd(void (*func)(int *, void *), void *data, int num_fds, struct pollfd *fds, double secs) {
+inline void later_fd(void (*func)(int *, void *), void *data, int num_fds,
+                     struct pollfd *fds, double secs) {
   later_fd(func, data, num_fds, fds, secs, GLOBAL_LOOP);
 }
-
 
 // ---- BackgroundTask --------------------------------------------------------
 // Helper class for running work on a background thread and returning results
@@ -173,13 +181,8 @@ public:
     pthread_create(&t, &attr, BackgroundTask::task_main, this);
     pthread_attr_destroy(&attr);
 #else
-    HANDLE hThread = ::CreateThread(
-      NULL, 0,
-      BackgroundTask::task_main_win,
-      this,
-      0,
-      NULL
-    );
+    HANDLE hThread =
+        ::CreateThread(NULL, 0, BackgroundTask::task_main_win, this, 0, NULL);
     ::CloseHandle(hThread);
 #endif
   }
@@ -198,8 +201,8 @@ protected:
   virtual void complete() = 0;
 
 private:
-  static void* task_main(void* data) {
-    BackgroundTask* task = reinterpret_cast<BackgroundTask*>(data);
+  static void *task_main(void *data) {
+    BackgroundTask *task = reinterpret_cast<BackgroundTask *>(data);
     // TODO: Error handling
     task->execute();
     later(&BackgroundTask::result_callback, task, 0);
@@ -213,8 +216,8 @@ private:
   }
 #endif
 
-  static void result_callback(void* data) {
-    BackgroundTask* task = reinterpret_cast<BackgroundTask*>(data);
+  static void result_callback(void *data) {
+    BackgroundTask *task = reinterpret_cast<BackgroundTask *>(data);
     // TODO: Error handling
     task->complete();
     delete task;

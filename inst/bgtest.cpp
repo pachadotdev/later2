@@ -15,9 +15,7 @@ protected:
   // touched from the background thread; any values that need
   // to be passed into or out of the Execute method must be
   // included as fields on the Task subclass object.
-  void execute() {
-    sleep(_timeoutSecs);
-  }
+  void execute() { sleep(_timeoutSecs); }
 
   // A short task that runs on the main R thread after the
   // background task has completed. It's safe to access the
@@ -25,9 +23,6 @@ protected:
   void complete() {}
 };
 
-
 // [[Rcpp::depends(later)]]
 // [[Rcpp::export]]
-void launchBgTask(int secsToSleep) {
-  (new TestTask(secsToSleep))->begin();
-}
+void launchBgTask(int secsToSleep) { (new TestTask(secsToSleep))->begin(); }
