@@ -174,8 +174,7 @@ bool execCallbacksOne(bool runAll,
                       shared_ptr<CallbackRegistry> callback_registry,
                       Timestamp now) {
   ASSERT_MAIN_THREAD()
-  // execCallbacks can be called directly from C code, and the callbacks may
-  // include Rcpp code. (Should we also call wrap?)
+  // execCallbacks can be called directly from C code
   GetRNGstate();
   ProtectCallbacks pcscope;
 
@@ -350,8 +349,6 @@ extern "C" uint64_t execLaterNative2(void (*func)(void *), void *data,
 
 extern "C" void later_c_init(DllInfo *dll);
 
-[[cpp4r::init]] void later_init(DllInfo *dll) {
-  later_c_init(dll);
-}
+[[cpp4r::init]] void later_init(DllInfo *dll) { later_c_init(dll); }
 
 extern "C" int apiVersion() { return LATER_DLL_API_VERSION; }
