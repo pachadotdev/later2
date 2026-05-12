@@ -8,9 +8,9 @@ class TimestampImpl {
 public:
   virtual ~TimestampImpl() {}
   virtual bool future() const = 0;
-  virtual bool less(const TimestampImpl* other) const = 0;
-  virtual bool greater(const TimestampImpl* other) const = 0;
-  virtual double diff_secs(const TimestampImpl* other) const = 0;
+  virtual bool less(const TimestampImpl *other) const = 0;
+  virtual bool greater(const TimestampImpl *other) const = 0;
+  virtual double diff_secs(const TimestampImpl *other) const = 0;
 };
 
 class Timestamp {
@@ -22,20 +22,18 @@ public:
   Timestamp(double secs);
 
   // Is this timestamp in the future?
-  bool future() const {
-    return p_impl->future();
-  }
+  bool future() const { return p_impl->future(); }
 
   // Comparison operators
-  bool operator<(const Timestamp& other) const {
+  bool operator<(const Timestamp &other) const {
     return p_impl->less(other.p_impl.get());
   }
-  bool operator>(const Timestamp& other) const {
+  bool operator>(const Timestamp &other) const {
     return p_impl->greater(other.p_impl.get());
   }
 
   // Diff
-  double diff_secs(const Timestamp& other) const {
+  double diff_secs(const Timestamp &other) const {
     return p_impl->diff_secs(other.p_impl.get());
   }
 };
