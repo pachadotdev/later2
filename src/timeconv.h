@@ -7,7 +7,7 @@
 // anyone who uses these functions.
 #include "tinycthread.h"
 
-inline timespec addSeconds(const timespec& time, double secs) {
+inline timespec addSeconds(const timespec &time, double secs) {
   timespec ts = time;
   ts.tv_sec += (time_t)secs;
   ts.tv_nsec += (secs - (time_t)secs) * 1e9L;
