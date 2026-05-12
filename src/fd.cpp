@@ -162,14 +162,14 @@ static int execLater_fd_native(void (*func)(int *, void *), void *data,
 [[cpp4r::register]] SEXP execLater_fd(SEXP callback, cpp4r::integers readfds,
                                       cpp4r::integers writefds,
                                       cpp4r::integers exceptfds,
-                                      cpp4r::doubles timeoutSecs,
+                                      SEXP timeoutSecs,
                                       cpp4r::integers loop_id) {
 
   const int rfds = static_cast<int>(readfds.size());
   const int wfds = static_cast<int>(writefds.size());
   const int efds = static_cast<int>(exceptfds.size());
   const int num_fds = rfds + wfds + efds;
-  const double timeout = num_fds ? timeoutSecs[0] : 0;
+  const double timeout = num_fds ? Rf_asReal(timeoutSecs) : 0;
   const int loop = loop_id[0];
 
   std::vector<struct pollfd> pollfds;
