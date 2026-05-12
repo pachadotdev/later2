@@ -1,9 +1,12 @@
 #include "debug.h"
 #include "utils.h"
-#include <Rcpp.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
+
+#include "cpp4r.hpp"
+
+using namespace cpp4r;
 
 // For debug.h
 #if defined(DEBUG_THREAD)
@@ -37,8 +40,7 @@ void err_printf(const char *fmt, ...) {
 LogLevel log_level_ = LOG_ERROR;
 
 // Sets the current log level and returns previous value.
-// [[Rcpp::export(rng = false)]]
-std::string log_level(std::string level) {
+[[cpp4r::register]] std::string log_level(std::string level) {
   LogLevel old_level = log_level_;
 
   if (level == "") {
@@ -54,7 +56,7 @@ std::string log_level(std::string level) {
   } else if (level == "DEBUG") {
     log_level_ = LOG_DEBUG;
   } else {
-    Rcpp::stop("Unknown value for `level`");
+    cpp4r::stop("Unknown value for `level`");
   }
 
   switch (old_level) {
@@ -74,8 +76,7 @@ std::string log_level(std::string level) {
 }
 
 // Reports whether package was compiled with UBSAN
-// [[Rcpp::export(rng = false)]]
-bool using_ubsan() {
+[[cpp4r::register]] bool using_ubsan() {
 #ifdef USING_UBSAN
   return true;
 #else
