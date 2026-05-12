@@ -1,15 +1,14 @@
 #ifndef _CALLBACK_REGISTRY_TABLE_H_
 #define _CALLBACK_REGISTRY_TABLE_H_
 
-#include <Rcpp.h>
-#include <memory>
-#include "threadutils.h"
-#include "debug.h"
 #include "callback_registry.h"
+#include "debug.h"
 #include "later.h"
+#include "threadutils.h"
+#include <memory>
 
-using std::shared_ptr;
 using std::make_shared;
+using std::shared_ptr;
 
 class CallbackRegistryTable;
 extern CallbackRegistryTable callbackRegistryTable;
@@ -32,9 +31,9 @@ class CallbackRegistryTable {
   // object references it.
   class RegistryHandle {
   public:
-    RegistryHandle(std::shared_ptr<CallbackRegistry> registry, bool r_ref_exists)
-      : registry(registry), r_ref_exists(r_ref_exists) {
-    };
+    RegistryHandle(std::shared_ptr<CallbackRegistry> registry,
+                   bool r_ref_exists)
+        : registry(registry), r_ref_exists(r_ref_exists) {};
     // Need to declare a copy constructor. Needed because pre-C++11 std::map
     // doesn't have an .emplace() method.
     RegistryHandle() = default;
@@ -44,8 +43,8 @@ class CallbackRegistryTable {
   };
 
 public:
-  CallbackRegistryTable() : mutex(tct_mtx_plain | tct_mtx_recursive), condvar(mutex)  {
-  }
+  CallbackRegistryTable()
+      : mutex(tct_mtx_plain | tct_mtx_recursive), condvar(mutex) {}
 
   bool exists(int id) {
     Guard guard(&mutex);
@@ -58,7 +57,7 @@ public:
     Guard guard(&mutex);
 
     if (exists(id)) {
-      Rcpp::stop("Can't create event loop %d because it already exists.", id);
+      cpp4r::stop("Can't create event loop %d because it already exists.", id);
     }
 
     // Each new registry is passed our mutex and condvar. These serve as a
@@ -68,12 +67,14 @@ public:
     // CallbackRegistry tree, and some recursively acquire a lock upward;
     // without a shared lock, if these things happen at the same time from
     // different threads, it could deadlock.
-    shared_ptr<CallbackRegistry> registry = make_shared<CallbackRegistry>(id, &mutex, &condvar);
+    shared_ptr<CallbackRegistry> registry =
+        make_shared<CallbackRegistry>(id, &mutex, &condvar);
 
     if (parent_id != -1) {
       shared_ptr<CallbackRegistry> parent = getRegistry(parent_id);
       if (parent == nullptr) {
-        Rcpp::stop("Can't create registry. Parent with id %d does not exist.", parent_id);
+        cpp4r::stop("Can't create registry. Parent with id %d does not exist.",
+                    parent_id);
       }
       registry->parent = parent;
       parent->children.push_back(registry);
@@ -97,7 +98,8 @@ public:
     return registries[id].registry;
   }
 
-  uint64_t scheduleCallback(void (*func)(void*), void* data, double delaySecs, int loop_id) {
+  uint64_t scheduleCallback(void (*func)(void *), void *data, double delaySecs,
+                            int loop_id) {
     // This method can be called from any thread
     Guard guard(&mutex);
 
@@ -153,8 +155,8 @@ public:
     // R ref is deleted, both will removed in a single pass.
     while (it != registries.end()) {
       if (!it->second.r_ref_exists &&
-          (it->second.registry->empty() || it->second.registry->parent == nullptr))
-      {
+          (it->second.registry->empty() ||
+           it->second.registry->parent == nullptr)) {
         // Need to increment iterator before removing the registry; otherwise
         // the iterator will be invalid.
         int id = it->first;
@@ -188,10 +190,9 @@ public:
     shared_ptr<CallbackRegistry> parent = registry->parent;
     if (parent != nullptr) {
       // Remove this registry from the parent's list of children.
-      for (std::vector<shared_ptr<CallbackRegistry> >::iterator it = parent->children.begin();
-           it != parent->children.end();
-          )
-      {
+      for (std::vector<shared_ptr<CallbackRegistry>>::iterator it =
+               parent->children.begin();
+           it != parent->children.end();) {
         if (*it == registry) {
           parent->children.erase(it);
           break;
@@ -202,10 +203,9 @@ public:
     }
 
     // Tell the children that they no longer have a parent.
-    for (std::vector<std::shared_ptr<CallbackRegistry> >::iterator it = registry->children.begin();
-         it != registry->children.end();
-         ++it)
-    {
+    for (std::vector<std::shared_ptr<CallbackRegistry>>::iterator it =
+             registry->children.begin();
+         it != registry->children.end(); ++it) {
       (*it)->parent.reset();
     }
 
@@ -218,8 +218,6 @@ private:
   std::map<int, RegistryHandle> registries;
   Mutex mutex;
   ConditionVariable condvar;
-
 };
-
 
 #endif
