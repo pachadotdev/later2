@@ -25,3 +25,6 @@
 ^CLAUDE.md$
 ^compile_commands\.json$
 ^scripts$
+^latertest$
+^Makefile$
+^README\.html$
