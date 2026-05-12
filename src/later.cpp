@@ -1,32 +1,30 @@
 #include "later.h"
-#include <Rcpp.h>
-#include <queue>
-#include <memory>
 #include "debug.h"
-#include "utils.h"
 #include "threadutils.h"
+#include "utils.h"
+#include <memory>
+#include <queue>
 
 #include "callback_registry.h"
 #include "callback_registry_table.h"
 
 #include "interrupt.h"
 
+#include <R.h> // RNG state functions
+#include <cpp4r.hpp>
+
 using std::shared_ptr;
+using namespace cpp4r;
 
 static size_t exec_callbacks_reentrancy_count = 0;
 
 // instance has global scope as declared in callback_registry_table.h
 CallbackRegistryTable callbackRegistryTable;
 
-
 class ProtectCallbacks {
 public:
-  ProtectCallbacks() {
-    exec_callbacks_reentrancy_count++;
-  }
-  ~ProtectCallbacks() {
-    exec_callbacks_reentrancy_count--;
-  }
+  ProtectCallbacks() { exec_callbacks_reentrancy_count++; }
+  ~ProtectCallbacks() { exec_callbacks_reentrancy_count--; }
 };
 
 // Returns number of frames on the call stack. Basically just a wrapper for
@@ -50,7 +48,8 @@ int sys_nframe() {
     }
 
     UNPROTECT(2);
-  } END_SUSPEND_INTERRUPTS;
+  }
+  END_SUSPEND_INTERRUPTS;
 
   return value;
 }
@@ -63,7 +62,7 @@ bool at_top_level() {
 
   int nframe = sys_nframe();
   if (nframe == -1) {
-    Rcpp::stop("Error occurred while calling sys.nframe()");
+    cpp4r::stop("Error occurred while calling sys.nframe()");
   }
   return nframe == 0;
 }
@@ -85,14 +84,12 @@ bool at_top_level() {
 
 static int current_registry;
 
-// [[Rcpp::export(rng = false)]]
-void setCurrentRegistryId(int id) {
+[[cpp4r::register]] void setCurrentRegistryId(int id) {
   ASSERT_MAIN_THREAD()
   current_registry = id;
 }
 
-// [[Rcpp::export(rng = false)]]
-int getCurrentRegistryId() {
+[[cpp4r::register]] int getCurrentRegistryId() {
   ASSERT_MAIN_THREAD()
   return current_registry;
 }
@@ -106,20 +103,19 @@ public:
     old_id = getCurrentRegistryId();
     setCurrentRegistryId(id);
   }
-  ~CurrentRegistryGuard() {
-    setCurrentRegistryId(old_id);
-  }
+  ~CurrentRegistryGuard() { setCurrentRegistryId(old_id); }
+
 private:
   int old_id;
 };
-
 
 // ============================================================================
 // Callback registry functions
 // ============================================================================
 
 shared_ptr<CallbackRegistry> getGlobalRegistry() {
-  shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(GLOBAL_LOOP);
+  shared_ptr<CallbackRegistry> registry =
+      callbackRegistryTable.getRegistry(GLOBAL_LOOP);
   if (registry == nullptr) {
     (Rf_error)("Global registry does not exist.");
   }
@@ -129,69 +125,58 @@ shared_ptr<CallbackRegistry> getGlobalRegistry() {
 // This deletes a CallbackRegistry and deregisters it as a child of its
 // parent. Any children of this registry are orphaned -- they no longer have a
 // parent. (Maybe this should be an option?)
-//
-// [[Rcpp::export(rng = false)]]
-bool deleteCallbackRegistry(int loop_id) {
+[[cpp4r::register]] bool deleteCallbackRegistry(int loop_id) {
   ASSERT_MAIN_THREAD()
   if (loop_id == GLOBAL_LOOP) {
-    Rcpp::stop("Can't destroy global loop.");
+    cpp4r::stop("Can't destroy global loop.");
   }
   if (loop_id == getCurrentRegistryId()) {
-    Rcpp::stop("Can't destroy current loop.");
+    cpp4r::stop("Can't destroy current loop.");
   }
 
   return callbackRegistryTable.remove(loop_id);
 }
 
-
 // This is called when the R loop handle is GC'd.
-// [[Rcpp::export(rng = false)]]
-bool notifyRRefDeleted(int loop_id) {
+[[cpp4r::register]] bool notifyRRefDeleted(int loop_id) {
   ASSERT_MAIN_THREAD()
   if (loop_id == GLOBAL_LOOP) {
-    Rcpp::stop("Can't notify that reference to global loop is deleted.");
+    cpp4r::stop("Can't notify that reference to global loop is deleted.");
   }
   if (loop_id == getCurrentRegistryId()) {
-    Rcpp::stop("Can't notify that reference to current loop is deleted.");
+    cpp4r::stop("Can't notify that reference to current loop is deleted.");
   }
 
   return callbackRegistryTable.notifyRRefDeleted(loop_id);
 }
 
-
-// [[Rcpp::export(rng = false)]]
-void createCallbackRegistry(int id, int parent_id) {
+[[cpp4r::register]] void createCallbackRegistry(int id, int parent_id) {
   ASSERT_MAIN_THREAD()
   callbackRegistryTable.create(id, parent_id);
 }
 
-// [[Rcpp::export(rng = false)]]
-bool existsCallbackRegistry(int id) {
+[[cpp4r::register]] bool existsCallbackRegistry(int id) {
   ASSERT_MAIN_THREAD()
   return callbackRegistryTable.exists(id);
 }
 
-// [[Rcpp::export(rng = false)]]
-Rcpp::List list_queue_(int id) {
+[[cpp4r::register]] list list_queue_(int id) {
   ASSERT_MAIN_THREAD()
   shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(id);
   if (registry == nullptr) {
-    Rcpp::stop("CallbackRegistry does not exist.");
+    cpp4r::stop("CallbackRegistry does not exist.");
   }
   return registry->list();
 }
 
-
 // Execute callbacks for a single event loop.
-bool execCallbacksOne(
-  bool runAll,
-  shared_ptr<CallbackRegistry> callback_registry,
-  Timestamp now
-) {
+bool execCallbacksOne(bool runAll,
+                      shared_ptr<CallbackRegistry> callback_registry,
+                      Timestamp now) {
   ASSERT_MAIN_THREAD()
   // execCallbacks can be called directly from C code, and the callbacks may
   // include Rcpp code. (Should we also call wrap?)
-  Rcpp::RNGScope rngscope;
+  GetRNGstate();
   ProtectCallbacks pcscope;
 
   // Set current loop for the duration of this function.
@@ -212,24 +197,26 @@ bool execCallbacksOne(
 
   // I think there's no need to lock this since it's only modified from the
   // main thread. But need to check.
-  std::vector<std::shared_ptr<CallbackRegistry> > children = callback_registry->children;
-  for (std::vector<std::shared_ptr<CallbackRegistry> >::iterator it = children.begin();
-       it != children.end();
-       ++it)
-  {
+  std::vector<std::shared_ptr<CallbackRegistry>> children =
+      callback_registry->children;
+  for (std::vector<std::shared_ptr<CallbackRegistry>>::iterator it =
+           children.begin();
+       it != children.end(); ++it) {
     execCallbacksOne(true, *it, now);
   }
 
+  PutRNGstate();
   return true;
 }
 
 // Execute callbacks for an event loop and its children.
-// [[Rcpp::export(rng = false)]]
-bool execCallbacks(double timeoutSecs, bool runAll, int loop_id) {
+[[cpp4r::register]] bool execCallbacks(double timeoutSecs, bool runAll,
+                                       int loop_id) {
   ASSERT_MAIN_THREAD()
-  shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(loop_id);
+  shared_ptr<CallbackRegistry> registry =
+      callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    Rcpp::stop("CallbackRegistry does not exist.");
+    cpp4r::stop("CallbackRegistry does not exist.");
   }
 
   if (!registry->wait(timeoutSecs, true)) {
@@ -244,7 +231,6 @@ bool execCallbacks(double timeoutSecs, bool runAll, int loop_id) {
   callbackRegistryTable.pruneRegistries();
   return true;
 }
-
 
 // This function is called from the input handler on Unix, or the Windows
 // equivalent. It may throw exceptions.
@@ -269,20 +255,18 @@ bool execCallbacksForTopLevel() {
   return any;
 }
 
-// [[Rcpp::export(rng = false)]]
-bool idle(int loop_id) {
+[[cpp4r::register]] bool idle(int loop_id) {
   ASSERT_MAIN_THREAD()
-  shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(loop_id);
+  shared_ptr<CallbackRegistry> registry =
+      callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    Rcpp::stop("CallbackRegistry does not exist.");
+    cpp4r::stop("CallbackRegistry does not exist.");
   }
   return registry->empty();
 }
 
-
 static bool initialized = false;
-// [[Rcpp::export(rng = false)]]
-void ensureInitialized() {
+[[cpp4r::register]] void ensureInitialized() {
   if (initialized) {
     return;
   }
@@ -298,13 +282,14 @@ void ensureInitialized() {
   initialized = true;
 }
 
-// [[Rcpp::export(rng = false)]]
-std::string execLater(Rcpp::Function callback, double delaySecs, int loop_id) {
+[[cpp4r::register]] std::string execLater(SEXP callback, double delaySecs,
+                                          int loop_id) {
   ASSERT_MAIN_THREAD()
   ensureInitialized();
-  shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(loop_id);
+  shared_ptr<CallbackRegistry> registry =
+      callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    Rcpp::stop("CallbackRegistry does not exist.");
+    cpp4r::stop("CallbackRegistry does not exist.");
   }
   uint64_t callback_id = doExecLater(registry, callback, delaySecs, true);
 
@@ -313,19 +298,17 @@ std::string execLater(Rcpp::Function callback, double delaySecs, int loop_id) {
   return toString(callback_id);
 }
 
-
-
 bool cancel(uint64_t callback_id, int loop_id) {
   ASSERT_MAIN_THREAD()
-  shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(loop_id);
+  shared_ptr<CallbackRegistry> registry =
+      callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
     return false;
   }
   return registry->cancel(callback_id);
 }
 
-// [[Rcpp::export(rng = false)]]
-bool cancel(std::string callback_id_s, int loop_id) {
+[[cpp4r::register]] bool cancel(std::string callback_id_s, int loop_id) {
   ASSERT_MAIN_THREAD()
   uint64_t callback_id;
   std::istringstream iss(callback_id_s);
@@ -333,21 +316,19 @@ bool cancel(std::string callback_id_s, int loop_id) {
 
   // If the input is good (just a number with no other text) then eof will be
   // 1 and fail will be 0.
-  if (! (iss.eof() && !iss.fail())) {
+  if (!(iss.eof() && !iss.fail())) {
     return false;
   }
 
   return cancel(callback_id, loop_id);
 }
 
-
-
-// [[Rcpp::export(rng = false)]]
-double nextOpSecs(int loop_id) {
+[[cpp4r::register]] double nextOpSecs(int loop_id) {
   ASSERT_MAIN_THREAD()
-  shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(loop_id);
+  shared_ptr<CallbackRegistry> registry =
+      callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    Rcpp::stop("CallbackRegistry does not exist.");
+    cpp4r::stop("CallbackRegistry does not exist.");
   }
 
   Optional<Timestamp> nextTime = registry->nextTimestamp();
@@ -361,11 +342,10 @@ double nextOpSecs(int loop_id) {
 
 // Schedules a C function to execute on a specific event loop. Returns
 // callback ID on success, or 0 on error.
-extern "C" uint64_t execLaterNative2(void (*func)(void*), void* data, double delaySecs, int loop_id) {
+extern "C" uint64_t execLaterNative2(void (*func)(void *), void *data,
+                                     double delaySecs, int loop_id) {
   ensureInitialized();
   return callbackRegistryTable.scheduleCallback(func, data, delaySecs, loop_id);
 }
 
-extern "C" int apiVersion() {
-  return LATER_DLL_API_VERSION;
-}
+extern "C" int apiVersion() { return LATER_DLL_API_VERSION; }
