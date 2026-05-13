@@ -1,6 +1,6 @@
 Package: latertest
 Type: Package
-Title: Additional unit tests for 'later'
+Title: Additional Unit Tests for 'later'
 Version: 0.1
 Authors@R: c(
     person("Winston", "Chang", , "winston@posit.co", role = "aut",
@@ -36,5 +36,5 @@ BugReports: https://github.com/r-lib/later/issues
 RoxygenNote: 8.0.0
 Encoding: UTF-8
 NeedsCompilation: yes
-LinkingTo: cpp4r, later
+LinkingTo: cpp11, later
 Config/testthat/edition: 3
