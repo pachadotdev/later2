@@ -38,40 +38,40 @@ export R_PROFILE_USER=""
 export R_ENVIRON=""
 export R_ENVIRON_USER=""
 
-# Install required packages in R-devel if not present (use --vanilla to avoid loading .Rprofile)
+# Install required packages in R-devel if not present
 echo "Checking/installing required packages in R-devel..."
 "${RSCRIPT_DEVEL}" --vanilla -e '
-  pkgs <- c("devtools", "roxygen2", "testthat", "usethis", "decor", "desc", "glue", "tibble", "vctrs", "withr", "pkgbuild")
+  pkgs <- c("devtools", "roxygen2", "testthat", "usethis", "cpp11", "withr", "pkgbuild")
   missing <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
   if (length(missing) > 0) {
     install.packages(missing, repos = "https://cloud.r-project.org")
   }
 '
 
-# Install cpp11 from local source using R CMD INSTALL
-echo "Installing cpp11 into R-devel..."
-cpp11_TARBALL=$("${R_DEVEL}" CMD build --no-manual . 2>/dev/null | grep -oP "^\* creating '\K[^']+" || true)
-if [ -z "${cpp11_TARBALL}" ] || [ ! -f "${cpp11_TARBALL}" ]; then
-  # Fallback: find the tarball
-  cpp11_TARBALL=$(ls -t cpp11_*.tar.gz 2>/dev/null | head -1)
-fi
-if [ -z "${cpp11_TARBALL}" ] || [ ! -f "${cpp11_TARBALL}" ]; then
-  echo "ERROR: Failed to build cpp11 tarball"
-  exit 1
-fi
-echo "Built tarball: ${cpp11_TARBALL}"
-"${R_DEVEL}" CMD INSTALL "${cpp11_TARBALL}"
-rm -f "${cpp11_TARBALL}"
+# Patch latertest/src/Makevars with the requested C++ standard
+"${SCRIPT_DIR}/check_prepare.sh" "${std}" "${compiler}"
 
-# Export CXX_STD for configure script
-export CXX_STD="${std}"
+# Set up compiler override via R_MAKEVARS_USER
+TMPDIR_MAKE=$(mktemp -d)
+MAKEVARS_FILE="${TMPDIR_MAKE}/Makevars"
+trap '"${SCRIPT_DIR}/check_restore.sh" "${std}" "${compiler}"; rm -rf "${TMPDIR_MAKE}"' EXIT
 
-# Set compiler
 if [ "$compiler" = "clang" ]; then
-  export USE_CLANG=1
+  cat > "${MAKEVARS_FILE}" << 'EOF'
+CC = clang
+CXX = clang++
+CXX17 = clang++
+CXX17STD = -std=gnu++17
+CXX20 = clang++
+CXX20STD = -std=gnu++20
+CXX23 = clang++
+CXX23STD = -std=gnu++23
+SHLIB_OPENMP_CXXFLAGS = -fopenmp=libgomp
+EOF
 else
-  unset USE_CLANG || true
+  touch "${MAKEVARS_FILE}"
 fi
+export R_MAKEVARS_USER="${MAKEVARS_FILE}"
 
 # Ensure results directory exists
 mkdir -p "./check-r-devel"
@@ -83,9 +83,9 @@ rm -f "${LOG}"
 # Capture everything (stdout+stderr) into the log while printing to console
 exec > >(tee -a "${LOG}") 2>&1
 
-# Register and document the test package using R-devel
+# Register and document latertest using R-devel
 echo "Registering latertest with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'cpp11::register("./latertest")'
+"${RSCRIPT_DEVEL}" --vanilla -e 'cpp11::cpp_register("./latertest")'
 
 echo "Documenting latertest with R-devel..."
 "${RSCRIPT_DEVEL}" --vanilla -e 'devtools::document("./latertest")'
@@ -102,7 +102,7 @@ echo "Tarball created: ${TARBALL}"
 
 # Run R CMD check on the tarball using R-devel
 echo "Running R CMD check with R-devel..."
-CXX_STD="${std}" "${R_DEVEL}" CMD check --as-cran --no-manual "${TARBALL}" || true
+"${R_DEVEL}" CMD check --as-cran --no-manual "${TARBALL}" || true
 
 # If there was an error, copy the install log for inspection
 if [ -f "./latertest.Rcheck/00install.out" ]; then
@@ -121,9 +121,7 @@ else
   echo "R CMD check completed with no ERRORs. Warnings/Notes (if any) are allowed. See ${LOG} for full output."
 fi
 
-# Cleanup
 rm -f "${TARBALL}"
-rm -rf ./latertest.Rcheck || true
 
 echo "==============================="
 echo "R-devel check complete."

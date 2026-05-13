@@ -67,7 +67,7 @@ fi
 if grep -q "\bERROR\b" "${LOG}"; then
 	echo "R CMD check found ERRORs. See ${LOG} for details."
 	# Print a short excerpt for convenience
-	grep -n "\bERROR\b" -n "${LOG}" || true
+	grep -n "\bERROR\b" "${LOG}" || true
 	exit 1
 else
 	echo "R CMD check completed with no ERRORs. Warnings/Notes (if any) are allowed. See ${LOG} for full output."
