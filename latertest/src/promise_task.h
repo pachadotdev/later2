@@ -1,20 +1,20 @@
 class PromiseTask : public later::BackgroundTask {
 public:
-  PromiseTask(cpp4r::sexp resolve, cpp4r::sexp reject)
+  PromiseTask(cpp11::sexp resolve, cpp11::sexp reject)
       : resolve(resolve), reject(reject) {}
 
 protected:
   virtual void execute() = 0;
-  virtual cpp4r::sexp get_result() = 0;
+  virtual cpp11::sexp get_result() = 0;
 
   void complete() {
-    cpp4r::sexp result = get_result();
-    cpp4r::function{static_cast<SEXP>(resolve)}(static_cast<SEXP>(result));
+    cpp11::sexp result = get_result();
+    cpp11::function{static_cast<SEXP>(resolve)}(static_cast<SEXP>(result));
   }
 
 private:
-  cpp4r::sexp resolve;
-  cpp4r::sexp reject;
+  cpp11::sexp resolve;
+  cpp11::sexp reject;
 };
 
 long fib(long x) {
@@ -26,13 +26,13 @@ long fib(long x) {
 
 class FibonacciTask : public PromiseTask {
 public:
-  FibonacciTask(cpp4r::sexp resolve, cpp4r::sexp reject, double x)
+  FibonacciTask(cpp11::sexp resolve, cpp11::sexp reject, double x)
       : PromiseTask(resolve, reject), x(x) {}
 
   void execute() { result = fib((long)x); }
 
-  cpp4r::sexp get_result() {
-    cpp4r::writable::doubles res = {(double)result};
+  cpp11::sexp get_result() {
+    cpp11::writable::doubles res = {(double)result};
     return res;
   }
 
@@ -41,7 +41,7 @@ private:
   long result;
 };
 
-[[cpp4r::register]] void asyncFib(SEXP resolve, SEXP reject, double x) {
+[[cpp11::register]] void asyncFib(SEXP resolve, SEXP reject, double x) {
   FibonacciTask *fib = new FibonacciTask(resolve, reject, x);
   fib->begin();
 }

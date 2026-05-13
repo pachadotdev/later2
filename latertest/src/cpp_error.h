@@ -40,7 +40,7 @@ void oof(void *data) {
   }
 }
 
-[[cpp4r::register]] void cpp_error(int value) {
+[[cpp11::register]] void cpp_error(int value) {
   int *v = new int(value);
   later::later(oof, v, 0);
 }

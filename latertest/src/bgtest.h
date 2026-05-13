@@ -18,6 +18,6 @@ protected:
   void complete() {}
 };
 
-[[cpp4r::register]] void launchBgTask(int secsToSleep) {
+[[cpp11::register]] void launchBgTask(int secsToSleep) {
   (new TestTask(secsToSleep))->begin();
 }
