@@ -42,7 +42,7 @@ rm -f "${LOG}"
 exec > >(tee -a "${LOG}") 2>&1
 
 # Run the bench script (will exit on error)
-Rscript -e 'cpp4r::register("./latertest")'
+Rscript -e 'cpp11::cpp_register("./latertest")'
 Rscript -e 'devtools::document("./latertest")'
 
 # Build package tarball first (devtools::build returns path)

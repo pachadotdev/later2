@@ -32,7 +32,7 @@ echo "Using R-devel:"
 
 cd "${PROJECT_DIR}"
 
-# Prevent R from loading any startup files (including ~/.Rprofile which loads cpp4r)
+# Prevent R from loading any startup files (including ~/.Rprofile which loads cpp11)
 export R_PROFILE=""
 export R_PROFILE_USER=""
 export R_ENVIRON=""
@@ -48,20 +48,20 @@ echo "Checking/installing required packages in R-devel..."
   }
 '
 
-# Install cpp4r from local source using R CMD INSTALL
-echo "Installing cpp4r into R-devel..."
-CPP4R_TARBALL=$("${R_DEVEL}" CMD build --no-manual . 2>/dev/null | grep -oP "^\* creating '\K[^']+" || true)
-if [ -z "${CPP4R_TARBALL}" ] || [ ! -f "${CPP4R_TARBALL}" ]; then
+# Install cpp11 from local source using R CMD INSTALL
+echo "Installing cpp11 into R-devel..."
+cpp11_TARBALL=$("${R_DEVEL}" CMD build --no-manual . 2>/dev/null | grep -oP "^\* creating '\K[^']+" || true)
+if [ -z "${cpp11_TARBALL}" ] || [ ! -f "${cpp11_TARBALL}" ]; then
   # Fallback: find the tarball
-  CPP4R_TARBALL=$(ls -t cpp4r_*.tar.gz 2>/dev/null | head -1)
+  cpp11_TARBALL=$(ls -t cpp11_*.tar.gz 2>/dev/null | head -1)
 fi
-if [ -z "${CPP4R_TARBALL}" ] || [ ! -f "${CPP4R_TARBALL}" ]; then
-  echo "ERROR: Failed to build cpp4r tarball"
+if [ -z "${cpp11_TARBALL}" ] || [ ! -f "${cpp11_TARBALL}" ]; then
+  echo "ERROR: Failed to build cpp11 tarball"
   exit 1
 fi
-echo "Built tarball: ${CPP4R_TARBALL}"
-"${R_DEVEL}" CMD INSTALL "${CPP4R_TARBALL}"
-rm -f "${CPP4R_TARBALL}"
+echo "Built tarball: ${cpp11_TARBALL}"
+"${R_DEVEL}" CMD INSTALL "${cpp11_TARBALL}"
+rm -f "${cpp11_TARBALL}"
 
 # Export CXX_STD for configure script
 export CXX_STD="${std}"
@@ -85,7 +85,7 @@ exec > >(tee -a "${LOG}") 2>&1
 
 # Register and document the test package using R-devel
 echo "Registering latertest with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'cpp4r::register("./latertest")'
+"${RSCRIPT_DEVEL}" --vanilla -e 'cpp11::register("./latertest")'
 
 echo "Documenting latertest with R-devel..."
 "${RSCRIPT_DEVEL}" --vanilla -e 'devtools::document("./latertest")'

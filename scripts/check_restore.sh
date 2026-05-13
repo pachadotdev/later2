@@ -19,7 +19,7 @@ else cpp_std="$std"; fi
 # Restore Makevars to defaults
 sed -i 's/^CXX_STD = .*/CXX_STD = CXX23/' ./latertest/src/Makevars
 # Remove any leftover clang block from a previous prepare run
-sed -i '/# cpp4r-check-clang-begin/,/# cpp4r-check-clang-end/d' ./latertest/src/Makevars
+sed -i '/# cpp11-check-clang-begin/,/# cpp11-check-clang-end/d' ./latertest/src/Makevars
 
 # Clear check files
 rm -rf ./latertest.Rcheck || true
