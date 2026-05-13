@@ -83,22 +83,18 @@ rm -f "${LOG}"
 # Capture everything (stdout+stderr) into the log while printing to console
 exec > >(tee -a "${LOG}") 2>&1
 
-# Ensure configure scripts are executable
-chmod +x ./cpp4rtest/configure
-chmod +x ./cpp4rtest/cleanup
-
 # Register and document the test package using R-devel
-echo "Registering cpp4rtest with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'cpp4r::register("./cpp4rtest")'
+echo "Registering latertest with R-devel..."
+"${RSCRIPT_DEVEL}" --vanilla -e 'cpp4r::register("./latertest")'
 
-echo "Documenting cpp4rtest with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'devtools::document("./cpp4rtest")'
+echo "Documenting latertest with R-devel..."
+"${RSCRIPT_DEVEL}" --vanilla -e 'devtools::document("./latertest")'
 
 # Build package tarball using R-devel
 echo "Building tarball with R-devel..."
-TARBALL=$("${RSCRIPT_DEVEL}" --vanilla -e 'cat(devtools::build("./cpp4rtest", quiet = TRUE))')
+TARBALL=$("${RSCRIPT_DEVEL}" --vanilla -e 'cat(devtools::build("./latertest", quiet = TRUE))')
 if [ -z "${TARBALL}" ]; then
-  echo "Failed to build tarball for cpp4rtest."
+  echo "Failed to build tarball for latertest."
   exit 1
 fi
 
@@ -109,10 +105,10 @@ echo "Running R CMD check with R-devel..."
 CXX_STD="${std}" "${R_DEVEL}" CMD check --as-cran --no-manual "${TARBALL}" || true
 
 # If there was an error, copy the install log for inspection
-if [ -f "./cpp4rtest.Rcheck/00install.out" ]; then
-  cp "./cpp4rtest.Rcheck/00install.out" "./check-r-devel/install-${std}-${compiler}-devel.log"
+if [ -f "./latertest.Rcheck/00install.out" ]; then
+  cp "./latertest.Rcheck/00install.out" "./check-r-devel/install-${std}-${compiler}-devel.log"
   echo "=== BEGIN 00install.out ==="
-  cat "./cpp4rtest.Rcheck/00install.out"
+  cat "./latertest.Rcheck/00install.out"
   echo "=== END 00install.out ==="
 fi
 
@@ -127,8 +123,7 @@ fi
 
 # Cleanup
 rm -f "${TARBALL}"
-rm -rf ./cpp4rtest.Rcheck || true
-rm -f "./cpp4rtest/src/Makevars" || true
+rm -rf ./latertest.Rcheck || true
 
 echo "==============================="
 echo "R-devel check complete."

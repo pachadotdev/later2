@@ -16,11 +16,10 @@ elif [ "$std" = "CXX20" ]; then cpp_std="C++20"
 elif [ "$std" = "CXX23" ]; then cpp_std="C++23"
 else cpp_std="$std"; fi
 
-# Remove generated Makevars
-rm -f "./cpp4rtest/src/Makevars"
-
-# Restore GCC by unsetting USE_CLANG
-unset USE_CLANG || true
+# Restore Makevars to defaults
+sed -i 's/^CXX_STD = .*/CXX_STD = CXX23/' ./latertest/src/Makevars
+# Remove any leftover clang block from a previous prepare run
+sed -i '/# cpp4r-check-clang-begin/,/# cpp4r-check-clang-end/d' ./latertest/src/Makevars
 
 # Clear check files
-rm -rf ./cpp4rtest.Rcheck || true
+rm -rf ./latertest.Rcheck || true

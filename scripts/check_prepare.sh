@@ -9,5 +9,5 @@ echo "==============================="
 echo "Preparing C++ code with $std standard and $compiler compiler"
 echo ""
 
-chmod +x ./cpp4rtest/configure
-chmod +x ./cpp4rtest/cleanup
+# Patch CXX_STD in latertest/src/Makevars
+sed -i "s/^CXX_STD = .*/CXX_STD = ${std}/" ./latertest/src/Makevars

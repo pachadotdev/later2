@@ -28,3 +28,4 @@
 ^latertest$
 ^Makefile$
 ^README\.html$
+^check-gcc-clang$
