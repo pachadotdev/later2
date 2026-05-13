@@ -37,7 +37,7 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 LinkingTo:
-    cpp4r
+    cpp11
 VignetteBuilder:
     knitr
 Config/build/compilation-database: true

@@ -4,7 +4,7 @@
 \name{latertest-package}
 \alias{latertest}
 \alias{latertest-package}
-\title{latertest: Additional unit tests for 'later'}
+\title{latertest: Additional Unit Tests for 'later'}
 \description{
 Unit tests that use the 'later' API to test the behaviour of 'later' itself. This package is not intended for general use.
 }

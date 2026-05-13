@@ -69,10 +69,10 @@ Create your own subclass, implementing a custom constructor plus the `execute` a
 It's critical that the code in your `execute` method not mutate any R data structures, call any R code, or cause any R allocations, as it will execute in a background thread where such operations are unsafe. You can, however, perform such operations in the constructor (assuming you perform construction only from the main R thread) and `complete` method. Pass values between the constructor and methods using fields.
 
 ```cpp
-#include "cpp4r.hpp"
+#include "cpp11.hpp"
 #include <later_api.h>
 
-using namespace cpp4r;
+using namespace cpp11;
 
 class MyTask : public later::BackgroundTask {
 public:
@@ -105,7 +105,7 @@ private:
 To run the task, `new` up your subclass and call `begin()`, e.g. `(new MyTask(vec))->begin()`. There's no need to keep track of the pointer; the task object will delete itself when the task is complete.
 
 ```r
-[[cpp4r::register]] void asyncMean(doubles data) {
+[[cpp11::register]] void asyncMean(doubles data) {
   (new MyTask(data))->begin();
 }
 ```

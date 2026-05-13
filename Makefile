@@ -9,12 +9,15 @@ COMPILERS := gcc clang
 
 ALL_CHECKS := $(foreach std,$(STANDARDS),$(foreach comp,$(COMPILERS),check-$(std)-$(comp)))
 
-check: $(ALL_CHECKS)
+check-init:
+	@Rscript -e 'devtools::check(".");'
+	@$(MAKE) install
+
+check: check-init $(ALL_CHECKS)
 
 define run-check
-check-$(1)-$(2):
+check-$(1)-$(2): check-init
 	@echo "Checking C++ code with $(1) standard and $(2) compiler"
-	# @$$(MAKE) install
 	./scripts/check_prepare.sh "$(1)" "$(2)"; \
 	if ! ./scripts/check_run.sh "$(1)" "$(2)"; then \
 		echo "Check failed"; \

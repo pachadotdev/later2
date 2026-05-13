@@ -153,10 +153,10 @@ perform construction only from the main R thread) and `complete` method.
 Pass values between the constructor and methods using fields.
 
 ``` cpp
-#include "cpp4r.hpp"
+#include "cpp11.hpp"
 #include <later_api.h>
 
-using namespace cpp4r;
+using namespace cpp11;
 
 class MyTask : public later::BackgroundTask {
 public:
@@ -191,7 +191,7 @@ e.g. `(new MyTask(vec))->begin()`. There’s no need to keep track of the
 pointer; the task object will delete itself when the task is complete.
 
 ``` r
-[[cpp4r::register]] void asyncMean(Rcpp::NumericVector data) {
+[[cpp11::register]] void asyncMean(Rcpp::NumericVector data) {
   (new MyTask(data))->begin();
 }
 ```

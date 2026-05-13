@@ -1,6 +1,6 @@
 # later (development version)
 
-* Rcpp code moved to cpp4r.
+* Rcpp code moved to cpp11.
 * Some unit tests had to be moved to the side package 'latertest'.
 * Unit tests organized as: later: 163; latertest: 15; total: 178
 
