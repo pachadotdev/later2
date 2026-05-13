@@ -2,6 +2,9 @@ Loading required package: usethis
 Loading required package: usethis
 ℹ Updating latertest documentation
 ℹ Loading latertest
+ℹ 7 functions decorated with [[cpp11::register]]
+✔ generated file 'cpp11.R'
+✔ generated file 'cpp11.cpp'
 ℹ Re-compiling latertest (debug build)
 ── R CMD INSTALL ───────────────────────────────────────────────────────────────
 * installing *source* package ‘latertest’ ...
@@ -14,11 +17,11 @@ using C++23
 make[1]: Entering directory '/home/pacha/Documents/later/latertest/src'
 make[1]: Leaving directory '/home/pacha/Documents/later/latertest/src'
 make[1]: Entering directory '/home/pacha/Documents/later/latertest/src'
-g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp4r.cpp -o cpp4r.o
-g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c latertest.cpp -o latertest.o
-g++ -std=gnu++23 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o latertest.so cpp4r.o latertest.o -fopenmp -L/usr/lib64/R/lib -lR
+g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp11/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp11.cpp -o cpp11.o
+g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp11/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c latertest.cpp -o latertest.o
+g++ -std=gnu++23 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o latertest.so cpp11.o latertest.o -fopenmp -L/usr/lib64/R/lib -lR
 make[1]: Leaving directory '/home/pacha/Documents/later/latertest/src'
-installing to /tmp/Rtmp1YtlWn/devtools_install_3045d4add1efb/00LOCK-latertest/00new/latertest/libs
+installing to /tmp/Rtmpv61VNy/devtools_install_24e1c49a76e06/00LOCK-latertest/00new/latertest/libs
 ** checking absolute paths in shared objects and dynamic libraries
 * DONE (latertest)
 Loading required package: usethis
@@ -31,7 +34,7 @@ Loading required package: usethis
     GNU Fortran (GCC) 15.2.1 20260209
 * running under: Manjaro Linux
 * using session charset: UTF-8
-* current time: 2026-05-12 23:51:41 UTC
+* current time: 2026-05-13 19:30:15 UTC
 * using options ‘--no-manual --as-cran’
 * checking for file ‘latertest/DESCRIPTION’ ... OK
 * checking extension type ... Package
@@ -41,11 +44,6 @@ Loading required package: usethis
 Maintainer: ‘Charlie Gao <charlie.gao@posit.co>’
 
 New submission
-
-The Title field should be in title case. Current version is:
-  ‘Additional unit tests for 'later'’
-In title case that is:
-  ‘Additional Unit Tests for 'later'’
 * checking package namespace information ... OK
 * checking package dependencies ... OK
 * checking if this is a source package ... OK
@@ -127,9 +125,9 @@ specified C++23
 using C++ compiler: ‘g++ (GCC) 15.2.1 20260209’
 using C++23
 make[1]: Entering directory '/home/pacha/Documents/later/latertest.Rcheck/00_pkg_src/latertest/src'
-g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp4r.cpp -o cpp4r.o
-g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c latertest.cpp -o latertest.o
-g++ -std=gnu++23 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o latertest.so cpp4r.o latertest.o -fopenmp -L/usr/lib64/R/lib -lR
+g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp11/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp11.cpp -o cpp11.o
+g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp11/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c latertest.cpp -o latertest.o
+g++ -std=gnu++23 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o latertest.so cpp11.o latertest.o -fopenmp -L/usr/lib64/R/lib -lR
 make[1]: Leaving directory '/home/pacha/Documents/later/latertest.Rcheck/00_pkg_src/latertest/src'
 make[1]: Entering directory '/home/pacha/Documents/later/latertest.Rcheck/00_pkg_src/latertest/src'
 make[1]: Leaving directory '/home/pacha/Documents/later/latertest.Rcheck/00_pkg_src/latertest/src'
