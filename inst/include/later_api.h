@@ -72,10 +72,6 @@ inline void later(void (*func)(void *), void *data, double secs, int loop_id) {
   // we have to ensure that the first call to execLaterNative2 happens on the
   // main thread. We accomplish this using the statically initialized
   // LaterInitializer object at the end of this file.
-  //
-  // This file is named later_api.h instead of later.h because Rcpp treats
-  // $PACKAGE.h files specially by including them in RcppExports.cpp, and we
-  // definitely do not want the static initialization to happen there.
 
   // The function type for the real execLaterNative2
   typedef void (*elnfun)(void (*func)(void *), void *, double, int);
