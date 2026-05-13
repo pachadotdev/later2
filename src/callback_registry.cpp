@@ -18,37 +18,37 @@ StdFunctionCallback::StdFunctionCallback(Timestamp when,
   this->callbackId = nextCallbackId++;
 }
 
-cpp4r::sexp StdFunctionCallback::rRepresentation() const {
+cpp11::sexp StdFunctionCallback::rRepresentation() const {
   ASSERT_MAIN_THREAD()
-  return cpp4r::writable::list(
-      {cpp4r::named_arg("id") = (double)callbackId,
-       cpp4r::named_arg("when") = when.diff_secs(Timestamp()),
-       cpp4r::named_arg("callback") = "C/C++ function"});
+  return cpp11::writable::list(
+      {cpp11::named_arg("id") = (double)callbackId,
+       cpp11::named_arg("when") = when.diff_secs(Timestamp()),
+       cpp11::named_arg("callback") = "C/C++ function"});
 }
 
 // ============================================================================
-// cpp4rFunctionCallback
+// cpp11FunctionCallback
 // ============================================================================
 
-cpp4rFunctionCallback::cpp4rFunctionCallback(Timestamp when, SEXP func)
+cpp11FunctionCallback::cpp11FunctionCallback(Timestamp when, SEXP func)
     : Callback(when), func(func) {
   ASSERT_MAIN_THREAD()
   this->callbackId = nextCallbackId++;
 }
 
-cpp4r::sexp cpp4rFunctionCallback::rRepresentation() const {
+cpp11::sexp cpp11FunctionCallback::rRepresentation() const {
   ASSERT_MAIN_THREAD()
-  return cpp4r::writable::list(
-      {cpp4r::named_arg("id") = (double)callbackId,
-       cpp4r::named_arg("when") = when.diff_secs(Timestamp()),
-       cpp4r::named_arg("callback") = static_cast<SEXP>(func)});
+  return cpp11::writable::list(
+      {cpp11::named_arg("id") = (double)callbackId,
+       cpp11::named_arg("when") = when.diff_secs(Timestamp()),
+       cpp11::named_arg("callback") = static_cast<SEXP>(func)});
 }
 
 // ============================================================================
 // CallbackRegistry
 // ============================================================================
 
-[[cpp4r::register]] void testCallbackOrdering() {
+[[cpp11::register]] void testCallbackOrdering() {
   std::vector<StdFunctionCallback> callbacks;
   Timestamp ts;
   std::function<void(void)> func;
@@ -57,21 +57,21 @@ cpp4r::sexp cpp4rFunctionCallback::rRepresentation() const {
   }
   for (size_t i = 1; i < 100; i++) {
     if (callbacks[i] < callbacks[i - 1]) {
-      cpp4r::stop("Callback ordering is broken [1]");
+      cpp11::stop("Callback ordering is broken [1]");
     }
     if (!(callbacks[i] > callbacks[i - 1])) {
-      cpp4r::stop("Callback ordering is broken [2]");
+      cpp11::stop("Callback ordering is broken [2]");
     }
     if (callbacks[i - 1] > callbacks[i]) {
-      cpp4r::stop("Callback ordering is broken [3]");
+      cpp11::stop("Callback ordering is broken [3]");
     }
     if (!(callbacks[i - 1] < callbacks[i])) {
-      cpp4r::stop("Callback ordering is broken [4]");
+      cpp11::stop("Callback ordering is broken [4]");
     }
   }
   for (size_t i = 100; i > 1; i--) {
     if (callbacks[i - 1] < callbacks[i - 2]) {
-      cpp4r::stop("Callback ordering is broken [2]");
+      cpp11::stop("Callback ordering is broken [2]");
     }
   }
 }
@@ -90,7 +90,7 @@ uint64_t CallbackRegistry::add(SEXP func, double secs) {
   // R functions should only be accessed from the main thread.
   ASSERT_MAIN_THREAD()
   Timestamp when(secs);
-  Callback_sp cb = std::make_shared<cpp4rFunctionCallback>(when, func);
+  Callback_sp cb = std::make_shared<cpp11FunctionCallback>(when, func);
   Guard guard(mutex);
   queue.insert(cb);
   condvar->signal();
@@ -231,14 +231,14 @@ bool CallbackRegistry::wait(double timeoutSecs, bool recursive) const {
   return due();
 }
 
-cpp4r::sexp CallbackRegistry::list() const {
+cpp11::sexp CallbackRegistry::list() const {
   ASSERT_MAIN_THREAD()
   Guard guard(mutex);
 
-  cpp4r::sexp results(cpp4r::safe[Rf_allocVector](VECSXP, queue.size()));
+  cpp11::sexp results(cpp11::safe[Rf_allocVector](VECSXP, queue.size()));
   size_t i = 0;
   for (cbSet::const_iterator it = queue.begin(); it != queue.end(); ++it, ++i) {
-    cpp4r::sexp item = (*it)->rRepresentation();
+    cpp11::sexp item = (*it)->rRepresentation();
     SET_VECTOR_ELT(static_cast<SEXP>(results), i, static_cast<SEXP>(item));
   }
 

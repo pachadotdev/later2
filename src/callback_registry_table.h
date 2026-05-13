@@ -5,10 +5,8 @@
 #include "debug.h"
 #include "later.h"
 #include "threadutils.h"
+#include <map>
 #include <memory>
-
-using std::make_shared;
-using std::shared_ptr;
 
 class CallbackRegistryTable;
 extern CallbackRegistryTable callbackRegistryTable;
@@ -57,7 +55,7 @@ public:
     Guard guard(&mutex);
 
     if (exists(id)) {
-      cpp4r::stop("Can't create event loop %d because it already exists.", id);
+      cpp11::stop("Can't create event loop %d because it already exists.", id);
     }
 
     // Each new registry is passed our mutex and condvar. These serve as a
@@ -67,13 +65,13 @@ public:
     // CallbackRegistry tree, and some recursively acquire a lock upward;
     // without a shared lock, if these things happen at the same time from
     // different threads, it could deadlock.
-    shared_ptr<CallbackRegistry> registry =
-        make_shared<CallbackRegistry>(id, &mutex, &condvar);
+    std::shared_ptr<CallbackRegistry> registry =
+        std::make_shared<CallbackRegistry>(id, &mutex, &condvar);
 
     if (parent_id != -1) {
-      shared_ptr<CallbackRegistry> parent = getRegistry(parent_id);
+      std::shared_ptr<CallbackRegistry> parent = getRegistry(parent_id);
       if (parent == nullptr) {
-        cpp4r::stop("Can't create registry. Parent with id %d does not exist.",
+        cpp11::stop("Can't create registry. Parent with id %d does not exist.",
                     parent_id);
       }
       registry->parent = parent;
@@ -88,10 +86,10 @@ public:
   // Returns a shared_ptr to the registry. If the registry is not present in
   // the table, or if the target CallbackRegistry has already been deleted,
   // then the shared_ptr is empty.
-  shared_ptr<CallbackRegistry> getRegistry(int id) {
+  std::shared_ptr<CallbackRegistry> getRegistry(int id) {
     Guard guard(&mutex);
     if (!exists(id)) {
-      return shared_ptr<CallbackRegistry>();
+      return std::shared_ptr<CallbackRegistry>();
     }
     // If the target of the shared_ptr has been deleted, then this is an empty
     // shared_ptr.
@@ -103,7 +101,7 @@ public:
     // This method can be called from any thread
     Guard guard(&mutex);
 
-    shared_ptr<CallbackRegistry> registry = getRegistry(loop_id);
+    std::shared_ptr<CallbackRegistry> registry = getRegistry(loop_id);
     if (registry == nullptr) {
       return 0;
     }
@@ -174,7 +172,7 @@ public:
     ASSERT_MAIN_THREAD()
     Guard guard(&mutex);
 
-    shared_ptr<CallbackRegistry> registry = getRegistry(id);
+    std::shared_ptr<CallbackRegistry> registry = getRegistry(id);
     if (registry == nullptr) {
       return false;
     }
@@ -187,10 +185,10 @@ public:
     // inside its destructor; we need to some pointer comparison, but by the
     // time the destructor runs, you can't run shared_from_this() in the object,
     // because there are no more shared_ptrs to it.
-    shared_ptr<CallbackRegistry> parent = registry->parent;
+    std::shared_ptr<CallbackRegistry> parent = registry->parent;
     if (parent != nullptr) {
       // Remove this registry from the parent's list of children.
-      for (std::vector<shared_ptr<CallbackRegistry>>::iterator it =
+      for (std::vector<std::shared_ptr<CallbackRegistry>>::iterator it =
                parent->children.begin();
            it != parent->children.end();) {
         if (*it == registry) {

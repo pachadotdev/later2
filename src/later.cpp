@@ -1,20 +1,21 @@
-#include "later.h"
-#include "debug.h"
-#include "threadutils.h"
-#include "utils.h"
 #include <memory>
 #include <queue>
+
+#include <R.h> // RNG state functions
+#include <cpp11.hpp>
+
+using std::shared_ptr;
+using namespace cpp11;
+
+#include "debug.h"
+#include "later.h"
+#include "threadutils.h"
+#include "utils.h"
 
 #include "callback_registry.h"
 #include "callback_registry_table.h"
 
 #include "interrupt.h"
-
-#include <R.h> // RNG state functions
-#include <cpp4r.hpp>
-
-using std::shared_ptr;
-using namespace cpp4r;
 
 static size_t exec_callbacks_reentrancy_count = 0;
 
@@ -62,7 +63,7 @@ bool at_top_level() {
 
   int nframe = sys_nframe();
   if (nframe == -1) {
-    cpp4r::stop("Error occurred while calling sys.nframe()");
+    cpp11::stop("Error occurred while calling sys.nframe()");
   }
   return nframe == 0;
 }
@@ -84,12 +85,12 @@ bool at_top_level() {
 
 static int current_registry;
 
-[[cpp4r::register]] void setCurrentRegistryId(int id) {
+[[cpp11::register]] void setCurrentRegistryId(int id) {
   ASSERT_MAIN_THREAD()
   current_registry = id;
 }
 
-[[cpp4r::register]] int getCurrentRegistryId() {
+[[cpp11::register]] int getCurrentRegistryId() {
   ASSERT_MAIN_THREAD()
   return current_registry;
 }
@@ -125,46 +126,46 @@ shared_ptr<CallbackRegistry> getGlobalRegistry() {
 // This deletes a CallbackRegistry and deregisters it as a child of its
 // parent. Any children of this registry are orphaned -- they no longer have a
 // parent. (Maybe this should be an option?)
-[[cpp4r::register]] bool deleteCallbackRegistry(int loop_id) {
+[[cpp11::register]] bool deleteCallbackRegistry(int loop_id) {
   ASSERT_MAIN_THREAD()
   if (loop_id == GLOBAL_LOOP) {
-    cpp4r::stop("Can't destroy global loop.");
+    cpp11::stop("Can't destroy global loop.");
   }
   if (loop_id == getCurrentRegistryId()) {
-    cpp4r::stop("Can't destroy current loop.");
+    cpp11::stop("Can't destroy current loop.");
   }
 
   return callbackRegistryTable.remove(loop_id);
 }
 
 // This is called when the R loop handle is GC'd.
-[[cpp4r::register]] bool notifyRRefDeleted(int loop_id) {
+[[cpp11::register]] bool notifyRRefDeleted(int loop_id) {
   ASSERT_MAIN_THREAD()
   if (loop_id == GLOBAL_LOOP) {
-    cpp4r::stop("Can't notify that reference to global loop is deleted.");
+    cpp11::stop("Can't notify that reference to global loop is deleted.");
   }
   if (loop_id == getCurrentRegistryId()) {
-    cpp4r::stop("Can't notify that reference to current loop is deleted.");
+    cpp11::stop("Can't notify that reference to current loop is deleted.");
   }
 
   return callbackRegistryTable.notifyRRefDeleted(loop_id);
 }
 
-[[cpp4r::register]] void createCallbackRegistry(int id, int parent_id) {
+[[cpp11::register]] void createCallbackRegistry(int id, int parent_id) {
   ASSERT_MAIN_THREAD()
   callbackRegistryTable.create(id, parent_id);
 }
 
-[[cpp4r::register]] bool existsCallbackRegistry(int id) {
+[[cpp11::register]] bool existsCallbackRegistry(int id) {
   ASSERT_MAIN_THREAD()
   return callbackRegistryTable.exists(id);
 }
 
-[[cpp4r::register]] cpp4r::sexp list_queue_(int id) {
+[[cpp11::register]] cpp11::sexp list_queue_(int id) {
   ASSERT_MAIN_THREAD()
   shared_ptr<CallbackRegistry> registry = callbackRegistryTable.getRegistry(id);
   if (registry == nullptr) {
-    cpp4r::stop("CallbackRegistry does not exist.");
+    cpp11::stop("CallbackRegistry does not exist.");
   }
   return registry->list();
 }
@@ -209,13 +210,13 @@ bool execCallbacksOne(bool runAll,
 }
 
 // Execute callbacks for an event loop and its children.
-[[cpp4r::register]] bool execCallbacks(double timeoutSecs, bool runAll,
+[[cpp11::register]] bool execCallbacks(double timeoutSecs, bool runAll,
                                        int loop_id) {
   ASSERT_MAIN_THREAD()
   shared_ptr<CallbackRegistry> registry =
       callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    cpp4r::stop("CallbackRegistry does not exist.");
+    cpp11::stop("CallbackRegistry does not exist.");
   }
 
   if (!registry->wait(timeoutSecs, true)) {
@@ -254,18 +255,18 @@ bool execCallbacksForTopLevel() {
   return any;
 }
 
-[[cpp4r::register]] bool idle(int loop_id) {
+[[cpp11::register]] bool idle(int loop_id) {
   ASSERT_MAIN_THREAD()
   shared_ptr<CallbackRegistry> registry =
       callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    cpp4r::stop("CallbackRegistry does not exist.");
+    cpp11::stop("CallbackRegistry does not exist.");
   }
   return registry->empty();
 }
 
 static bool initialized = false;
-[[cpp4r::register]] void ensureInitialized() {
+[[cpp11::register]] void ensureInitialized() {
   if (initialized) {
     return;
   }
@@ -281,14 +282,14 @@ static bool initialized = false;
   initialized = true;
 }
 
-[[cpp4r::register]] std::string execLater(SEXP callback, double delaySecs,
+[[cpp11::register]] std::string execLater(SEXP callback, double delaySecs,
                                           int loop_id) {
   ASSERT_MAIN_THREAD()
   ensureInitialized();
   shared_ptr<CallbackRegistry> registry =
       callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    cpp4r::stop("CallbackRegistry does not exist.");
+    cpp11::stop("CallbackRegistry does not exist.");
   }
   uint64_t callback_id = doExecLater(registry, callback, delaySecs, true);
 
@@ -307,7 +308,7 @@ bool cancel(uint64_t callback_id, int loop_id) {
   return registry->cancel(callback_id);
 }
 
-[[cpp4r::register]] bool cancel(std::string callback_id_s, int loop_id) {
+[[cpp11::register]] bool cancel(std::string callback_id_s, int loop_id) {
   ASSERT_MAIN_THREAD()
   uint64_t callback_id;
   std::istringstream iss(callback_id_s);
@@ -322,12 +323,12 @@ bool cancel(uint64_t callback_id, int loop_id) {
   return cancel(callback_id, loop_id);
 }
 
-[[cpp4r::register]] double nextOpSecs(int loop_id) {
+[[cpp11::register]] double nextOpSecs(int loop_id) {
   ASSERT_MAIN_THREAD()
   shared_ptr<CallbackRegistry> registry =
       callbackRegistryTable.getRegistry(loop_id);
   if (registry == nullptr) {
-    cpp4r::stop("CallbackRegistry does not exist.");
+    cpp11::stop("CallbackRegistry does not exist.");
   }
 
   Optional<Timestamp> nextTime = registry->nextTimestamp();
@@ -349,6 +350,6 @@ extern "C" uint64_t execLaterNative2(void (*func)(void *), void *data,
 
 extern "C" void later_c_init(DllInfo *dll);
 
-[[cpp4r::init]] void later_init(DllInfo *dll) { later_c_init(dll); }
+[[cpp11::init]] void later_init(DllInfo *dll) { later_c_init(dll); }
 
 extern "C" int apiVersion() { return LATER_DLL_API_VERSION; }

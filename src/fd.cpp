@@ -3,7 +3,7 @@
 #include "later.h"
 #include "tinycthread.h"
 #include <atomic>
-#include <cpp4r.hpp>
+#include <cpp11.hpp>
 #include <cstdlib>
 #include <memory>
 #include <unistd.h>
@@ -27,7 +27,7 @@ public:
   ThreadArgs(SEXP func, int num_fds, struct pollfd *fds, double timeout,
              int loop, CallbackRegistryTable &table)
       : ThreadArgs(num_fds, fds, timeout, loop, table) {
-    callback = cpp4r::sexp(func);
+    callback = cpp11::sexp(func);
   }
 
   ThreadArgs(void (*func)(int *, void *), void *data, int num_fds,
@@ -41,7 +41,7 @@ public:
 
   Timestamp timeout;
   std::shared_ptr<std::atomic<bool>> active;
-  cpp4r::sexp callback;
+  cpp11::sexp callback;
   std::function<void(int *)> callback_native = nullptr;
   std::vector<struct pollfd> fds;
   std::vector<int> results;
@@ -76,12 +76,12 @@ static void later_callback(void *arg) {
   if (!still_active)
     return;
   if (static_cast<SEXP>(args->callback) != R_NilValue) {
-    cpp4r::sexp results_sexp(
-        cpp4r::safe[Rf_allocVector](LGLSXP, args->results.size()));
+    cpp11::sexp results_sexp(
+        cpp11::safe[Rf_allocVector](LGLSXP, args->results.size()));
     for (size_t i = 0; i < args->results.size(); i++) {
       SET_LOGICAL_ELT(static_cast<SEXP>(results_sexp), i, args->results[i]);
     }
-    cpp4r::function(static_cast<SEXP>(args->callback))(results_sexp);
+    cpp11::function(static_cast<SEXP>(args->callback))(results_sexp);
   } else {
     args->callback_native(args->results.data());
   }
@@ -138,9 +138,9 @@ static SEXP execLater_fd_impl(SEXP callback, int num_fds, struct pollfd *fds,
 
   if (tct_thrd_create(&thr, &wait_thread,
                       static_cast<void *>(args.release())) != tct_thrd_success)
-    cpp4r::stop("Thread creation failed");
+    cpp11::stop("Thread creation failed");
 
-  cpp4r::external_pointer<std::shared_ptr<std::atomic<bool>>> xptr(
+  cpp11::external_pointer<std::shared_ptr<std::atomic<bool>>> xptr(
       new std::shared_ptr<std::atomic<bool>>(active));
   return static_cast<SEXP>(xptr);
 }
@@ -159,11 +159,11 @@ static int execLater_fd_native(void (*func)(int *, void *), void *data,
          tct_thrd_success;
 }
 
-[[cpp4r::register]] SEXP execLater_fd(SEXP callback, cpp4r::integers readfds,
-                                      cpp4r::integers writefds,
-                                      cpp4r::integers exceptfds,
+[[cpp11::register]] SEXP execLater_fd(SEXP callback, cpp11::integers readfds,
+                                      cpp11::integers writefds,
+                                      cpp11::integers exceptfds,
                                       SEXP timeoutSecs,
-                                      cpp4r::integers loop_id) {
+                                      cpp11::integers loop_id) {
 
   const int rfds = static_cast<int>(readfds.size());
   const int wfds = static_cast<int>(writefds.size());
@@ -198,9 +198,9 @@ static int execLater_fd_native(void (*func)(int *, void *), void *data,
   return execLater_fd_impl(callback, num_fds, pollfds.data(), timeout, loop);
 }
 
-[[cpp4r::register]] bool fd_cancel(SEXP xptr) {
+[[cpp11::register]] bool fd_cancel(SEXP xptr) {
 
-  cpp4r::external_pointer<std::shared_ptr<std::atomic<bool>>> active(xptr);
+  cpp11::external_pointer<std::shared_ptr<std::atomic<bool>>> active(xptr);
 
   bool cancelled = true;
   // atomic compare_exchange_strong:
