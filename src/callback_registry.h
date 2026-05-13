@@ -50,20 +50,21 @@ public:
 
   void invoke() const {
     // Do NOT use cpp4r::unwind_protect here. Nesting R_UnwindProtect calls that
-    // share the same static token (as cpp4r's unwind_protect does per compilation
-    // unit) causes the outer RCNTXT to be left dangling on R's context chain when
-    // a C++ exception propagates through the outer R_UnwindProtect C frame without
-    // endcontext() being called. This corrupts R's context chain and causes crashes.
+    // share the same static token (as cpp4r's unwind_protect does per
+    // compilation unit) causes the outer RCNTXT to be left dangling on R's
+    // context chain when a C++ exception propagates through the outer
+    // R_UnwindProtect C frame without endcontext() being called. This corrupts
+    // R's context chain and causes crashes.
     //
     // Instead, let C++ exceptions propagate naturally: END_CPP4R (the generated
-    // wrapper around execCallbacks) catches std::exception and unwind_exception and
-    // handles them correctly. R errors (Rf_error longjmps) propagate directly to
-    // R's nearest tryCatch handler.
+    // wrapper around execCallbacks) catches std::exception and unwind_exception
+    // and handles them correctly. R errors (Rf_error longjmps) propagate
+    // directly to R's nearest tryCatch handler.
     try {
       func();
-    } catch (const cpp4r::unwind_exception&) {
+    } catch (const cpp4r::unwind_exception &) {
       throw;
-    } catch (const std::exception&) {
+    } catch (const std::exception &) {
       throw;
     } catch (...) {
       throw std::runtime_error("C++ exception of unknown type");

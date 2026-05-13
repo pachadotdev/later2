@@ -1,5 +1,4 @@
 #include <R_ext/Rdynload.h>
-#include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
 #include <sys/types.h>
