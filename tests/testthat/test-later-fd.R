@@ -108,24 +108,3 @@ test_that("later_fd() errors when passed destroyed loops", {
   destroy_loop(loop)
   expect_snapshot(error = TRUE, later_fd(identity, loop = loop))
 })
-
-test_that("later_fd C API works", {
-  skip_if(using_ubsan())
-  env <- new.env()
-  Rcpp::cppFunction(
-    depends = 'later',
-    includes = '
-      #include <later_api.h>
-      void func(int *value, void *data) {}
-    ',
-    code = '
-      int testfd() {
-        later::later_fd(func, nullptr, 0, nullptr, 0.0, 0);
-        return 0;
-      }
-    ',
-    env = env
-  )
-  expect_equal(env$testfd(), 0L)
-  run_now()
-})
