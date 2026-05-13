@@ -6,11 +6,6 @@
       Error:
       ! boom
 
-# When callbacks have tied timestamps, they respect order of creation
-
-    Code
-      testCallbackOrdering()
-
 # Callbacks cannot affect the caller
 
     Code
