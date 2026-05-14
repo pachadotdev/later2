@@ -7,6 +7,7 @@
 #include "threadutils.h"
 #include <map>
 #include <memory>
+#include <vector>
 
 class CallbackRegistryTable;
 extern CallbackRegistryTable callbackRegistryTable;

@@ -9,6 +9,7 @@
 #include <functional>
 #include <memory>
 #include <set>
+#include <vector>
 
 // Callback is an abstract class with two subclasses. The reason that there
 // are two subclasses is because one of them is for C++ (std::function)

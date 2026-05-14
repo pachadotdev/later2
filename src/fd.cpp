@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <memory>
 #include <unistd.h>
+#include <vector>
 
 class ThreadArgs {
 public:
