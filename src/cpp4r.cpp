@@ -41,7 +41,7 @@ extern "C" SEXP _later2_fd_cancel(SEXP xptr) {
     return cpp4r::as_sexp(fd_cancel(cpp4r::as_cpp<cpp4r::decay_t<SEXP>>(xptr)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 void setCurrentRegistryId(int id);
 extern "C" SEXP _later2_setCurrentRegistryId(SEXP id) {
   BEGIN_CPP4R
@@ -49,28 +49,28 @@ extern "C" SEXP _later2_setCurrentRegistryId(SEXP id) {
     return R_NilValue;
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 int getCurrentRegistryId();
 extern "C" SEXP _later2_getCurrentRegistryId() {
   BEGIN_CPP4R
     return cpp4r::as_sexp(getCurrentRegistryId());
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 bool deleteCallbackRegistry(int loop_id);
 extern "C" SEXP _later2_deleteCallbackRegistry(SEXP loop_id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(deleteCallbackRegistry(cpp4r::as_cpp<cpp4r::decay_t<int>>(loop_id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 bool notifyRRefDeleted(int loop_id);
 extern "C" SEXP _later2_notifyRRefDeleted(SEXP loop_id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(notifyRRefDeleted(cpp4r::as_cpp<cpp4r::decay_t<int>>(loop_id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 void createCallbackRegistry(int id, int parent_id);
 extern "C" SEXP _later2_createCallbackRegistry(SEXP id, SEXP parent_id) {
   BEGIN_CPP4R
@@ -78,35 +78,35 @@ extern "C" SEXP _later2_createCallbackRegistry(SEXP id, SEXP parent_id) {
     return R_NilValue;
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 bool existsCallbackRegistry(int id);
 extern "C" SEXP _later2_existsCallbackRegistry(SEXP id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(existsCallbackRegistry(cpp4r::as_cpp<cpp4r::decay_t<int>>(id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 cpp4r::sexp list_queue_(int id);
 extern "C" SEXP _later2_list_queue_(SEXP id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(list_queue_(cpp4r::as_cpp<cpp4r::decay_t<int>>(id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 bool execCallbacks(double timeoutSecs, bool runAll, int loop_id);
 extern "C" SEXP _later2_execCallbacks(SEXP timeoutSecs, SEXP runAll, SEXP loop_id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(execCallbacks(cpp4r::as_cpp<cpp4r::decay_t<double>>(timeoutSecs), cpp4r::as_cpp<cpp4r::decay_t<bool>>(runAll), cpp4r::as_cpp<cpp4r::decay_t<int>>(loop_id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 bool idle(int loop_id);
 extern "C" SEXP _later2_idle(SEXP loop_id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(idle(cpp4r::as_cpp<cpp4r::decay_t<int>>(loop_id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 void ensureInitialized();
 extern "C" SEXP _later2_ensureInitialized() {
   BEGIN_CPP4R
@@ -114,21 +114,21 @@ extern "C" SEXP _later2_ensureInitialized() {
     return R_NilValue;
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 std::string execLater(SEXP callback, double delaySecs, int loop_id);
 extern "C" SEXP _later2_execLater(SEXP callback, SEXP delaySecs, SEXP loop_id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(execLater(cpp4r::as_cpp<cpp4r::decay_t<SEXP>>(callback), cpp4r::as_cpp<cpp4r::decay_t<double>>(delaySecs), cpp4r::as_cpp<cpp4r::decay_t<int>>(loop_id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 bool cancel(std::string callback_id_s, int loop_id);
 extern "C" SEXP _later2_cancel(SEXP callback_id_s, SEXP loop_id) {
   BEGIN_CPP4R
     return cpp4r::as_sexp(cancel(cpp4r::as_cpp<cpp4r::decay_t<std::string>>(callback_id_s), cpp4r::as_cpp<cpp4r::decay_t<int>>(loop_id)));
   END_CPP4R
 }
-// later.cpp
+// later2.cpp
 double nextOpSecs(int loop_id);
 extern "C" SEXP _later2_nextOpSecs(SEXP loop_id) {
   BEGIN_CPP4R

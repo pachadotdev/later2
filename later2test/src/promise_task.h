@@ -1,4 +1,4 @@
-class PromiseTask : public later::BackgroundTask {
+class PromiseTask : public later2::BackgroundTask {
 public:
   PromiseTask(cpp4r::sexp resolve, cpp4r::sexp reject)
       : resolve(resolve), reject(reject) {}

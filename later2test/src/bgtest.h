@@ -1,4 +1,4 @@
-class TestTask : public later::BackgroundTask {
+class TestTask : public later2::BackgroundTask {
   int _timeoutSecs;
 
 public:

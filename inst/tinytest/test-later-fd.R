@@ -1,18 +1,46 @@
 local({
   # later_fd ----
 
-  if (!requireNamespace("nanonext", quietly = TRUE)) return(NULL)
+  # Uses the 'parallel' package (part of every base R installation) to
+  # obtain real, pollable file descriptors instead of depending on an
+  # external socket library. `parallel::mcparallel()` forks a child process
+  # and hands back a pipe file descriptor (`$fd[1]`) in the parent that
+  # becomes ready for reading once the child produces its result. This is
+  # unix-only (fork-based), so the test is skipped elsewhere.
+  if (.Platform$OS.type != "unix") return(NULL)
+
+  jobs <- list()
+
+  # A job whose fd becomes ready almost immediately.
+  make_ready_fd <- function() {
+    job <- parallel::mcparallel(TRUE)
+    jobs[[length(jobs) + 1]] <<- job
+    Sys.sleep(0.1)
+    job
+  }
+
+  # A job whose fd stays "not ready" for the lifetime of the test.
+  make_pending_fd <- function() {
+    job <- parallel::mcparallel({ Sys.sleep(5); TRUE })
+    jobs[[length(jobs) + 1]] <<- job
+    job
+  }
+
+  on.exit({
+    for (job in jobs) {
+      tryCatch(tools::pskill(job$pid), error = function(e) NULL)
+      suppressWarnings(parallel::mccollect(job, wait = TRUE, timeout = 1))
+    }
+  })
 
   result <- NULL
   callback <- function(x) result <<- x
-  s1 <- nanonext::socket(listen = "inproc://nanonext")
-  on.exit(close(s1))
-  s2 <- nanonext::socket(dial = "inproc://nanonext")
-  on.exit(close(s2), add = TRUE)
-  fd1 <- nanonext::opt(s1, "recv-fd")
-  fd2 <- nanonext::opt(s2, "recv-fd")
 
-  # timeout
+  # timeout (both fds pending)
+  job1 <- make_pending_fd()
+  job2 <- make_pending_fd()
+  fd1 <- job1$fd[1]
+  fd2 <- job2$fd[1]
   later_fd(callback, c(fd1, fd2), timeout = 0)
   run_now(1)
   expect_equal(result, c(FALSE, FALSE))
@@ -37,15 +65,16 @@ local({
   run_now(1.3)
   expect_equal(result, c(FALSE, FALSE))
 
-  # fd1 ready
+  # fd1 ready, fd2 pending
+  job1 <- make_ready_fd()
+  fd1 <- job1$fd[1]
   later_fd(callback, c(fd1, fd2), timeout = 0.9)
-  res <- nanonext::send(s2, "msg")
   run_now(1)
   expect_equal(result, c(TRUE, FALSE))
 
   # both fd1, fd2 ready
-  res <- nanonext::send(s1, "msg")
-  Sys.sleep(0.1)
+  job2 <- make_ready_fd()
+  fd2 <- job2$fd[1]
   later_fd(callback, c(fd1, fd2), timeout = 1)
   run_now(1)
   expect_equal(result, c(TRUE, TRUE))
@@ -55,21 +84,21 @@ local({
   run_now(1)
   expect_equal(result, c(TRUE, TRUE, FALSE, FALSE))
 
-  # fd2 ready
-  res <- nanonext::recv(s1)
+  # fd1 not ready, fd2 ready
+  job1 <- make_pending_fd()
+  fd1 <- job1$fd[1]
   later_fd(callback, c(fd1, fd2), timeout = 1L)
   run_now(1)
   expect_equal(result, c(FALSE, TRUE))
 
-  # fd2 invalid
-  res <- nanonext::recv(s2)
+  # fd2 invalid (already collected/closed)
+  suppressWarnings(parallel::mccollect(job2, wait = TRUE, timeout = 1))
   later_fd(callback, c(fd1, fd2), exceptfds = c(fd1, fd2), timeout = 0.1)
-  close(s2)
   run_now(1)
   expect_length(result, 4L)
 
   # both fd1, fd2 invalid
-  close(s1)
+  suppressWarnings(parallel::mccollect(job1, wait = TRUE, timeout = 1))
   later_fd(callback, c(fd1, fd2), c(fd1, fd2), timeout = 0)
   run_now(1)
   expect_equal(result, c(NA, NA, NA, NA))
@@ -78,21 +107,20 @@ local({
   later_fd(callback, timeout = -1)
   run_now(1)
   expect_equal(result, logical())
-
-  on.exit()
 })
 
 local({
   # loop_empty() reflects later_fd callbacks ----
 
-  if (!requireNamespace("nanonext", quietly = TRUE)) return(NULL)
+  if (.Platform$OS.type != "unix") return(NULL)
 
-  s1 <- nanonext::socket(listen = "inproc://nanotest2")
-  on.exit(close(s1))
-  s2 <- nanonext::socket(dial = "inproc://nanotest2")
-  on.exit(close(s2), add = TRUE)
+  job <- parallel::mcparallel({ Sys.sleep(5); TRUE })
+  on.exit({
+    tryCatch(tools::pskill(job$pid), error = function(e) NULL)
+    suppressWarnings(parallel::mccollect(job, wait = TRUE, timeout = 1))
+  })
 
-  fd1 <- nanonext::opt(s1, "recv-fd")
+  fd1 <- job$fd[1]
 
   expect_true(loop_empty())
 

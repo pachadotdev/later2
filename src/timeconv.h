@@ -1,5 +1,5 @@
-#ifndef _LATER_TIMECONV_H_
-#define _LATER_TIMECONV_H_
+#ifndef _LATER2_TIMECONV_H_
+#define _LATER2_TIMECONV_H_
 
 // Some platforms (Win32, previously some Mac versions) use
 // tinycthread.h to provide timespec. Whether tinycthread
@@ -22,4 +22,4 @@ inline timespec addSeconds(const timespec &time, double secs) {
   return ts;
 }
 
-#endif // _LATER_TIMECONV_H_
+#endif // _LATER2_TIMECONV_H_

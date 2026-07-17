@@ -7,14 +7,14 @@
 
 #include "callback_registry.h"
 #include "debug.h"
-#include "later.h"
+#include "later2.h"
 #include "threadutils.h"
 #include "timer_posix.h"
 
 using namespace cpp4r;
 
-#define LATER_ACTIVITY 20
-#define LATER_DUMMY_ACTIVITY 21
+#define LATER2_ACTIVITY 20
+#define LATER2_DUMMY_ACTIVITY 21
 
 extern void *R_GlobalContext;
 extern void *R_TopLevelContext;
@@ -55,7 +55,7 @@ void set_fd(bool ready) {
     } else {
       if (read(pipe_out, buf, BUF_SIZE) < 0) {
         Rf_warningcall_immediate(
-            R_NilValue, "Failed to read out of pipe for later package");
+            R_NilValue, "Failed to read out of pipe for later2 package");
       }
       hot = false;
     }
@@ -120,15 +120,15 @@ static void async_input_handler(void *data) {
   } catch (cpp4r::unwind_exception &e) {
     DEBUG_LOG("async_input_handler: caught exception or interrupt", LOG_INFO);
     REprintf(
-        "later: exception or interrupt occurred while executing callback.\n");
+        "later2: exception or interrupt occurred while executing callback.\n");
   } catch (std::exception &e) {
     DEBUG_LOG("async_input_handler: caught exception", LOG_INFO);
-    std::string msg = "later: exception occurred while executing callback: \n";
+    std::string msg = "later2: exception occurred while executing callback: \n";
     msg += e.what();
     msg += "\n";
     REprintf("%s", msg.c_str());
   } catch (...) {
-    REprintf("later: c++ exception (unknown reason) occurred while executing "
+    REprintf("later2: c++ exception (unknown reason) occurred while executing "
              "callback.\n");
   }
 }
@@ -195,7 +195,7 @@ void ensureAutorunnerInitialized() {
     pipe_in = pipes[1];
 
     inputHandlerHandle = addInputHandler(R_InputHandlers, pipe_out,
-                                         async_input_handler, LATER_ACTIVITY);
+                                         async_input_handler, LATER2_ACTIVITY);
 
     // If the R process is forked, make sure that the child process doesn't mess
     // with the pipes. This also means that functions scheduled in the child
@@ -218,7 +218,7 @@ void ensureAutorunnerInitialized() {
     dummy_pipe_in = dummy_pipes[1];
     dummyInputHandlerHandle =
         addInputHandler(R_InputHandlers, dummy_pipe_out, remove_dummy_handler,
-                        LATER_DUMMY_ACTIVITY);
+                        LATER2_DUMMY_ACTIVITY);
 
     initialized = 1;
   }

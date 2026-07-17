@@ -3,15 +3,15 @@
 #' @title Testing Function
 #' @rdname testing
 #' @export
-later_dll_api_version <- function() {
-	.Call(`_latertest_later_dll_api_version`)
+later2_dll_api_version <- function() {
+	.Call(`_later2test_later2_dll_api_version`)
 }
 
 #' @title Testing Function
 #' @rdname testing
 #' @export
-later_h_api_version <- function() {
-	.Call(`_latertest_later_h_api_version`)
+later2_h_api_version <- function() {
+	.Call(`_later2test_later2_h_api_version`)
 }
 
 #' @title Testing Function
@@ -19,14 +19,14 @@ later_h_api_version <- function() {
 #' @param secsToSleep seconds to sleep (integer)
 #' @export
 launchBgTask <- function(secsToSleep) {
-	invisible(.Call(`_latertest_launchBgTask`, secsToSleep))
+	invisible(.Call(`_later2test_launchBgTask`, secsToSleep))
 }
 
 #' @title Testing Function
 #' @rdname testing
 #' @export
 checkLaterOrdering <- function() {
-	invisible(.Call(`_latertest_checkLaterOrdering`))
+	invisible(.Call(`_later2test_checkLaterOrdering`))
 }
 
 #' @title Testing Function
@@ -34,7 +34,7 @@ checkLaterOrdering <- function() {
 #' @param value integer value
 #' @export
 cpp_error <- function(value) {
-	invisible(.Call(`_latertest_cpp_error`, value))
+	invisible(.Call(`_later2test_cpp_error`, value))
 }
 
 #' @title Testing Function
@@ -44,12 +44,12 @@ cpp_error <- function(value) {
 #' @param x value for Fibonnacci task (double)
 #' @export
 asyncFib <- function(resolve, reject, x) {
-	invisible(.Call(`_latertest_asyncFib`, resolve, reject, x))
+	invisible(.Call(`_later2test_asyncFib`, resolve, reject, x))
 }
 
 #' @title Testing Function
 #' @rdname testing
 #' @export
 testfd <- function() {
-	.Call(`_latertest_testfd`)
+	.Call(`_later2test_testfd`)
 }

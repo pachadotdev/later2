@@ -9,7 +9,7 @@ using std::shared_ptr;
 using namespace cpp4r;
 
 #include "debug.h"
-#include "later.h"
+#include "later2.h"
 #include "threadutils.h"
 #include "utils.h"
 
@@ -355,9 +355,9 @@ extern "C" int execLaterFdNative(void (*)(int *, void *), void *, int,
 extern "C" int apiVersion();
 
 [[cpp4r::init]] void later_init(DllInfo *dll) {
-  R_RegisterCCallable("later", "execLaterNative2", (DL_FUNC)&execLaterNative2);
-  R_RegisterCCallable("later", "execLaterFdNative", (DL_FUNC)&execLaterFdNative);
-  R_RegisterCCallable("later", "apiVersion", (DL_FUNC)&apiVersion);
+  R_RegisterCCallable("later2", "execLaterNative2", (DL_FUNC)&execLaterNative2);
+  R_RegisterCCallable("later2", "execLaterFdNative", (DL_FUNC)&execLaterFdNative);
+  R_RegisterCCallable("later2", "apiVersion", (DL_FUNC)&apiVersion);
 }
 
-extern "C" int apiVersion() { return LATER_DLL_API_VERSION; }
+extern "C" int apiVersion() { return LATER2_DLL_API_VERSION; }

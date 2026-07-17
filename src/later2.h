@@ -1,14 +1,19 @@
-#ifndef _LATER_H_
-#define _LATER_H_
+#ifndef _LATER2_H_
+#define _LATER2_H_
 
 #include "callback_registry.h"
 #include <memory>
 
-// This should be kept in sync with LATER_H_API_VERSION in
-// inst/include/later_api.h. Whenever the interface between
-// inst/include/later_api.h and the code in src/ changes, these values
+// This should be kept in sync with LATER2_H_API_VERSION in
+// inst/include/later2_api.h. Whenever the interface between
+// inst/include/later2_api.h and the code in src/ changes, these values
 // should be incremented.
-#define LATER_DLL_API_VERSION 3
+#define LATER2_DLL_API_VERSION_MAJOR 0
+#define LATER2_DLL_API_VERSION_MINOR 1
+#define LATER2_DLL_API_VERSION_PATCH 0
+#define LATER2_DLL_API_VERSION                                               \
+  (LATER2_DLL_API_VERSION_MAJOR * 10000 + LATER2_DLL_API_VERSION_MINOR * 100 + \
+   LATER2_DLL_API_VERSION_PATCH)
 
 #define GLOBAL_LOOP 0
 
@@ -31,4 +36,4 @@ uint64_t doExecLater(std::shared_ptr<CallbackRegistry> callbackRegistry,
                      void (*callback)(void *), void *data, double delaySecs,
                      bool resetTimer);
 
-#endif // _LATER_H_
+#endif // _LATER2_H_

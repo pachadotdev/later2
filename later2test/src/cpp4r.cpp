@@ -6,22 +6,22 @@
 #include <R_ext/Visibility.h>
 
 // api_version.h
-int later_dll_api_version();
-extern "C" SEXP _latertest_later_dll_api_version() {
+int later2_dll_api_version();
+extern "C" SEXP _later2test_later2_dll_api_version() {
   BEGIN_CPP4R
-    return cpp4r::as_sexp(later_dll_api_version());
+    return cpp4r::as_sexp(later2_dll_api_version());
   END_CPP4R
 }
 // api_version.h
-int later_h_api_version();
-extern "C" SEXP _latertest_later_h_api_version() {
+int later2_h_api_version();
+extern "C" SEXP _later2test_later2_h_api_version() {
   BEGIN_CPP4R
-    return cpp4r::as_sexp(later_h_api_version());
+    return cpp4r::as_sexp(later2_h_api_version());
   END_CPP4R
 }
 // bgtest.h
 void launchBgTask(int secsToSleep);
-extern "C" SEXP _latertest_launchBgTask(SEXP secsToSleep) {
+extern "C" SEXP _later2test_launchBgTask(SEXP secsToSleep) {
   BEGIN_CPP4R
     launchBgTask(cpp4r::as_cpp<cpp4r::decay_t<int>>(secsToSleep));
     return R_NilValue;
@@ -29,7 +29,7 @@ extern "C" SEXP _latertest_launchBgTask(SEXP secsToSleep) {
 }
 // checkLaterOrder.h
 void checkLaterOrdering();
-extern "C" SEXP _latertest_checkLaterOrdering() {
+extern "C" SEXP _later2test_checkLaterOrdering() {
   BEGIN_CPP4R
     checkLaterOrdering();
     return R_NilValue;
@@ -37,7 +37,7 @@ extern "C" SEXP _latertest_checkLaterOrdering() {
 }
 // cpp_error.h
 void cpp_error(int value);
-extern "C" SEXP _latertest_cpp_error(SEXP value) {
+extern "C" SEXP _later2test_cpp_error(SEXP value) {
   BEGIN_CPP4R
     cpp_error(cpp4r::as_cpp<cpp4r::decay_t<int>>(value));
     return R_NilValue;
@@ -45,7 +45,7 @@ extern "C" SEXP _latertest_cpp_error(SEXP value) {
 }
 // promise_task.h
 void asyncFib(SEXP resolve, SEXP reject, double x);
-extern "C" SEXP _latertest_asyncFib(SEXP resolve, SEXP reject, SEXP x) {
+extern "C" SEXP _later2test_asyncFib(SEXP resolve, SEXP reject, SEXP x) {
   BEGIN_CPP4R
     asyncFib(cpp4r::as_cpp<cpp4r::decay_t<SEXP>>(resolve), cpp4r::as_cpp<cpp4r::decay_t<SEXP>>(reject), cpp4r::as_cpp<cpp4r::decay_t<double>>(x));
     return R_NilValue;
@@ -53,7 +53,7 @@ extern "C" SEXP _latertest_asyncFib(SEXP resolve, SEXP reject, SEXP x) {
 }
 // testfd.h
 int testfd();
-extern "C" SEXP _latertest_testfd() {
+extern "C" SEXP _later2test_testfd() {
   BEGIN_CPP4R
     return cpp4r::as_sexp(testfd());
   END_CPP4R
@@ -61,17 +61,17 @@ extern "C" SEXP _latertest_testfd() {
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_latertest_later_dll_api_version", (DL_FUNC) &_latertest_later_dll_api_version, 0},
-    {"_latertest_later_h_api_version", (DL_FUNC) &_latertest_later_h_api_version, 0},
-    {"_latertest_launchBgTask", (DL_FUNC) &_latertest_launchBgTask, 1},
-    {"_latertest_checkLaterOrdering", (DL_FUNC) &_latertest_checkLaterOrdering, 0},
-    {"_latertest_cpp_error", (DL_FUNC) &_latertest_cpp_error, 1},
-    {"_latertest_asyncFib", (DL_FUNC) &_latertest_asyncFib, 3},
-    {"_latertest_testfd", (DL_FUNC) &_latertest_testfd, 0},
+    {"_later2test_later2_dll_api_version", (DL_FUNC) &_later2test_later2_dll_api_version, 0},
+    {"_later2test_later2_h_api_version", (DL_FUNC) &_later2test_later2_h_api_version, 0},
+    {"_later2test_launchBgTask", (DL_FUNC) &_later2test_launchBgTask, 1},
+    {"_later2test_checkLaterOrdering", (DL_FUNC) &_later2test_checkLaterOrdering, 0},
+    {"_later2test_cpp_error", (DL_FUNC) &_later2test_cpp_error, 1},
+    {"_later2test_asyncFib", (DL_FUNC) &_later2test_asyncFib, 3},
+    {"_later2test_testfd", (DL_FUNC) &_later2test_testfd, 0},
     {NULL, NULL, 0}
 };
 }
-extern "C" attribute_visible void R_init_latertest(DllInfo* dll){
+extern "C" attribute_visible void R_init_later2test(DllInfo* dll){
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
   R_forceSymbols(dll, TRUE);

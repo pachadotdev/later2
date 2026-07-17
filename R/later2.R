@@ -202,7 +202,8 @@ print.event_loop <- function(x, ...) {
 #' If you must have specific behavior occur in the face of errors, put error
 #' handling logic inside of `func`.
 #'
-#' @param func A function or formula (see [rlang::as_function()]).
+#' @param func A function or one-sided formula (e.g. `~ .x + 1`, using `.` or
+#'   `.x` as the argument pronoun).
 #' @param delay Number of seconds in the future to delay execution. There is no
 #'   guarantee that the function will be executed at the desired time, but it
 #'   should not execute earlier.
@@ -224,14 +225,39 @@ print.event_loop <- function(x, ...) {
 #'
 #' @export
 later <- function(func, delay = 0, loop = current_loop()) {
-  # `rlang::as_function` is used conditionally so that `rlang` is not loaded
-  # until used, avoiding this overhead for packages only linking to `later`
   if (!is.function(func)) {
-    func <- rlang::as_function(func)
+    func <- as_function(func)
   }
   id <- execLater(func, delay, loop$id)
 
   invisible(create_canceller(id, loop$id))
+}
+
+# Converts a one-sided formula (e.g. `~ .x + 1`) into a function, using `.`
+# and `.x` as the pronoun for the first argument. Plain functions are
+# returned unchanged. This is a small base-R stand-in for
+# `rlang::as_function()`, used so that `later`/`later_fd` don't need to
+# depend on `rlang`.
+as_function <- function(x) {
+  if (is.function(x)) {
+    return(x)
+  }
+  if (inherits(x, "formula")) {
+    if (length(x) != 2L) {
+      stop("`func` must be a function or a one-sided formula, e.g. `~ .x + 1`.")
+    }
+    rhs <- x[[2L]]
+    env <- attr(x, ".Environment")
+    f <- function(...) {
+      dots <- list(...)
+      . <- if (length(dots) >= 1L) dots[[1L]] else NULL
+      .x <- .
+      eval(rhs, envir = environment())
+    }
+    environment(f) <- env
+    return(f)
+  }
+  stop("`func` must be a function or a formula.")
 }
 
 # Returns a function that will cancel a callback with the given ID. If the
@@ -279,39 +305,47 @@ create_canceller <- function(id, loop_id) {
 #'
 #' @inherit later return note
 #'
-#' @examplesIf requireNamespace("nanonext", quietly = TRUE)
-#' # create nanonext sockets
-#' s1 <- nanonext::socket(listen = "inproc://nano")
-#' s2 <- nanonext::socket(dial = "inproc://nano")
-#' fd1 <- nanonext::opt(s1, "recv-fd")
-#' fd2 <- nanonext::opt(s2, "recv-fd")
+#' @examplesIf .Platform$OS.type == "unix"
+#' # Use the base R 'parallel' package to fork child processes and obtain
+#' # real, pollable file descriptors. A child's `fd` becomes ready for
+#' # reading once the child finishes running.
 #'
 #' # 1. timeout: prints FALSE, FALSE
+#' job1 <- parallel::mcparallel({ Sys.sleep(1); TRUE })
+#' job2 <- parallel::mcparallel({ Sys.sleep(1); TRUE })
+#' fd1 <- job1$fd[1]
+#' fd2 <- job2$fd[1]
 #' later_fd(print, c(fd1, fd2), timeout = 0.1)
 #' Sys.sleep(0.2)
 #' run_now()
 #'
 #' # 2. fd1 ready: prints TRUE, FALSE
+#' job1 <- parallel::mcparallel(TRUE)
+#' fd1 <- job1$fd[1]
+#' Sys.sleep(0.1)
 #' later_fd(print, c(fd1, fd2), timeout = 1)
-#' res <- nanonext::send(s2, "msg")
 #' Sys.sleep(0.1)
 #' run_now()
 #'
 #' # 3. both ready: prints TRUE, TRUE
-#' res <- nanonext::send(s1, "msg")
+#' job2 <- parallel::mcparallel(TRUE)
+#' fd2 <- job2$fd[1]
+#' Sys.sleep(0.1)
 #' later_fd(print, c(fd1, fd2), timeout = 1)
 #' Sys.sleep(0.1)
 #' run_now()
 #'
 #' # 4. fd2 ready: prints FALSE, TRUE
-#' res <- nanonext::recv(s1)
+#' parallel::mccollect(job1)
+#' job1 <- parallel::mcparallel({ Sys.sleep(1); TRUE })
+#' fd1 <- job1$fd[1]
 #' later_fd(print, c(fd1, fd2), timeout = 1)
 #' Sys.sleep(0.1)
 #' run_now()
 #'
 #' # 5. fds invalid: prints NA, NA
-#' close(s2)
-#' close(s1)
+#' parallel::mccollect(job1)
+#' parallel::mccollect(job2)
 #' later_fd(print, c(fd1, fd2), timeout = 0)
 #' Sys.sleep(0.1)
 #' run_now()
@@ -326,7 +360,7 @@ later_fd <- function(
   loop = current_loop()
 ) {
   if (!is.function(func)) {
-    func <- rlang::as_function(func)
+    func <- as_function(func)
   }
   xptr <- execLater_fd(func, readfds, writefds, exceptfds, timeout, loop$id)
 

@@ -1,6 +1,6 @@
 #ifdef _WIN32
 
-#include "later.h"
+#include "later2.h"
 
 #include <cpp4r.hpp>
 #include <queue>
@@ -46,14 +46,14 @@ static bool executeHandlers() {
     execCallbacksForTopLevel();
   } catch (cpp4r::unwind_exception &e) {
     REprintf(
-        "later: exception or interrupt occurred while executing callback.\n");
+        "later2: exception or interrupt occurred while executing callback.\n");
   } catch (std::exception &e) {
-    std::string msg = "later: exception occurred while executing callback: \n";
+    std::string msg = "later2: exception occurred while executing callback: \n";
     msg += e.what();
     msg += "\n";
     REprintf("%s", msg.c_str());
   } catch (...) {
-    REprintf("later: c++ exception (unknown reason) occurred while executing "
+    REprintf("later2: c++ exception (unknown reason) occurred while executing "
              "callback.\n");
   }
 
@@ -79,7 +79,7 @@ LRESULT CALLBACK callbackWndProc(HWND hWnd, UINT message, WPARAM wParam,
 
 void ensureAutorunnerInitialized() {
   if (!initialized) {
-    static const char *class_name = "R_LATER_WINDOW_CLASS";
+    static const char *class_name = "R_LATER2_WINDOW_CLASS";
     WNDCLASSEX wc = {};
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.lpfnWndProc = callbackWndProc;

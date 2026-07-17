@@ -22,7 +22,7 @@ public:
 
   void reset() {
     // Creating a new object may be problematic or expensive for some classes;
-    // however, for the types we use in later, this is OK. If Optional is used
+    // however, for the types we use in later2, this is OK. If Optional is used
     // for more types in the future, we could switch to a different
     // implementation of optional.
     this->value = T();

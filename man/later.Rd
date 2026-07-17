@@ -7,7 +7,8 @@
 later(func, delay = 0, loop = current_loop())
 }
 \arguments{
-\item{func}{A function or formula (see [rlang::as_function()]).}
+\item{func}{A function or one-sided formula (e.g. `~ .x + 1`, using `.` or
+`.x` as the argument pronoun).}
 
 \item{delay}{Number of seconds in the future to delay execution. There is no
 guarantee that the function will be executed at the desired time, but it

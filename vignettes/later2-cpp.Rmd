@@ -11,7 +11,7 @@ vignette: >
 
 # Using later from C++
 
-You can call `later::later` from C++ code in your own packages, to cause your own C-style functions to be called back. This is safe to call from either the main R thread or a different thread; in both cases, your callback will be invoked from the main R thread.
+You can call `later2::later` from C++ code in your own packages, to cause your own C-style functions to be called back. This is safe to call from either the main R thread or a different thread; in both cases, your callback will be invoked from the main R thread.
 
 To use the C++ interface, you'll need to:
 
@@ -21,11 +21,11 @@ To use the C++ interface, you'll need to:
 #' @import later
 NULL
 ```
-* Add `#include <later_api.h>` to the top of each C++ file that uses the below APIs.
+* Add `#include <later2_api.h>` to the top of each C++ file that uses the below APIs.
 
 ## Executing a C function later
 
-The `later::later` function is accessible from `later_api.h` and its prototype looks like this:
+The `later2::later` function is accessible from `later2_api.h` and its prototype looks like this:
 
 ```cpp
 void later(void (*func)(void*), void* data, double secs)
@@ -35,7 +35,7 @@ The first argument is a pointer to a function that takes one `void*` argument an
 
 ## Background tasks
 
-This package also offers a higher-level C++ helper class called `later::BackgroundTask`, to make it easier to execute tasks on a background thread. It takes care of launching the background thread for you, and returning control back to the R thread at a later point; you're responsible for providing the actual code that executes on the background thread, as well as code that executes on the R thread before and after the background task completes.
+This package also offers a higher-level C++ helper class called `later2::BackgroundTask`, to make it easier to execute tasks on a background thread. It takes care of launching the background thread for you, and returning control back to the R thread at a later point; you're responsible for providing the actual code that executes on the background thread, as well as code that executes on the R thread before and after the background task completes.
 
 Its public/protected interface looks like this:
 
@@ -70,11 +70,11 @@ It's critical that the code in your `execute` method not mutate any R data struc
 
 ```cpp
 #include "cpp11.hpp"
-#include <later_api.h>
+#include <later2_api.h>
 
 using namespace cpp11;
 
-class MyTask : public later::BackgroundTask {
+class MyTask : public later2::BackgroundTask {
 public:
   MyTask(doubles vec) :
     inputVals(as_cpp<std::vector<double> >(vec)) {

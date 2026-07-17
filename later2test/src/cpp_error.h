@@ -48,5 +48,5 @@ void oof(void *data) {
 */
 [[cpp4r::register]] void cpp_error(int value) {
   int *v = new int(value);
-  later::later(oof, v, 0);
+  later2::later(oof, v, 0);
 }

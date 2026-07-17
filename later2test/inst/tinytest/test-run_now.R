@@ -5,7 +5,7 @@ local({
   if (isTRUE(later2:::using_ubsan())) { return (NULL) }
 
   # The background task sleeps
-  latertest::launchBgTask(1)
+  later2test::launchBgTask(1)
 
   x <- system.time({
     result <- later2::run_now(3)
@@ -23,7 +23,7 @@ local({
 
   expect_silent(later2:::testCallbackOrdering())
 
-  latertest::checkLaterOrdering()
+  later2test::checkLaterOrdering()
 
   while (!later2::loop_empty()) {
     later2::run_now(0.1)
@@ -33,7 +33,7 @@ local({
 local({
   # interrupt and exception handling, C++ ----
 
-  if (Sys.getenv("LATER_FULL_TEST") != "yes") { return(NULL) }
+  if (Sys.getenv("LATER2_FULL_TEST") != "yes") { return(NULL) }
   
   if (isTRUE(later2:::using_ubsan())) { return (NULL) }
 

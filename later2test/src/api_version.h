@@ -3,8 +3,8 @@
 @rdname testing
 @export
 */
-[[cpp4r::register]] int later_dll_api_version() {
-  int (*dll_api_version)() = (int (*)())R_GetCCallable("later", "apiVersion");
+[[cpp4r::register]] int later2_dll_api_version() {
+  int (*dll_api_version)() = (int (*)())R_GetCCallable("later2", "apiVersion");
   return (*dll_api_version)();
 }
 
@@ -13,4 +13,4 @@
 @rdname testing
 @export
 */
-[[cpp4r::register]] int later_h_api_version() { return LATER_H_API_VERSION; }
+[[cpp4r::register]] int later2_h_api_version() { return LATER2_H_API_VERSION; }
