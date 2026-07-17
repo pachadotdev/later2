@@ -1,5 +1,3 @@
-Loading required package: usethis
-Loading required package: usethis
 ℹ Updating latertest documentation
 ℹ Loading latertest
 ℹ 7 functions decorated with [[cpp11::register]]
@@ -12,16 +10,16 @@ Loading required package: usethis
 ** using staged installation
 ** libs
 specified C++17
-using C++ compiler: ‘g++ (GCC) 15.2.1 20260209’
+using C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
 using C++17
 make[1]: Entering directory '/home/pacha/Documents/later/latertest/src'
 make[1]: Leaving directory '/home/pacha/Documents/later/latertest/src'
 make[1]: Entering directory '/home/pacha/Documents/later/latertest/src'
 g++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp11/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects  -UNDEBUG -Wall -pedantic -g -O0  -c cpp11.cpp -o cpp11.o
-In file included from /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/os_defines.h:39,
-                 from /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/c++config.h:727,
-                 from /usr/include/c++/15.2.1/bits/version.h:51,
-                 from /usr/include/c++/15.2.1/cstring:47,
+In file included from /usr/include/c++/16.1.1/x86_64-pc-linux-gnu/bits/os_defines.h:39,
+                 from /usr/include/c++/16.1.1/x86_64-pc-linux-gnu/bits/c++config.h:733,
+                 from /usr/include/c++/16.1.1/bits/version.h:51,
+                 from /usr/include/c++/16.1.1/cstring:47,
                  from /home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp11/include/cpp11/declarations.hpp:3,
                  from cpp11.cpp:5:
 /usr/include/features.h:451:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
@@ -35,11 +33,9 @@ In file included from /usr/include/signal.h:25,
       |    ^~~~~~~
 g++ -std=gnu++17 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o latertest.so cpp11.o latertest.o -fopenmp -L/usr/lib64/R/lib -lR
 make[1]: Leaving directory '/home/pacha/Documents/later/latertest/src'
-installing to /tmp/RtmpDpstUx/devtools_install_23ce923a7d964/00LOCK-latertest/00new/latertest/libs
+installing to /tmp/Rtmp7W8yJi/devtools_install_172a840150d83/00LOCK-latertest/00new/latertest/libs
 ** checking absolute paths in shared objects and dynamic libraries
 * DONE (latertest)
-Loading required package: usethis
-Loading required package: usethis
 * using log directory ‘/home/pacha/Documents/later/latertest.Rcheck’
 * using R version 4.6.0 (2026-04-24)
 * using platform: x86_64-pc-linux-gnu
@@ -48,13 +44,13 @@ Loading required package: usethis
     GNU Fortran (GCC) 15.2.1 20260209
 * running under: Manjaro Linux
 * using session charset: UTF-8
-* current time: 2026-05-13 19:27:29 UTC
+* current time: 2026-07-16 17:25:44 UTC
 * using options ‘--no-manual --as-cran’
 * checking for file ‘latertest/DESCRIPTION’ ... OK
 * checking extension type ... Package
 * this is package ‘latertest’ version ‘0.1’
 * package encoding: UTF-8
-* checking CRAN incoming feasibility ... NOTE
+* checking CRAN incoming feasibility ... [5s/10s] NOTE
 Maintainer: ‘Charlie Gao <charlie.gao@posit.co>’
 
 New submission
@@ -67,7 +63,7 @@ New submission
 * checking for portable file names ... OK
 * checking for sufficient/correct file permissions ... OK
 * checking whether package ‘latertest’ can be installed ... OK
-* used C++ compiler: ‘g++ (GCC) 15.2.1 20260209’
+* used C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
 * checking C++ specification ... INFO
   specified C++17
 * checking installed package size ... OK
@@ -130,13 +126,12 @@ See
 for details.
 
 === BEGIN 00install.out ===
-Loading required package: usethis
 * installing *source* package ‘latertest’ ...
 ** this is package ‘latertest’ version ‘0.1’
 ** using staged installation
 ** libs
 specified C++17
-using C++ compiler: ‘g++ (GCC) 15.2.1 20260209’
+using C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
 using C++17
 make[1]: Entering directory '/home/pacha/Documents/later/latertest.Rcheck/00_pkg_src/latertest/src'
 g++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp11/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp11.cpp -o cpp11.o
