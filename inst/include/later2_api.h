@@ -45,8 +45,8 @@ namespace later2 {
 #define LATER2_H_API_VERSION_MAJOR 0
 #define LATER2_H_API_VERSION_MINOR 1
 #define LATER2_H_API_VERSION_PATCH 0
-#define LATER2_H_API_VERSION                                                 \
-  (LATER2_H_API_VERSION_MAJOR * 10000 + LATER2_H_API_VERSION_MINOR * 100 +    \
+#define LATER2_H_API_VERSION                                                   \
+  (LATER2_H_API_VERSION_MAJOR * 10000 + LATER2_H_API_VERSION_MINOR * 100 +     \
    LATER2_H_API_VERSION_PATCH)
 #define GLOBAL_LOOP 0
 
@@ -107,8 +107,8 @@ inline void later_fd(void (*func)(int *, void *), void *data, int num_fds,
     if (func) {
       // We're not initialized but someone's trying to actually schedule
       // some code to be executed!
-      REprintf(
-          "Warning: later2::execLaterFdNative called in uninitialized state.\n");
+      REprintf("Warning: later2::execLaterFdNative called in uninitialized "
+               "state.\n");
     }
     elfdn = (elfdnfun)R_GetCCallable("later2", "execLaterFdNative");
   }

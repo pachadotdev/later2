@@ -216,7 +216,7 @@ print.event_loop <- function(x, ...) {
 #'
 #' @examples
 #' # Example of formula style
-#' later(~cat("Hello from the past\n"), 3)
+#' later(~ cat("Hello from the past\n"), 3)
 #'
 #' # Example of function style
 #' later(function() {
@@ -311,8 +311,14 @@ create_canceller <- function(id, loop_id) {
 #' # reading once the child finishes running.
 #'
 #' # 1. timeout: prints FALSE, FALSE
-#' job1 <- parallel::mcparallel({ Sys.sleep(1); TRUE })
-#' job2 <- parallel::mcparallel({ Sys.sleep(1); TRUE })
+#' job1 <- parallel::mcparallel({
+#'   Sys.sleep(1)
+#'   TRUE
+#' })
+#' job2 <- parallel::mcparallel({
+#'   Sys.sleep(1)
+#'   TRUE
+#' })
 #' fd1 <- job1$fd[1]
 #' fd2 <- job2$fd[1]
 #' later_fd(print, c(fd1, fd2), timeout = 0.1)
@@ -337,7 +343,10 @@ create_canceller <- function(id, loop_id) {
 #'
 #' # 4. fd2 ready: prints FALSE, TRUE
 #' parallel::mccollect(job1)
-#' job1 <- parallel::mcparallel({ Sys.sleep(1); TRUE })
+#' job1 <- parallel::mcparallel({
+#'   Sys.sleep(1)
+#'   TRUE
+#' })
 #' fd1 <- job1$fd[1]
 #' later_fd(print, c(fd1, fd2), timeout = 1)
 #' Sys.sleep(0.1)

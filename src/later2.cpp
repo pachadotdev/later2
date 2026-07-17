@@ -1,7 +1,7 @@
 #include <memory>
 #include <queue>
 
-#include <R.h> // RNG state functions
+#include <R.h>              // RNG state functions
 #include <R_ext/Rdynload.h> // for R_RegisterCCallable, DllInfo
 #include <cpp4r.hpp>
 
@@ -356,7 +356,8 @@ extern "C" int apiVersion();
 
 [[cpp4r::init]] void later_init(DllInfo *dll) {
   R_RegisterCCallable("later2", "execLaterNative2", (DL_FUNC)&execLaterNative2);
-  R_RegisterCCallable("later2", "execLaterFdNative", (DL_FUNC)&execLaterFdNative);
+  R_RegisterCCallable("later2", "execLaterFdNative",
+                      (DL_FUNC)&execLaterFdNative);
   R_RegisterCCallable("later2", "apiVersion", (DL_FUNC)&apiVersion);
 }
 
