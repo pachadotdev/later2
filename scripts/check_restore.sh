@@ -8,7 +8,7 @@ compiler=${2:-gcc}
 echo "Restoring files for $std and $compiler"
 
 # Restore CXX_STD to default
-sed -i 's/^CXX_STD = .*/CXX_STD = CXX23/' ./latertest/src/Makevars
+sed -i 's/^CXX_STD = .*/CXX_STD = CXX23/' ./later2test/src/Makevars
 
 # Clear check files
-rm -rf ./latertest.Rcheck || true
+rm -rf ./later2test.Rcheck || true

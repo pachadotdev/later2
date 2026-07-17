@@ -2,13 +2,13 @@
 
 #include "later.h"
 
-#include <cpp11.hpp>
+#include <cpp4r.hpp>
 #include <queue>
 #define WIN32_LEAN_AND_MEAN
 #include "debug.h"
 #include <windows.h>
 
-using namespace cpp11;
+using namespace cpp4r;
 
 // Whether we have initialized the message-only window.
 static int initialized = 0;
@@ -44,7 +44,7 @@ static bool executeHandlers() {
   // https://github.com/r-lib/later/issues/31
   try {
     execCallbacksForTopLevel();
-  } catch (cpp11::unwind_exception &e) {
+  } catch (cpp4r::unwind_exception &e) {
     REprintf(
         "later: exception or interrupt occurred while executing callback.\n");
   } catch (std::exception &e) {
@@ -86,13 +86,13 @@ void ensureAutorunnerInitialized() {
     wc.hInstance = NULL;
     wc.lpszClassName = class_name;
     if (!RegisterClassEx(&wc)) {
-      cpp11::stop("Failed to register window class");
+      cpp4r::stop("Failed to register window class");
     }
 
     hwnd = CreateWindowEx(0, class_name, "dummy_name", 0, 0, 0, 0, 0,
                           HWND_MESSAGE, NULL, NULL, NULL);
     if (!hwnd) {
-      cpp11::stop("Failed to create message-only window");
+      cpp4r::stop("Failed to create message-only window");
     }
 
     initialized = 1;

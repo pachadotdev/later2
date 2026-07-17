@@ -1,7 +1,7 @@
 #ifndef _WIN32
 
 #include <R_ext/eventloop.h>
-#include <cpp11.hpp>
+#include <cpp4r.hpp>
 #include <queue>
 #include <unistd.h>
 
@@ -11,7 +11,7 @@
 #include "threadutils.h"
 #include "timer_posix.h"
 
-using namespace cpp11;
+using namespace cpp4r;
 
 #define LATER_ACTIVITY 20
 #define LATER_DUMMY_ACTIVITY 21
@@ -117,7 +117,7 @@ static void async_input_handler(void *data) {
   // https://github.com/r-lib/later/issues/31
   try {
     execCallbacksForTopLevel();
-  } catch (cpp11::unwind_exception &e) {
+  } catch (cpp4r::unwind_exception &e) {
     DEBUG_LOG("async_input_handler: caught exception or interrupt", LOG_INFO);
     REprintf(
         "later: exception or interrupt occurred while executing callback.\n");
@@ -188,7 +188,7 @@ void ensureAutorunnerInitialized() {
     int pipes[2];
     if (pipe(pipes)) {
       free(buf);
-      cpp11::stop("Failed to create pipe");
+      cpp4r::stop("Failed to create pipe");
       return;
     }
     pipe_out = pipes[0];
@@ -211,7 +211,7 @@ void ensureAutorunnerInitialized() {
     // See https://github.com/rstudio/httpuv/issues/78
     int dummy_pipes[2];
     if (pipe(dummy_pipes)) {
-      cpp11::stop("Failed to create pipe");
+      cpp4r::stop("Failed to create pipe");
       return;
     }
     dummy_pipe_out = dummy_pipes[0];

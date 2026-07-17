@@ -1,8 +1,8 @@
 clean:
-	@Rscript -e 'devtools::clean_dll(".");'
+	@Rscript -e 'tinydev::pkg_clean(".");'
 
 install:
-	@Rscript -e 'devtools::install(".");'
+	@Rscript -e 'tinydev::pkg_install(".");'
 
 STANDARDS := cxx17 cxx20 cxx23
 COMPILERS := gcc clang
@@ -10,7 +10,7 @@ COMPILERS := gcc clang
 ALL_CHECKS := $(foreach std,$(STANDARDS),$(foreach comp,$(COMPILERS),check-$(std)-$(comp)))
 
 check-init:
-	@Rscript -e 'devtools::check(".");'
+	@Rscript -e 'tinydev::pkg_check(".");'
 	@$(MAKE) install
 
 check: check-init $(ALL_CHECKS)

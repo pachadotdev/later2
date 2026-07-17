@@ -56,7 +56,7 @@ public:
     Guard guard(&mutex);
 
     if (exists(id)) {
-      cpp11::stop("Can't create event loop %d because it already exists.", id);
+      cpp4r::stop("Can't create event loop %d because it already exists.", id);
     }
 
     // Each new registry is passed our mutex and condvar. These serve as a
@@ -72,7 +72,7 @@ public:
     if (parent_id != -1) {
       std::shared_ptr<CallbackRegistry> parent = getRegistry(parent_id);
       if (parent == nullptr) {
-        cpp11::stop("Can't create registry. Parent with id %d does not exist.",
+        cpp4r::stop("Can't create registry. Parent with id %d does not exist.",
                     parent_id);
       }
       registry->parent = parent;

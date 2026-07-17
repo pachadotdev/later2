@@ -5,7 +5,7 @@
 #include "threadutils.h"
 #include "timestamp.h"
 #include <atomic>
-#include <cpp11.hpp>
+#include <cpp4r.hpp>
 #include <functional>
 #include <memory>
 #include <set>
@@ -35,7 +35,7 @@ public:
 
   virtual void invoke() const = 0;
 
-  virtual cpp11::sexp rRepresentation() const = 0;
+  virtual cpp4r::sexp rRepresentation() const = 0;
 
   Timestamp when;
 
@@ -50,20 +50,20 @@ public:
   StdFunctionCallback(Timestamp when, std::function<void(void)> func);
 
   void invoke() const {
-    // Do NOT use cpp11::unwind_protect here. Nesting R_UnwindProtect calls that
-    // share the same static token (as cpp11's unwind_protect does per
+    // Do NOT use cpp4r::unwind_protect here. Nesting R_UnwindProtect calls that
+    // share the same static token (as cpp4r's unwind_protect does per
     // compilation unit) causes the outer RCNTXT to be left dangling on R's
     // context chain when a C++ exception propagates through the outer
     // R_UnwindProtect C frame without endcontext() being called. This corrupts
     // R's context chain and causes crashes.
     //
-    // Instead, let C++ exceptions propagate naturally: END_cpp11 (the generated
+    // Instead, let C++ exceptions propagate naturally: END_cpp4r (the generated
     // wrapper around execCallbacks) catches std::exception and unwind_exception
     // and handles them correctly. R errors (Rf_error longjmps) propagate
     // directly to R's nearest tryCatch handler.
     try {
       func();
-    } catch (const cpp11::unwind_exception &) {
+    } catch (const cpp4r::unwind_exception &) {
       throw;
     } catch (const std::exception &) {
       throw;
@@ -72,22 +72,22 @@ public:
     }
   }
 
-  cpp11::sexp rRepresentation() const;
+  cpp4r::sexp rRepresentation() const;
 
 private:
   std::function<void(void)> func;
 };
 
-class cpp11FunctionCallback : public Callback {
+class cpp4rFunctionCallback : public Callback {
 public:
-  cpp11FunctionCallback(Timestamp when, SEXP func);
+  cpp4rFunctionCallback(Timestamp when, SEXP func);
 
-  void invoke() const { cpp11::function{static_cast<SEXP>(func)}(); }
+  void invoke() const { cpp4r::function{static_cast<SEXP>(func)}(); }
 
-  cpp11::sexp rRepresentation() const;
+  cpp4r::sexp rRepresentation() const;
 
 private:
-  cpp11::sexp func;
+  cpp4r::sexp func;
 };
 
 typedef std::shared_ptr<Callback> Callback_sp;
@@ -152,7 +152,7 @@ public:
   bool wait(double timeoutSecs, bool recursive) const;
 
   // Return a List of items in the queue.
-  cpp11::sexp list() const;
+  cpp4r::sexp list() const;
 
   // Increment and decrement the number of active later_fd waits
   void fd_waits_incr();

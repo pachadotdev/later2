@@ -42,13 +42,13 @@ rm -f "${LOG}"
 exec > >(tee -a "${LOG}") 2>&1
 
 # Run the bench script (will exit on error)
-Rscript -e 'cpp11::cpp_register("./latertest")'
-Rscript -e 'devtools::document("./latertest")'
+Rscript -e 'cpp4r::register("./later2test")'
+Rscript -e 'tinydev::pkg_document("./later2test")'
 
-# Build package tarball first (devtools::build returns path)
-TARBALL=$(Rscript -e 'cat(devtools::build("./latertest", quiet = TRUE))')
+# Build package tarball first
+TARBALL=$(Rscript -e 'cat(tinydev::pkg_build("./later2test"))')
 if [ -z "${TARBALL}" ]; then
-	echo "Failed to build tarball for latertest."
+	echo "Failed to build tarball for later2test."
 	exit 1
 fi
 
@@ -56,10 +56,10 @@ fi
 R CMD check --as-cran --no-manual "${TARBALL}" || true
 
 # If there was an error, copy the install log to the results directory for inspection
-if [ -f "./latertest.Rcheck/00install.out" ]; then
-	cp "./latertest.Rcheck/00install.out" "./check-gcc-clang/install-${std}-${compiler}.log"
+if [ -f "./later2test.Rcheck/00install.out" ]; then
+	cp "./later2test.Rcheck/00install.out" "./check-gcc-clang/install-${std}-${compiler}.log"
 	echo "=== BEGIN 00install.out ==="
-	cat "./latertest.Rcheck/00install.out"
+	cat "./later2test.Rcheck/00install.out"
 	echo "=== END 00install.out ==="
 fi
 

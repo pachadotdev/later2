@@ -10,6 +10,7 @@
 ^LICENSE\.md$
 ^docs$
 ^scripts$
-^latertest$
+^later2test$
 ^Makefile$
 ^check-gcc-clang$
+^.*tar\.gz$

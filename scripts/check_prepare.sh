@@ -9,5 +9,5 @@ echo "==============================="
 echo "Preparing C++ code with $std standard and $compiler compiler"
 echo ""
 
-# Patch CXX_STD in latertest/src/Makevars
-sed -i "s/^CXX_STD = .*/CXX_STD = ${std}/" ./latertest/src/Makevars
+# Patch CXX_STD in later2test/src/Makevars
+sed -i "s/^CXX_STD = .*/CXX_STD = ${std}/" ./later2test/src/Makevars

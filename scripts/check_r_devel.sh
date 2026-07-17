@@ -41,14 +41,14 @@ export R_ENVIRON_USER=""
 # Install required packages in R-devel if not present
 echo "Checking/installing required packages in R-devel..."
 "${RSCRIPT_DEVEL}" --vanilla -e '
-  pkgs <- c("devtools", "roxygen2", "testthat", "usethis", "cpp11", "withr", "pkgbuild")
+  pkgs <- c("tinydev", "tinytest", "roxygen2", "cpp4r")
   missing <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
   if (length(missing) > 0) {
     install.packages(missing, repos = "https://cloud.r-project.org")
   }
 '
 
-# Patch latertest/src/Makevars with the requested C++ standard
+# Patch later2test/src/Makevars with the requested C++ standard
 "${SCRIPT_DIR}/check_prepare.sh" "${std}" "${compiler}"
 
 # Set up compiler override via R_MAKEVARS_USER
@@ -83,18 +83,18 @@ rm -f "${LOG}"
 # Capture everything (stdout+stderr) into the log while printing to console
 exec > >(tee -a "${LOG}") 2>&1
 
-# Register and document latertest using R-devel
-echo "Registering latertest with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'cpp11::cpp_register("./latertest")'
+# Register and document later2test using R-devel
+echo "Registering later2test with R-devel..."
+"${RSCRIPT_DEVEL}" --vanilla -e 'cpp4r::register("./later2test")'
 
-echo "Documenting latertest with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'devtools::document("./latertest")'
+echo "Documenting later2test with R-devel..."
+"${RSCRIPT_DEVEL}" --vanilla -e 'tinydev::pkg_document("./later2test")'
 
 # Build package tarball using R-devel
 echo "Building tarball with R-devel..."
-TARBALL=$("${RSCRIPT_DEVEL}" --vanilla -e 'cat(devtools::build("./latertest", quiet = TRUE))')
+TARBALL=$("${RSCRIPT_DEVEL}" --vanilla -e 'cat(tinydev::pkg_build("./later2test"))')
 if [ -z "${TARBALL}" ]; then
-  echo "Failed to build tarball for latertest."
+  echo "Failed to build tarball for later2test."
   exit 1
 fi
 
@@ -105,10 +105,10 @@ echo "Running R CMD check with R-devel..."
 "${R_DEVEL}" CMD check --as-cran --no-manual "${TARBALL}" || true
 
 # If there was an error, copy the install log for inspection
-if [ -f "./latertest.Rcheck/00install.out" ]; then
-  cp "./latertest.Rcheck/00install.out" "./check-r-devel/install-${std}-${compiler}-devel.log"
+if [ -f "./later2test.Rcheck/00install.out" ]; then
+  cp "./later2test.Rcheck/00install.out" "./check-r-devel/install-${std}-${compiler}-devel.log"
   echo "=== BEGIN 00install.out ==="
-  cat "./latertest.Rcheck/00install.out"
+  cat "./later2test.Rcheck/00install.out"
   echo "=== END 00install.out ==="
 fi
 
