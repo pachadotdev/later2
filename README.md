@@ -1,39 +1,27 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# later
+# later2
 
 <!-- badges: start -->
 
-[![CRAN
-status](https://www.r-pkg.org/badges/version/later)](https://CRAN.R-project.org/package=later)
-[![R-CMD-check](https://github.com/r-lib/later/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/later/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/r-lib/later/graph/badge.svg)](https://app.codecov.io/gh/r-lib/later)
 <!-- badges: end -->
 
-Schedule an R function or formula to run after a specified period of
-time. Similar to JavaScript’s `setTimeout` function. Like JavaScript, R
-is single-threaded so there’s no guarantee that the operation will run
-exactly at the requested time, only that at least that much time will
-elapse.
+Schedule an R function or formula to run after a specified period of time. This is similar to JavaScript’s `setTimeout` function.
+Like JavaScript, R is single-threaded so there’s no guarantee that the operation will run exactly at the requested time, only that
+at least that much time will elapse.
 
-To avoid bugs due to reentrancy, by default, scheduled operations only
-run when there is no other R code present on the execution stack; i.e.,
-when R is sitting at the top-level prompt. You can force past-due
-operations to run at a time of your choosing by calling
-`later::run_now()`.
+To avoid bugs due to reentrancy, by default, scheduled operations only run when there is no other R code present on the execution
+stack; i.e., when R is sitting at the top-level prompt. You can force past-due operations to run at a time of your choosing by
+calling `later2::run_now()`.
 
-The mechanism used by this package is inspired by Simon Urbanek’s
-[background](https://github.com/s-u/background) package and similar code
-in Rhttpd.
+This package is derived from [later](https://github.com/r-lib/later), which uses derived work from
+[background](https://github.com/s-u/background) package and similar code in
+[Rhttpd](https://search.r-project.org/CRAN/refmans/Rook/html/Rhttpd-class.html).
 
 ## Installation
 
 You can install the development version of later with:
 
 ``` r
-pak::pak("r-lib/later")
+pak::pak("pachadotdev/later2")
 ```
 
 ## Usage from R
@@ -41,43 +29,36 @@ pak::pak("r-lib/later")
 Pass a function (in this case, delayed by 5 seconds):
 
 ``` r
-later::later(\() print("Got here!"), 5)
+later2::later(\() print("Got here!"), 5)
 ```
 
-Or a formula (in this case, run as soon as control returns to the
-top-level):
+Or a formula (in this case, run as soon as control returns to the top-level):
 
 ``` r
-later::later(~print("Got here!"))
+later2::later(~print("Got here!"))
 ```
 
 ### File Descriptor Readiness
 
-It is also possible to have a function run based on when file
-descriptors are ready for reading or writing, at some indeterminate time
-in the future.
+It is also possible to have a function run based on when file descriptors are ready for reading or writing, at an unknown
+time in the future.
 
-Below, a logical vector is printed indicating which of file descriptors
-21 or 22 were ready, subject to a timeout of 1s.
+Below, a logical vector is printed indicating which of file descriptors 21 or 22 were ready, subject to a timeout of 1s.
 
 ``` r
-later::later_fd(\(x) print(x), c(21L, 22L), timeout = 1)
+later2::later_fd(\(x) print(x), c(21L, 22L), timeout = 1)
 ```
 
-This is useful in particular for asynchronous I/O, allowing reads to be
-made from TCP sockets as soon as data becomes available. Functions such
-as `curl::multi_fdset()` return the relevant file descriptors to be
-monitored.
+This is useful in particular for asynchronous I/O, allowing reads to be made from TCP sockets as soon as data becomes available.
+Functions such as `curl::multi_fdset()` return the relevant file descriptors to be monitored.
 
 ## Usage from C++
 
-You can also call `later::later` from C++ code in your own packages, to
-cause your own C-style functions to be called back. This is safe to call
-from either the main R thread or a different thread; in both cases, your
-callback will be invoked from the main R thread.
+You can also call `later2::later` from C++ code in your own packages, to cause your own C-style functions to be called back. This
+is safe to call from either the main R thread or a different thread; in both cases, your callback will be invoked from the main R
+thread.
 
-`later::later` is accessible from `later_api.h` and its prototype looks
-like this:
+`later2::later` is accessible from `later2_api.h` and its prototype looks like this:
 
 ``` cpp
 void later(void (*func)(void*), void* data, double secs)
@@ -88,7 +69,7 @@ argument and returns void. The second argument is a `void*` that will be
 passed to the function when it’s called back. And the third argument is
 the number of seconds to wait (at a minimum) before invoking.
 
-`later::later_fd` is also accessible from `later_api.h` and its
+`later2::later_fd` is also accessible from `later2_api.h` and its
 prototype looks like this:
 
 ``` cpp
@@ -114,7 +95,7 @@ sure that your `NAMESPACE` file has an `import(later)` entry.
 
 Finally, this package also offers a higher-level C++ helper class to
 make it easier to execute tasks on a background thread. It is also
-available from `later_api.h` and its public/protected interface looks
+available from `later2_api.h` and its public/protected interface looks
 like this:
 
 ``` cpp
@@ -152,14 +133,16 @@ can, however, perform such operations in the constructor (assuming you
 perform construction only from the main R thread) and `complete` method.
 Pass values between the constructor and methods using fields.
 
-``` rcpp
-#include <Rcpp.h>
-#include <later_api.h>
+``` cpp
+#include "cpp11.hpp"
+#include <later2_api.h>
 
-class MyTask : public later::BackgroundTask {
+using namespace cpp11;
+
+class MyTask : public later2::BackgroundTask {
 public:
-  MyTask(Rcpp::NumericVector vec) :
-    inputVals(Rcpp::as<std::vector<double> >(vec)) {
+  MyTask(doubles vec) :
+    inputVals(as_cpp<std::vector<double>>(vec)) {
   }
 
 protected:
@@ -189,8 +172,7 @@ e.g. `(new MyTask(vec))->begin()`. There’s no need to keep track of the
 pointer; the task object will delete itself when the task is complete.
 
 ``` r
-// [[Rcpp::export]]
-void asyncMean(Rcpp::NumericVector data) {
+[[cpp11::register]] void asyncMean(Rcpp::NumericVector data) {
   (new MyTask(data))->begin();
 }
 ```

@@ -1,0 +1,26 @@
+* installing *source* package ‘later2test’ ...
+** this is package ‘later2test’ version ‘0.1’
+** using staged installation
+** libs
+specified C++23
+using C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
+using C++23
+make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp4r.cpp -o cpp4r.o
+g++ -std=gnu++23 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c later2test.cpp -o later2test.o
+g++ -std=gnu++23 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o later2test.so cpp4r.o later2test.o -fopenmp -L/usr/lib64/R/lib -lR
+make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+installing to /home/pacha/Documents/later/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (later2test)

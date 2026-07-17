@@ -4,7 +4,6 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "tinycthread.h"
 #include "timeconv.h"
 
 class ConditionVariable;
@@ -31,12 +30,10 @@ public:
   }
 
   // Make non-copyable
-  Mutex(const Mutex&) = delete;
-  Mutex& operator=(const Mutex&) = delete;
+  Mutex(const Mutex &) = delete;
+  Mutex &operator=(const Mutex &) = delete;
 
-  virtual ~Mutex() {
-    tct_mtx_destroy(&_m);
-  }
+  virtual ~Mutex() { tct_mtx_destroy(&_m); }
 
   void lock() {
     if (tct_mtx_lock(&_m) != tct_thrd_success) {
@@ -63,28 +60,24 @@ public:
 };
 
 class Guard {
-  Mutex* _mutex;
+  Mutex *_mutex;
 
 public:
-  Guard(Mutex* mutex) : _mutex(mutex) {
-    _mutex->lock();
-  }
+  Guard(Mutex *mutex) : _mutex(mutex) { _mutex->lock(); }
 
   // Make non-copyable
-  Guard(const Guard&) = delete;
-  Guard& operator=(const Guard&) = delete;
+  Guard(const Guard &) = delete;
+  Guard &operator=(const Guard &) = delete;
 
-  ~Guard() {
-    _mutex->unlock();
-  }
+  ~Guard() { _mutex->unlock(); }
 };
 
 class ConditionVariable {
-  tct_mtx_t* _m;
+  tct_mtx_t *_m;
   tct_cnd_t _c;
 
 public:
-  ConditionVariable(Mutex& mutex) : _m(&mutex._m) {
+  ConditionVariable(Mutex &mutex) : _m(&mutex._m) {
     // If time_t isn't integral, our addSeconds logic needs to change,
     // as it relies on casting to time_t being a truncation.
     if (!std::is_integral<time_t>::value)
@@ -99,12 +92,10 @@ public:
   }
 
   // Make non-copyable
-  ConditionVariable(const ConditionVariable&) = delete;
-  ConditionVariable& operator=(const ConditionVariable&) = delete;
+  ConditionVariable(const ConditionVariable &) = delete;
+  ConditionVariable &operator=(const ConditionVariable &) = delete;
 
-  virtual ~ConditionVariable() {
-    tct_cnd_destroy(&_c);
-  }
+  virtual ~ConditionVariable() { tct_cnd_destroy(&_c); }
 
   // Unblocks one thread (if any are waiting)
   void signal() {

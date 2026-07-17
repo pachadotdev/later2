@@ -1,0 +1,157 @@
+ℹ Loading later2test
+ℹ Re-compiling later2test (debug build)
+── R CMD INSTALL ───────────────────────────────────────────────────────────────
+* installing *source* package ‘later2test’ ...
+** this is package ‘later2test’ version ‘0.1’
+** using staged installation
+** libs
+specified C++17
+using C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
+using C++17
+make[1]: Entering directory '/home/pacha/Documents/later/later2test/src'
+make[1]: Leaving directory '/home/pacha/Documents/later/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later/later2test/src'
+g++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects  -UNDEBUG -Wall -pedantic -g -O0  -c cpp4r.cpp -o cpp4r.o
+In file included from /usr/include/c++/16.1.1/x86_64-pc-linux-gnu/bits/os_defines.h:39,
+                 from /usr/include/c++/16.1.1/x86_64-pc-linux-gnu/bits/c++config.h:733,
+                 from /usr/include/c++/16.1.1/bits/version.h:51,
+                 from /usr/include/c++/16.1.1/cstring:47,
+                 from /home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include/cpp4r/declarations.hpp:3,
+                 from cpp4r.cpp:5:
+/usr/include/features.h:451:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  451 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+g++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects  -UNDEBUG -Wall -pedantic -g -O0  -c later2test.cpp -o later2test.o
+In file included from /usr/include/signal.h:25,
+                 from later2test.cpp:2:
+/usr/include/features.h:451:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  451 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+g++ -std=gnu++17 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o later2test.so cpp4r.o later2test.o -fopenmp -L/usr/lib64/R/lib -lR
+make[1]: Leaving directory '/home/pacha/Documents/later/later2test/src'
+installing to /tmp/Rtmpl0EOR2/devtools_install_3766060fcdd9b/00LOCK-later2test/00new/later2test/libs
+** checking absolute paths in shared objects and dynamic libraries
+* DONE (later2test)
+ℹ Loading later2test
+* using log directory ‘/home/pacha/Documents/later/later2test.Rcheck’
+* using R version 4.6.0 (2026-04-24)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (GCC) 15.2.1 20260209
+    GNU Fortran (GCC) 15.2.1 20260209
+* running under: Manjaro Linux
+* using session charset: UTF-8
+* current time: 2026-07-17 14:45:38 UTC
+* using options ‘--no-manual --as-cran’
+* checking for file ‘later2test/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘later2test’ version ‘0.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... WARNING
+Maintainer: ‘Mauricio Vargas Sepulveda <m.vargas.sepulveda@gmail.com>’
+
+New submission
+
+Strong dependencies not in the CRAN or BioC software repositories:
+  later2
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘later2test’ can be installed ... OK
+* used C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
+* checking C++ specification ... INFO
+  specified C++17
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... OK
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
+* checking use of SHLIB_OPENMP_*FLAGS in Makefiles ... OK
+* checking pragmas in C/C++ headers and code ... OK
+* checking compilation flags used ... NOTE
+Compilation used the following non-portable flag(s):
+  ‘-Werror=format-security’ ‘-Wformat’ ‘-Wp,-D_FORTIFY_SOURCE=3’
+  ‘-Wp,-D_GLIBCXX_ASSERTIONS’ ‘-march=x86-64’
+  ‘-mno-omit-leaf-frame-pointer’
+* checking compiled code ... OK
+* checking examples ... NONE
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ...
+  Running ‘tinytest.R’
+ OK
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+
+Status: 1 WARNING, 1 NOTE
+See
+  ‘/home/pacha/Documents/later/later2test.Rcheck/00check.log’
+for details.
+
+=== BEGIN 00install.out ===
+* installing *source* package ‘later2test’ ...
+** this is package ‘later2test’ version ‘0.1’
+** using staged installation
+** libs
+specified C++17
+using C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
+using C++17
+make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+g++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp4r.cpp -o cpp4r.o
+g++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c later2test.cpp -o later2test.o
+g++ -std=gnu++17 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o later2test.so cpp4r.o later2test.o -fopenmp -L/usr/lib64/R/lib -lR
+make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+installing to /home/pacha/Documents/later/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (later2test)
+=== END 00install.out ===
+R CMD check completed with no ERRORs. Warnings/Notes (if any) are allowed. See ./check-gcc-clang/check-CXX17-gcc.log for full output.
+Run complete.

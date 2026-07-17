@@ -2,8 +2,8 @@
 
 #include "timer_posix.h"
 
-int Timer::bg_main_func(void* data) {
-  reinterpret_cast<Timer*>(data)->bg_main();
+int Timer::bg_main_func(void *data) {
+  reinterpret_cast<Timer *>(data)->bg_main();
   return 0;
 }
 
@@ -44,9 +44,9 @@ void Timer::bg_main() {
   }
 }
 
-Timer::Timer(const std::function<void ()>& callback) :
-  callback(callback), mutex(tct_mtx_recursive), cond(mutex), stopped(false) {
-}
+Timer::Timer(const std::function<void()> &callback)
+    : callback(callback), mutex(tct_mtx_recursive), cond(mutex),
+      stopped(false) {}
 
 Timer::~Timer() {
 
@@ -64,7 +64,7 @@ Timer::~Timer() {
   }
 }
 
-void Timer::set(const Timestamp& timestamp) {
+void Timer::set(const Timestamp &timestamp) {
   Guard guard(&this->mutex);
 
   // If the thread has not yet been created, created it.

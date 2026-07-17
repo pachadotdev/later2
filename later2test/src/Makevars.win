@@ -1,0 +1,3 @@
+# DARMA_OPENMP_THREADS is a natural number between 1 and the number of cores
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS)
+PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS)

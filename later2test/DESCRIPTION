@@ -1,0 +1,38 @@
+Package: later2test
+Type: Package
+Title: Additional Unit Tests for 'later'
+Version: 0.1
+Authors@R: c(
+    person("Winston", "Chang", , "winston@posit.co", role = "aut",
+           comment = c(ORCID = "0000-0002-1576-2126")),
+    person("Joe", "Cheng", , "joe@posit.co", role = "aut"),
+    person("Charlie", "Gao", , "charlie.gao@posit.co", role = "aut",
+           comment = c(ORCID = "0000-0002-0750-061X")),
+    person("Posit Software, PBC", role = "aut",
+           comment = c(ROR = "03wc8by49")),
+    person("Marcus", "Geelnard", role = c("ctb", "cph"),
+           comment = "TinyCThread library, https://tinycthread.github.io/"),
+    person("Evan", "Nemerson", role = c("ctb", "cph"),
+           comment = "TinyCThread library, https://tinycthread.github.io/"),
+    person(
+        given = "Mauricio", family = "Vargas Sepulveda", role = c("aut", "cre"),
+        email = "m.vargas.sepulveda@gmail.com",
+        comment = c(ORCID = "0000-0003-1017-7574"))
+  )
+Imports: 
+    later2
+Suggests: 
+    knitr,
+    rmarkdown,
+    rlang,
+    tinytest
+Depends: R(>= 4.0.0)
+Description: Unit tests that use the 'later2' API to test the behaviour of
+    'later2' itself. This package is not intended for general use.
+License: MIT + file LICENSE
+URL: https://later.r-lib.org, https://github.com/r-lib/later
+BugReports: https://github.com/r-lib/later/issues
+RoxygenNote: 8.0.0
+Encoding: UTF-8
+NeedsCompilation: yes
+LinkingTo: cpp4r, later2
