@@ -29,7 +29,7 @@ Suggests:
 Depends: R(>= 4.0.0)
 Description: Unit tests that use the 'later2' API to test the behaviour of
     'later2' itself. This package is not intended for general use.
-License: MIT + file LICENSE
+License: Apache License 2.0
 URL: https://later.r-lib.org, https://github.com/r-lib/later
 BugReports: https://github.com/r-lib/later/issues
 RoxygenNote: 8.0.0

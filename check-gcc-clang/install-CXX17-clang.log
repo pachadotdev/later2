@@ -5,14 +5,14 @@
 specified C++17
 using C++ compiler: ‘clang version 22.1.5’
 using C++17
-make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
 clang++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp=libgomp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp4r.cpp -o cpp4r.o
 clang++ -std=gnu++17 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp=libgomp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c later2test.cpp -o later2test.o
 clang++ -std=gnu++17 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o later2test.so cpp4r.o later2test.o -fopenmp=libgomp -L/usr/lib64/R/lib -lR
-make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
-make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
-make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
-installing to /home/pacha/Documents/later/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
+make[1]: Leaving directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Leaving directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
+installing to /home/pacha/Documents/later2/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
 ** R
 ** inst
 ** byte-compile and prepare package for lazy loading

@@ -79,10 +79,18 @@ local({
   run_now(1)
   expect_equal(result, c(TRUE, TRUE))
 
-  # no exceptions
-  later_fd(callback, c(fd1, fd2), exceptfds = c(fd1, fd2), timeout = -0.1)
+  # no exceptions (fds still open and their processes still running, so
+  # there's no hang-up condition; note we can't reuse fd1/fd2 here, since by
+  # now their child processes have long since finished and exited, and the
+  # closed write end would trigger a hang-up, which is correctly reported as
+  # an exception/NA rather than FALSE)
+  jobA <- make_pending_fd()
+  jobB <- make_pending_fd()
+  fdA <- jobA$fd[1]
+  fdB <- jobB$fd[1]
+  later_fd(callback, c(fdA, fdB), exceptfds = c(fdA, fdB), timeout = -0.1)
   run_now(1)
-  expect_equal(result, c(TRUE, TRUE, FALSE, FALSE))
+  expect_equal(result, c(FALSE, FALSE, FALSE, FALSE))
 
   # fd1 not ready, fd2 ready
   job1 <- make_pending_fd()

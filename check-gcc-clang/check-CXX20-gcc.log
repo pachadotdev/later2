@@ -8,9 +8,9 @@
 specified C++20
 using C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
 using C++20
-make[1]: Entering directory '/home/pacha/Documents/later/later2test/src'
-make[1]: Leaving directory '/home/pacha/Documents/later/later2test/src'
-make[1]: Entering directory '/home/pacha/Documents/later/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later2/later2test/src'
+make[1]: Leaving directory '/home/pacha/Documents/later2/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later2/later2test/src'
 g++ -std=gnu++20 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects  -UNDEBUG -Wall -pedantic -g -O0  -c cpp4r.cpp -o cpp4r.o
 In file included from /usr/include/c++/16.1.1/x86_64-pc-linux-gnu/bits/os_defines.h:39,
                  from /usr/include/c++/16.1.1/x86_64-pc-linux-gnu/bits/c++config.h:733,
@@ -28,12 +28,12 @@ In file included from /usr/include/signal.h:25,
   451 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
       |    ^~~~~~~
 g++ -std=gnu++20 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o later2test.so cpp4r.o later2test.o -fopenmp -L/usr/lib64/R/lib -lR
-make[1]: Leaving directory '/home/pacha/Documents/later/later2test/src'
-installing to /tmp/Rtmpkr6OET/devtools_install_37dd930551978/00LOCK-later2test/00new/later2test/libs
+make[1]: Leaving directory '/home/pacha/Documents/later2/later2test/src'
+installing to /tmp/RtmpwWMp5T/devtools_install_b86a35a296b9/00LOCK-later2test/00new/later2test/libs
 ** checking absolute paths in shared objects and dynamic libraries
 * DONE (later2test)
 ℹ Loading later2test
-* using log directory ‘/home/pacha/Documents/later/later2test.Rcheck’
+* using log directory ‘/home/pacha/Documents/later2/later2test.Rcheck’
 * using R version 4.6.0 (2026-04-24)
 * using platform: x86_64-pc-linux-gnu
 * R was compiled by
@@ -41,7 +41,7 @@ installing to /tmp/Rtmpkr6OET/devtools_install_37dd930551978/00LOCK-later2test/0
     GNU Fortran (GCC) 15.2.1 20260209
 * running under: Manjaro Linux
 * using session charset: UTF-8
-* current time: 2026-07-17 14:46:41 UTC
+* current time: 2026-07-18 11:41:39 UTC
 * using options ‘--no-manual --as-cran’
 * checking for file ‘later2test/DESCRIPTION’ ... OK
 * checking extension type ... Package
@@ -122,7 +122,7 @@ Compilation used the following non-portable flag(s):
 
 Status: 1 WARNING, 1 NOTE
 See
-  ‘/home/pacha/Documents/later/later2test.Rcheck/00check.log’
+  ‘/home/pacha/Documents/later2/later2test.Rcheck/00check.log’
 for details.
 
 === BEGIN 00install.out ===
@@ -133,14 +133,14 @@ for details.
 specified C++20
 using C++ compiler: ‘g++ (GCC) 16.1.1 20260430’
 using C++20
-make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
 g++ -std=gnu++20 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c cpp4r.cpp -o cpp4r.o
 g++ -std=gnu++20 -I"/usr/include/R/" -DNDEBUG  -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/cpp4r/include' -I'/home/pacha/R/x86_64-pc-linux-gnu-library/4.6/later2/include' -I/usr/local/include   -fopenmp -fpic  -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -Wp,-D_GLIBCXX_ASSERTIONS -g -ffile-prefix-map=/build/r/src=/usr/src/debug/r -flto=auto -ffat-lto-objects   -c later2test.cpp -o later2test.o
 g++ -std=gnu++20 -shared -L/usr/lib64/R/lib -Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,-z,pack-relative-relocs -flto=auto -o later2test.so cpp4r.o later2test.o -fopenmp -L/usr/lib64/R/lib -lR
-make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
-make[1]: Entering directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
-make[1]: Leaving directory '/home/pacha/Documents/later/later2test.Rcheck/00_pkg_src/later2test/src'
-installing to /home/pacha/Documents/later/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
+make[1]: Leaving directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Entering directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
+make[1]: Leaving directory '/home/pacha/Documents/later2/later2test.Rcheck/00_pkg_src/later2test/src'
+installing to /home/pacha/Documents/later2/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
 ** R
 ** inst
 ** byte-compile and prepare package for lazy loading

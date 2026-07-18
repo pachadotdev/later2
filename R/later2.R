@@ -252,9 +252,8 @@ as_function <- function(x) {
       dots <- list(...)
       . <- if (length(dots) >= 1L) dots[[1L]] else NULL
       .x <- .
-      eval(rhs, envir = environment())
+      eval(rhs, envir = list(. = ., .x = .x), enclos = env)
     }
-    environment(f) <- env
     return(f)
   }
   stop("`func` must be a function or a formula.")

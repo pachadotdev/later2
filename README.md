@@ -177,7 +177,7 @@ delete itself when the task is complete.
 }
 ```
 
-## An example with parallel jobs (Unix-like systems)
+## Example with parallel jobs (Unix-like systems)
 
 Using the base R 'parallel' package, you can fork child processes and obtain real, pollable file
 descriptors. A child's `fd` becomes ready for reading once the child finishes running.
@@ -231,4 +231,29 @@ parallel::mccollect(job2)
 later_fd(print, c(fd1, fd2), timeout = 0)
 Sys.sleep(0.1)
 run_now()
+```
+
+## Example with "promise" abstractions
+
+I adapted some functions from the 'promises' package using base R. As 'later' points out, it is
+useful to execute tasks on background threads if you cannoy get the results back in R.
+See the [later2test](https://github.com/pachadotdev/later2/tree/main/later2test) for more "promise"
+abstractions such as:
+
+```r
+# test that resolve works
+result <- 0
+later2::promise(function(resolve, reject) {
+  later2test::asyncFib(resolve, reject, 3)
+}) |>
+  later2::then(\(x) {
+    result <<- x
+  })
+
+expect_identical(result, 0)
+later2::run_now(1)
+while (!later2::loop_empty()) {
+  later2::run_now(0.1)
+}
+expect_identical(result, 2)
 ```
