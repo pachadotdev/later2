@@ -103,7 +103,7 @@ private:
 
   // Most of the behavior of the registry is like a priority queue. However, a
   // std::priority_queue only allows access to the top element, and when we
-  // cancel a callback or get an Rcpp::List representation, we need random
+  // cancel a callback or get a list representation, we need random
   // access, so we'll use a std::set.
   typedef std::set<Callback_sp, pointer_less_than<Callback_sp>> cbSet;
   // This is a priority queue of shared pointers to Callback objects. The
