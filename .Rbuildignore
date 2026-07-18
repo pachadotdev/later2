@@ -7,10 +7,11 @@
 ^src/README.md$
 ^src/Makevars$
 ^cran-comments\.md$
-^LICENSE\.md$
+^LICENSE\.txt$
 ^docs$
 ^scripts$
 ^later2test$
 ^Makefile$
 ^check-gcc-clang$
 ^.*tar\.gz$
+^LICENSE\.txt$
