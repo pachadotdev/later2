@@ -1,6 +1,0 @@
-cpp4r-package           Title: Header-Only 'C++' and 'R' Interface
-pkg_template            Start a new project with the cpp4r package
-                        template
-register                Generates wrappers for registered C++ functions
-unvendor                Unvendor the cpp4r headers
-vendor                  Vendor the cpp4r headers

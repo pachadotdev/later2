@@ -1,31 +1,0 @@
-
-R version 4.6.0 (2026-04-24) -- "Because it was There"
-Copyright (C) 2026 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> 
-> if (requireNamespace("tinytest", quietly = TRUE)) {
-+   tinytest::test_package("later2test")
-+ }
-test-c-api.R..................    1 tests OK 60ms
-test-later-fd.R...............    1 tests OK 3ms
-test-promises.R...............    4 tests OK 5ms
-test-run_now.R................    2 tests OK test-run_now.R................    3 tests OK test-run_now.R................    3 tests OK 1.1s
-All ok, 9 results (1.1s)
-> 
-> 
-> proc.time()
-   user  system elapsed 
-  0.762   0.440   1.469 
