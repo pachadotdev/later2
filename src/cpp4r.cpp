@@ -4,6 +4,24 @@
 
 #include "cpp4r/declarations.hpp"
 #include <R_ext/Visibility.h>
+#include <cstring>
+
+namespace {
+// R_CallMethodDef requires a DL_FUNC (void (*)()), which necessarily
+// differs from the real signature of each registered function. A direct
+// cast between incompatible function pointer types triggers
+// -Wcast-function-type, and CRAN's checks disallow suppressing that with
+// compiler pragmas. Reinterpret the pointer by copying its bytes instead:
+// this never casts between function pointer types (memcpy's arguments are
+// ordinary object pointers to the local function-pointer variables), so it
+// is warning-free and portable across the platforms R supports.
+template <typename Fn> DL_FUNC cpp4r_to_dl_func(Fn fn) {
+  static_assert(sizeof(DL_FUNC) == sizeof(Fn), "function pointer size mismatch");
+  DL_FUNC out;
+  std::memcpy(&out, &fn, sizeof(out));
+  return out;
+}
+} // namespace
 
 // callback_registry.cpp
 void testCallbackOrdering();
@@ -152,26 +170,26 @@ extern "C" SEXP _later2_wref_key(SEXP x) {
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_later2_testCallbackOrdering", (DL_FUNC) &_later2_testCallbackOrdering, 0},
-    {"_later2_log_level", (DL_FUNC) &_later2_log_level, 1},
-    {"_later2_using_ubsan", (DL_FUNC) &_later2_using_ubsan, 0},
-    {"_later2_execLater_fd", (DL_FUNC) &_later2_execLater_fd, 6},
-    {"_later2_fd_cancel", (DL_FUNC) &_later2_fd_cancel, 1},
-    {"_later2_setCurrentRegistryId", (DL_FUNC) &_later2_setCurrentRegistryId, 1},
-    {"_later2_getCurrentRegistryId", (DL_FUNC) &_later2_getCurrentRegistryId, 0},
-    {"_later2_deleteCallbackRegistry", (DL_FUNC) &_later2_deleteCallbackRegistry, 1},
-    {"_later2_notifyRRefDeleted", (DL_FUNC) &_later2_notifyRRefDeleted, 1},
-    {"_later2_createCallbackRegistry", (DL_FUNC) &_later2_createCallbackRegistry, 2},
-    {"_later2_existsCallbackRegistry", (DL_FUNC) &_later2_existsCallbackRegistry, 1},
-    {"_later2_list_queue_", (DL_FUNC) &_later2_list_queue_, 1},
-    {"_later2_execCallbacks", (DL_FUNC) &_later2_execCallbacks, 3},
-    {"_later2_idle", (DL_FUNC) &_later2_idle, 1},
-    {"_later2_ensureInitialized", (DL_FUNC) &_later2_ensureInitialized, 0},
-    {"_later2_execLater", (DL_FUNC) &_later2_execLater, 3},
-    {"_later2_cancel", (DL_FUNC) &_later2_cancel, 2},
-    {"_later2_nextOpSecs", (DL_FUNC) &_later2_nextOpSecs, 1},
-    {"_later2_new_weakref", (DL_FUNC) &_later2_new_weakref, 1},
-    {"_later2_wref_key", (DL_FUNC) &_later2_wref_key, 1},
+    {"_later2_testCallbackOrdering", cpp4r_to_dl_func(&_later2_testCallbackOrdering), 0},
+    {"_later2_log_level", cpp4r_to_dl_func(&_later2_log_level), 1},
+    {"_later2_using_ubsan", cpp4r_to_dl_func(&_later2_using_ubsan), 0},
+    {"_later2_execLater_fd", cpp4r_to_dl_func(&_later2_execLater_fd), 6},
+    {"_later2_fd_cancel", cpp4r_to_dl_func(&_later2_fd_cancel), 1},
+    {"_later2_setCurrentRegistryId", cpp4r_to_dl_func(&_later2_setCurrentRegistryId), 1},
+    {"_later2_getCurrentRegistryId", cpp4r_to_dl_func(&_later2_getCurrentRegistryId), 0},
+    {"_later2_deleteCallbackRegistry", cpp4r_to_dl_func(&_later2_deleteCallbackRegistry), 1},
+    {"_later2_notifyRRefDeleted", cpp4r_to_dl_func(&_later2_notifyRRefDeleted), 1},
+    {"_later2_createCallbackRegistry", cpp4r_to_dl_func(&_later2_createCallbackRegistry), 2},
+    {"_later2_existsCallbackRegistry", cpp4r_to_dl_func(&_later2_existsCallbackRegistry), 1},
+    {"_later2_list_queue_", cpp4r_to_dl_func(&_later2_list_queue_), 1},
+    {"_later2_execCallbacks", cpp4r_to_dl_func(&_later2_execCallbacks), 3},
+    {"_later2_idle", cpp4r_to_dl_func(&_later2_idle), 1},
+    {"_later2_ensureInitialized", cpp4r_to_dl_func(&_later2_ensureInitialized), 0},
+    {"_later2_execLater", cpp4r_to_dl_func(&_later2_execLater), 3},
+    {"_later2_cancel", cpp4r_to_dl_func(&_later2_cancel), 2},
+    {"_later2_nextOpSecs", cpp4r_to_dl_func(&_later2_nextOpSecs), 1},
+    {"_later2_new_weakref", cpp4r_to_dl_func(&_later2_new_weakref), 1},
+    {"_later2_wref_key", cpp4r_to_dl_func(&_later2_wref_key), 1},
     {NULL, NULL, 0}
 };
 }

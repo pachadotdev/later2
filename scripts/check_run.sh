@@ -42,13 +42,13 @@ rm -f "${LOG}"
 exec > >(tee -a "${LOG}") 2>&1
 
 # Run the bench script (will exit on error)
-Rscript -e 'cpp4r::register("./later2test")'
-Rscript -e 'tinydev::pkg_document("./later2test")'
+Rscript -e 'cpp4r::register("./cpp4rtest")'
+Rscript -e 'tinydev::pkg_document("./cpp4rtest")'
 
 # Build package tarball first
-TARBALL=$(Rscript -e 'cat(tinydev::pkg_build("./later2test"))')
+TARBALL=$(Rscript -e 'cat(tinydev::pkg_build("./cpp4rtest"))')
 if [ -z "${TARBALL}" ]; then
-	echo "Failed to build tarball for later2test."
+	echo "Failed to build tarball for cpp4rtest."
 	exit 1
 fi
 
@@ -56,10 +56,10 @@ fi
 R CMD check --as-cran --no-manual "${TARBALL}" || true
 
 # If there was an error, copy the install log to the results directory for inspection
-if [ -f "./later2test.Rcheck/00install.out" ]; then
-	cp "./later2test.Rcheck/00install.out" "./check-docker/install-${std}-${compiler}.log"
+if [ -f "./cpp4rtest.Rcheck/00install.out" ]; then
+	cp "./cpp4rtest.Rcheck/00install.out" "./check-docker/install-${std}-${compiler}.log"
 	echo "=== BEGIN 00install.out ==="
-	cat "./later2test.Rcheck/00install.out"
+	cat "./cpp4rtest.Rcheck/00install.out"
 	echo "=== END 00install.out ==="
 fi
 

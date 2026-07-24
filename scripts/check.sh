@@ -131,30 +131,47 @@ cp "$CPP4R_TARBALL" "$CHECK_DIR/"
 cp "$LATER2_TARBALL" "$CHECK_DIR/"
 cp "$LATER2TEST_TARBALL" "$CHECK_DIR/"
 
-# Create a minimal R script that installs an explicit list of packages when run inside the container
+# Create a minimal R script that installs the packages' own declared
+# Imports/Suggests/LinkingTo (for a full test run, not just the CRAN-check
+# metadata) when run inside the container. Dependencies are read straight
+# out of each tarball's DESCRIPTION via base R's read.dcf (so this doesn't
+# itself depend on any package being installed yet), rather than a
+# hardcoded package list that silently goes stale whenever a test starts
+# depending on a new Suggested package (e.g. 'desc').
 cat > "$CHECK_DIR/install_required.R" <<'R_EOF'
 user_lib <- strsplit(Sys.getenv('R_LIBS_USER'), ':')[[1]][1]
 .libPaths(c(user_lib, .libPaths()))
-repos_snapshot_env <- Sys.getenv('RSPM_SNAPSHOT', '')
-if (nzchar(repos_snapshot_env)) {
-  if (grepl('^https?://', repos_snapshot_env)) {
-    options(repos = c(CRAN = repos_snapshot_env))
-  } else {
-    options(repos = c(CRAN = paste0('https://packagemanager.rstudio.com/cran/', repos_snapshot_env)))
-  }
-} else {
-  options(repos = c(CRAN = 'https://cloud.r-project.org'))
+options(repos = c(CRAN = 'https://cloud.r-project.org'))
+
+deps_from_tarball <- function(tarfile, own_names) {
+  td <- tempfile()
+  dir.create(td)
+  utils::untar(tarfile, exdir = td)
+  pkgdir <- list.dirs(td, recursive = FALSE)[1]
+  dcf <- read.dcf(file.path(pkgdir, 'DESCRIPTION'))
+  fields <- intersect(c('Depends', 'Imports', 'Suggests', 'LinkingTo'), colnames(dcf))
+  if (length(fields) == 0) return(character())
+  raw <- unlist(strsplit(dcf[1, fields], ','))
+  raw <- trimws(sub('\\(.*\\)', '', raw))
+  raw <- raw[nzchar(raw) & raw != 'R']
+  setdiff(raw, own_names)
 }
 
-if (!requireNamespace('tinytest', quietly = TRUE)) {
-  install.packages('tinytest', lib = user_lib)
-}
+tarballs <- c(__TARBALLS__)
+own_names <- c(__OWN_NAMES__)
+pkgs <- unique(unlist(lapply(tarballs, deps_from_tarball, own_names = own_names)))
+pkgs <- setdiff(pkgs, rownames(installed.packages()))
 
-if (!requireNamespace('desc', quietly = TRUE)) {
-  install.packages('desc', lib = user_lib)
+if (length(pkgs) > 0) {
+  message('Installing declared dependencies: ', paste(pkgs, collapse = ', '))
+  install.packages(pkgs, lib = user_lib)
 }
 
 R_EOF
+sed -i \
+  -e "s|__TARBALLS__|'/check/${CPP4R_FILE}', '/check/${LATER2TEST_FILE}'|" \
+  -e "s|__OWN_NAMES__|'cpp4r', 'later2test'|" \
+  "$CHECK_DIR/install_required.R"
 
 # When a C++ standard was requested, build the shell snippet that pins CXX to
 # it inside the container. Left empty to use the image's default toolchain.
@@ -263,25 +280,31 @@ docker run --rm \
       export DEBIAN_FRONTEND=noninteractive
       apt-get update -qq || true
       apt-get install -y --no-install-recommends \
-        libuv1-dev libxml2-dev pkg-config gfortran libcurl4-openssl-dev ${EXTRA_APT_PKGS} || true
+        devscripts pkg-config gfortran libcurl4-openssl-dev ${EXTRA_APT_PKGS} || true
     elif command -v dnf >/dev/null 2>&1 || command -v yum >/dev/null 2>&1; then
       PKG_MGR=\$(command -v dnf 2>/dev/null || echo yum)
-      \$PKG_MGR -y install libuv-devel libxml2-devel pkgconfig gcc-gfortran libcurl-devel ${EXTRA_DNF_PKGS} || true
+      \$PKG_MGR -y install pkgconfig gcc-gfortran libcurl-devel ${EXTRA_DNF_PKGS} || true
     elif command -v zypper >/dev/null 2>&1; then
-      zypper --non-interactive install libuv libxml2-devel pkg-config gcc-fortran libcurl-devel ${EXTRA_ZYPPER_PKGS} || true
+      zypper --non-interactive install pkg-config gcc-fortran libcurl-devel ${EXTRA_ZYPPER_PKGS} || true
     fi
 
     # Install system deps (xml2, etc) and R package deps before writing
     # ~/.R/Makevars so packages with C++ code (diffobj, etc) compile with the
     # image's default standard instead of the one under test.
     if [ -f /check/install_required.R ]; then Rscript /check/install_required.R || true; fi
+    # --as-cran's 'checking CRAN incoming feasibility' step uses the 'curl'
+    # R package to verify URLs/DOIs in the docs. It isn't a dependency of
+    # any of our packages; without it, URL/DOI verification errors out
+    # (rather than just flagging a bad link), which escalates that check from an
+    # informational NOTE to a WARNING.
+    Rscript -e \"if (!requireNamespace('curl', quietly = TRUE)) install.packages('curl', lib = Sys.getenv('R_LIBS_USER'))\" || true
 ${MAKEVARS_STEP}
     # Remove stale locks and old cpp4r/later2/later2test before reinstalling
     rm -rf /cache/R_libs/00LOCK-* /cache/R_libs/cpp4r /cache/R_libs/later2 /cache/R_libs/later2test
+    export LATER2TEST_CXX_STD='${LATER2TEST_CXX_STD}'
     R CMD INSTALL --library=/cache/R_libs /check/${CPP4R_FILE}
     R CMD INSTALL --library=/cache/R_libs /check/${LATER2_FILE}
-    export LATER2TEST_CXX_STD='${LATER2TEST_CXX_STD}'
-    R CMD INSTALL --no-staged-install --library=/cache/R_libs /check/${LATER2TEST_FILE}
+    R CMD INSTALL --library=/cache/R_libs /check/${LATER2TEST_FILE}
     cd /check
     export _R_CHECK_FORCE_SUGGESTS_=false
     R CMD check --as-cran --no-manual ${LATER2TEST_FILE}

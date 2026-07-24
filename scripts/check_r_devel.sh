@@ -48,7 +48,7 @@ echo "Checking/installing required packages in R-devel..."
   }
 '
 
-# Patch later2test/src/Makevars with the requested C++ standard
+# Patch cpp4rtest/src/Makevars with the requested C++ standard
 "${SCRIPT_DIR}/check_prepare.sh" "${std}" "${compiler}"
 
 # Set up compiler override via R_MAKEVARS_USER
@@ -83,18 +83,18 @@ rm -f "${LOG}"
 # Capture everything (stdout+stderr) into the log while printing to console
 exec > >(tee -a "${LOG}") 2>&1
 
-# Register and document later2test using R-devel
-echo "Registering later2test with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'cpp4r::register("./later2test")'
+# Register and document cpp4rtest using R-devel
+echo "Registering cpp4rtest with R-devel..."
+"${RSCRIPT_DEVEL}" --vanilla -e 'cpp4r::register("./cpp4rtest")'
 
-echo "Documenting later2test with R-devel..."
-"${RSCRIPT_DEVEL}" --vanilla -e 'tinydev::pkg_document("./later2test")'
+echo "Documenting cpp4rtest with R-devel..."
+"${RSCRIPT_DEVEL}" --vanilla -e 'tinydev::pkg_document("./cpp4rtest")'
 
 # Build package tarball using R-devel
 echo "Building tarball with R-devel..."
-TARBALL=$("${RSCRIPT_DEVEL}" --vanilla -e 'cat(tinydev::pkg_build("./later2test"))')
+TARBALL=$("${RSCRIPT_DEVEL}" --vanilla -e 'cat(tinydev::pkg_build("./cpp4rtest"))')
 if [ -z "${TARBALL}" ]; then
-  echo "Failed to build tarball for later2test."
+  echo "Failed to build tarball for cpp4rtest."
   exit 1
 fi
 
@@ -105,10 +105,10 @@ echo "Running R CMD check with R-devel..."
 "${R_DEVEL}" CMD check --as-cran --no-manual "${TARBALL}" || true
 
 # If there was an error, copy the install log for inspection
-if [ -f "./later2test.Rcheck/00install.out" ]; then
-  cp "./later2test.Rcheck/00install.out" "./check-r-devel/install-${std}-${compiler}-devel.log"
+if [ -f "./cpp4rtest.Rcheck/00install.out" ]; then
+  cp "./cpp4rtest.Rcheck/00install.out" "./check-r-devel/install-${std}-${compiler}-devel.log"
   echo "=== BEGIN 00install.out ==="
-  cat "./later2test.Rcheck/00install.out"
+  cat "./cpp4rtest.Rcheck/00install.out"
   echo "=== END 00install.out ==="
 fi
 

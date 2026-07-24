@@ -373,7 +373,8 @@ template <typename Fn> DL_FUNC to_dl_func(Fn fn) {
 }
 } // namespace
 
-[[cpp4r::init]] void later_init(DllInfo *) {
+[[cpp4r::init]] void later_init(DllInfo *dll) {
+  (void)dll; // squelch compiler warning
   R_RegisterCCallable("later2", "execLaterNative2",
                       to_dl_func(&execLaterNative2));
   R_RegisterCCallable("later2", "execLaterFdNative",

@@ -1,0 +1,373 @@
+Updating and loading repositories:
+ Fedora 42 - x86_64                     100% |   8.5 KiB/s |   3.4 KiB |  00m00s
+ Fedora 42 - x86_64 - Updates           100% |  16.6 KiB/s |   3.4 KiB |  00m00s
+ Fedora 42 openh264 (From Cisco) - x86_ 100% |   8.2 KiB/s | 986.0   B |  00m00s
+Repositories loaded.
+Nothing to do.
+Package "pkgconf-pkg-config-2.3.0-2.fc42.x86_64" is already installed.
+Package "gcc-gfortran-15.2.1-7.fc42.x86_64" is already installed.
+Package "libcurl-devel-8.11.1-8.fc42.x86_64" is already installed.
+
+Installing declared dependencies: tinytest, later2
+trying URL 'https://cloud.r-project.org/src/contrib/tinytest_1.4.3.tar.gz'
+Content type 'application/x-gzip' length 595901 bytes (581 KB)
+==================================================
+downloaded 581 KB
+
+* installing *source* package ‘tinytest’ ...
+** this is package ‘tinytest’ version ‘1.4.3’
+** package ‘tinytest’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+  converting help for package ‘tinytest’
+    finding HTML links ... done
+    at_home                                 html  
+    build_install_test                      html  
+    exit_file                               html  
+    expect_equal                            html  
+    expect_equal_to_reference               html  
+    expect_length                           html  
+    expect_match                            html  
+    get_call_wd                             html  
+    ignore                                  html  
+    print.tinytest                          html  
+    puppy                                   html  
+    register_tinytest_extension             html  
+    report_side_effects                     html  
+    run_test_dir                            html  
+    run_test_file                           html  
+    setup_tinytest                          html  
+    test_package                            html  
+    tinytest                                html  
+    tinytests                               html  
+    using                                   html  
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (tinytest)
+
+The downloaded source packages are in
+	‘/tmp/RtmpVyCoZ4/downloaded_packages’
+Warning message:
+package ‘later2’ is not available for this version of R
+
+A version of this package for your version of R might be available elsewhere,
+see the ideas at
+https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Installing-packages 
+trying URL 'https://raw.githubusercontent.com/r-hub/repos/main/fedora-42/4.7/src/contrib/curl_7.1.0_b2_R4.7_x86_64-pc-linux-gnu-fedora-42.tar.gz'
+Error in download.file(urls, destfiles, "libcurl", mode = "wb", ...) : 
+  cannot open URL 'https://raw.githubusercontent.com/r-hub/repos/main/fedora-42/4.7/src/contrib/curl_7.1.0_b2_R4.7_x86_64-pc-linux-gnu-fedora-42.tar.gz'
+In addition: Warning message:
+In download.file(urls, destfiles, "libcurl", mode = "wb", ...) :
+  cannot open URL 'https://raw.githubusercontent.com/r-hub/repos/main/fedora-42/4.7/src/contrib/curl_7.1.0_b2_R4.7_x86_64-pc-linux-gnu-fedora-42.tar.gz': HTTP status was '404 Not Found'
+Warning in download.packages(pkgs, destdir = tmpd, available = available,  :
+  download of package ‘curl’ failed
+* installing *source* package ‘cpp4r’ ...
+** this is package ‘cpp4r’ version ‘1.1.0’
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+  converting help for package ‘cpp4r’
+    finding HTML links ... done
+    cpp4r-package                           html  
+    pkg_template                            html  
+    register                                html  
+    unvendor                                html  
+    vendor                                  html  
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (cpp4r)
+* installing *source* package ‘later2’ ...
+** this is package ‘later2’ version ‘0.1’
+** using staged installation
+Running configure script
+-latomic linker flag not needed.
+** libs
+using C compiler: ‘gcc (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)’
+using C++ compiler: ‘g++ (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)’
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c callback_registry.cpp -o callback_registry.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c cpp4r.cpp -o cpp4r.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c debug.cpp -o debug.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c fd.cpp -o fd.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c later2.cpp -o later2.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c later_posix.cpp -o later_posix.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c later_win32.cpp -o later_win32.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c timer_posix.cpp -o timer_posix.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c timestamp_unix.cpp -o timestamp_unix.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c timestamp_win32.cpp -o timestamp_win32.o
+gcc -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2  -c tinycthread.c -o tinycthread.o
+g++ -std=gnu++20 -I"/opt/R/devel/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c wref.cpp -o wref.o
+g++ -std=gnu++20 -shared -L/opt/R/devel/lib/R/lib -L/usr/local/lib -o later2.so callback_registry.o cpp4r.o debug.o fd.o later2.o later_posix.o later_win32.o timer_posix.o timestamp_unix.o timestamp_win32.o tinycthread.o wref.o -pthread -L/opt/R/devel/lib/R/lib -lR
+installing to /cache/R_libs/00LOCK-later2/00new/later2/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+  converting help for package ‘later2’
+    finding HTML links ... done
+    create_loop                             html  
+    format.event_loop                       html  
+    format.promise                          html  
+    is.promise                              html  
+    later                                   html  
+    later2-package                          html  
+    later_fd                                html  
+    list_queue                              html  
+    logLevel                                html  
+    loop_empty                              html  
+    next_op_secs                            html  
+    print.event_loop                        html  
+    print.promise                           html  
+    promise                                 html  
+    run_now                                 html  
+    then                                    html  
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (later2)
+* installing *source* package ‘later2test’ ...
+** this is package ‘later2test’ version ‘0.1’
+** using staged installation
+Running configure script
+Using CXX_STD=CXX17
+** libs
+specified C++17
+using C++ compiler: ‘g++ (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)’
+using C++17
+g++ -std=gnu++17 -I"/opt/R/devel/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c cpp4r.cpp -o cpp4r.o
+g++ -std=gnu++17 -I"/opt/R/devel/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c later2test.cpp -o later2test.o
+g++ -std=gnu++17 -shared -L/opt/R/devel/lib/R/lib -L/usr/local/lib -o later2test.so cpp4r.o later2test.o -fopenmp -L/opt/R/devel/lib/R/lib -lR
+installing to /cache/R_libs/00LOCK-later2test/00new/later2test/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+  converting help for package ‘later2test’
+    finding HTML links ... done
+    later2test-package                      html  
+    testing                                 html  
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (later2test)
+* using log directory ‘/check/later2test.Rcheck’
+* using R Under development (unstable) (2026-05-15 r90061)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)
+    GNU Fortran (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)
+* running under: Fedora Linux 42 (Container Image)
+* using session charset: UTF-8
+* current time: 2026-07-24 21:19:21 UTC
+* using options ‘--no-manual --as-cran’
+* checking for file ‘later2test/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘later2test’ version ‘0.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... WARNING
+Maintainer: ‘Mauricio Vargas Sepulveda <m.vargas.sepulveda@gmail.com>’
+
+New submission
+
+Strong dependencies not in the CRAN or BioC software repositories:
+  later2
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘later2test’ can be installed ... OK
+* used C++ compiler: ‘g++ (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)’
+* checking C++ specification ... INFO
+  specified C++17
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking line endings in shell scripts ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... OK
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
+* checking use of SHLIB_OPENMP_*FLAGS in Makefiles ... OK
+* checking pragmas in C/C++ headers and code ... OK
+* checking compilation flags used ... OK
+* checking compiled code ... OK
+* checking examples ... NONE
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ...
+  Running ‘tinytest.R’
+ OK
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+
+Status: 1 WARNING
+See
+  ‘/check/later2test.Rcheck/00check.log’
+for details.
+
+=== 00install.out ===
+* installing *source* package ‘later2test’ ...
+** this is package ‘later2test’ version ‘0.1’
+** using staged installation
+Running configure script
+Using CXX_STD=CXX17
+** libs
+specified C++17
+using C++ compiler: ‘g++ (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)’
+using C++17
+g++ -std=gnu++17 -I"/opt/R/devel/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c cpp4r.cpp -o cpp4r.o
+g++ -std=gnu++17 -I"/opt/R/devel/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c later2test.cpp -o later2test.o
+g++ -std=gnu++17 -shared -L/opt/R/devel/lib/R/lib -L/usr/local/lib -o later2test.so cpp4r.o later2test.o -fopenmp -L/opt/R/devel/lib/R/lib -lR
+installing to /check/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+  converting help for package ‘later2test’
+    finding HTML links ... done
+    later2test-package                      html  
+    testing                                 html  
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (later2test)
+=== 00check.log ===
+* using log directory ‘/check/later2test.Rcheck’
+* using R Under development (unstable) (2026-05-15 r90061)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)
+    GNU Fortran (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)
+* running under: Fedora Linux 42 (Container Image)
+* using session charset: UTF-8
+* current time: 2026-07-24 21:19:21 UTC
+* using options ‘--no-manual --as-cran’
+* checking for file ‘later2test/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘later2test’ version ‘0.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... WARNING
+Maintainer: ‘Mauricio Vargas Sepulveda <m.vargas.sepulveda@gmail.com>’
+
+New submission
+
+Strong dependencies not in the CRAN or BioC software repositories:
+  later2
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘later2test’ can be installed ... OK
+* used C++ compiler: ‘g++ (GCC) 15.2.1 20260123 (Red Hat 15.2.1-7)’
+* checking C++ specification ... INFO
+  specified C++17
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking line endings in shell scripts ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... OK
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
+* checking use of SHLIB_OPENMP_*FLAGS in Makefiles ... OK
+* checking pragmas in C/C++ headers and code ... OK
+* checking compilation flags used ... OK
+* checking compiled code ... OK
+* checking examples ... NONE
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘tinytest.R’
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 1 WARNING

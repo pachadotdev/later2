@@ -1,35 +1,26 @@
 clean:
 	@Rscript -e 'tinydev::pkg_clean(".");'
 
+document:
+	@Rscript -e 'tinydev::pkg_document(".");'
+
 install:
 	@Rscript -e 'tinydev::pkg_install(".");'
 
-STANDARDS := cxx17 cxx20 cxx23
-COMPILERS := gcc clang
-
-ALL_CHECKS := $(foreach std,$(STANDARDS),$(foreach comp,$(COMPILERS),check-local-$(std)-$(comp)))
-
-check-init:
+check:
+	@Rscript -e 'tinydev::pkg_install("../cpp4r");'
 	@Rscript -e 'tinydev::pkg_check(".");'
-	@$(MAKE) install
+	@Rscript -e 'tinydev::pkg_install(".");'
+	@Rscript -e 'tinydev::pkg_check("./later2test");'
 
-check: check-init $(ALL_CHECKS)
-
-define run-check
-check-local-$(1)-$(2): check-init
-	@echo "Checking C++ code with $(1) standard and $(2) compiler"
-	./scripts/check_prepare.sh "$(1)" "$(2)"; \
-	if ! ./scripts/check_run.sh "$(1)" "$(2)"; then \
-		echo "Check failed"; \
-		./scripts/check_restore.sh "$(1)" "$(2)"; \
-		exit 1; \
-	fi; \
-	./scripts/check_restore.sh "$(1)" "$(2)"
-endef
+site:
+	@Rscript -e 'tinydev::pkg_document(".");'
+	@Rscript -e 'pkgsite::build_site(".");'
+	python -m http.server --directory docs
 
 # CXX_STDS := cxx11 cxx14 cxx17 cxx20 cxx23
 CXX_STDS := cxx17 cxx20 cxx23
-CXX_COMPILERS := gcc
+CXX_COMPILERS := gcc clang
 
 # Loop the single-standard check below over every supported C++ standard and
 # compiler.
@@ -40,12 +31,6 @@ check-cxx:
 			./scripts/check.sh ubuntu-release $$std $$cc || exit 1; \
 		done; \
 	done
-
-# make check-cran-<image>, e.g. check-cran-gcc16, check-cran-rocky8:
-# full CRAN-style check via Docker using <image>'s default toolchain.
-check-cran-%:
-	@chmod +x ./scripts/check.sh
-	@./scripts/check.sh $*
 
 # make check-c11-gcc, check-c14-gcc, check-c17-gcc, check-c20-gcc, check-c23-gcc:
 # quick Docker check pinning GCC to a single C++ standard.
@@ -58,6 +43,43 @@ check-cxx%-gcc:
 check-cxx%-clang:
 	@chmod +x ./scripts/check.sh
 	@./scripts/check.sh ubuntu-release cxx$* clang
+
+# make check-cran-<image>, e.g. check-cran-gcc16, check-cran-rocky8:
+# full CRAN-style check via Docker using <image>'s default toolchain.
+check-cran-%:
+	@chmod +x ./scripts/check.sh
+	@./scripts/check.sh $*
+
+check-cran-extra-%:
+	@chmod +x ./scripts/check.sh
+	@./scripts/check.sh $*
+
+# CRAN-like containers (pair: CRAN name : r-hub image)
+CRAN_EXTRA_PAIRS := \
+	r-devel-linux-x86_64-debian-clang:ubuntu-clang \
+	r-devel-linux-x86_64-debian-gcc:ubuntu-gcc15 \
+	r-patched-linux-x86_64:ubuntu-next \
+	r-release-linux-x86_64:ubuntu-release
+
+# Extra CRAN check images
+CRAN_EXTRA := atlas clang-asan clang-ubsan clang21 clang22 donttest \
+	gcc16 gcc-asan lto mkl nold nosuggests rchk valgrind
+
+# Loop the single-image CRAN check above over every image in CRAN_EXTRA_PAIRS
+# (the r-hub image is the part of each pair after the colon).
+check-cran:
+	@chmod +x ./scripts/check.sh
+	@for pair in $(CRAN_EXTRA_PAIRS); do \
+		image=$${pair#*:}; \
+		./scripts/check.sh $$image || exit 1; \
+	done
+
+# Loop the single-image CRAN check above over every image in CRAN_EXTRA.
+check-cran-extra:
+	@chmod +x ./scripts/check.sh
+	@for image in $(CRAN_EXTRA); do \
+		./scripts/check.sh $$image || exit 1; \
+	done
 
 clang_format=`which clang-format-21`
 

@@ -7,8 +7,8 @@ compiler=${2:-gcc}
 
 echo "Restoring files for $std and $compiler"
 
-# Restore CXX_STD to later2test's default (CXX23)
-(cd ./later2test && ./configure)
+# Restore CXX_STD to cpp4rtest's default (CXX23)
+(cd ./cpp4rtest && ./configure)
 
 # Clear check files
-rm -rf ./later2test.Rcheck || true
+rm -rf ./cpp4rtest.Rcheck || true

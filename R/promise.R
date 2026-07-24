@@ -360,12 +360,26 @@ is.promise <- function(x) {
   inherits(x, "promise")
 }
 
-#' @export
+#' Format a promise
+#'
+#' @param x A promise object.
+#' @param ... Further arguments passed to or from other methods (currently
+#'   unused).
+#' @return A character string.
+#' @keywords internal
+#' @exportS3Method
 format.promise <- function(x, ...) {
   attr(x, "promise_impl", exact = TRUE)$format()
 }
 
-#' @export
+#' Print a promise
+#'
+#' @param x A promise object.
+#' @param ... Further arguments passed to or from other methods (currently
+#'   unused).
+#' @return `NULL`, invisibly. Called for its side effect of printing.
+#' @keywords internal
+#' @exportS3Method
 print.promise <- function(x, ...) {
   cat(paste(format(x), collapse = "\n"), "\n", sep = "")
 }

@@ -164,7 +164,14 @@ global_loop <- function() {
   .globals$global_loop
 }
 
-#' @export
+#' Format an event loop
+#'
+#' @param x An event loop object.
+#' @param ... Further arguments passed to or from other methods (currently
+#'   unused).
+#' @return A character string.
+#' @keywords internal
+#' @exportS3Method
 format.event_loop <- function(x, ...) {
   str <- paste0("<event loop> ID: ", x$id)
   if (!exists_loop(x)) {
@@ -173,7 +180,14 @@ format.event_loop <- function(x, ...) {
   str
 }
 
-#' @export
+#' Print an event loop
+#'
+#' @param x An event loop object.
+#' @param ... Further arguments passed to or from other methods (currently
+#'   unused).
+#' @return `NULL`, invisibly. Called for its side effect of printing.
+#' @keywords internal
+#' @exportS3Method
 print.event_loop <- function(x, ...) {
   cat(format(x, ...))
 }
