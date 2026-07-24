@@ -4,9 +4,25 @@ echo "Running configure script"
 
 # Allow the C++ standard declared via CXX_STD to be overridden at install
 # time (e.g. by scripts/check.sh, which pins it to whichever standard is
-# currently under test: CXX17/CXX20/CXX23). Falls back to CXX23, later2test's
-# normal default, when unset.
-CXX_STD="${LATER2TEST_CXX_STD:-CXX23}"
+# currently under test: CXX17/CXX20/CXX23).
+if [ -n "${LATER2TEST_CXX_STD}" ]; then
+  CXX_STD="$LATER2TEST_CXX_STD"
+else
+  # No standard pinned (full default-toolchain CRAN-style check): probe
+  # what the compiler R would actually use supports and pick the newest,
+  # falling back gracefully instead of hard-failing on older-toolchain
+  # check images (e.g. Ubuntu 22.04's stock clang-15, which predates C++23).
+  CXX=$(R CMD config CXX 2>/dev/null)
+  CXX_STD="CXX17"
+  for pair in "CXX23:c++23" "CXX20:c++20"; do
+    std="${pair%%:*}"
+    flag="${pair##*:}"
+    if echo 'int main(){}' | ${CXX} -std="gnu${flag}" -x c++ -fsyntax-only - >/dev/null 2>&1; then
+      CXX_STD="$std"
+      break
+    fi
+  done
+fi
 echo "Using CXX_STD=$CXX_STD"
 
 sed -e "s|@cxx_std@|$CXX_STD|" src/Makevars.in > src/Makevars

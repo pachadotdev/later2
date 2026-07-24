@@ -19,13 +19,13 @@ Type 'q()' to quit R.
 > if (requireNamespace("tinytest", quietly = TRUE)) {
 +   tinytest::test_package("later2test")
 + }
-test-c-api.R..................    1 tests OK 0.4s
+test-c-api.R..................    1 tests OK 67ms
 test-later-fd.R...............    1 tests OK 2ms
 test-promises.R...............    4 tests OK 4ms
 test-run_now.R................    2 tests OK test-run_now.R................    3 tests OK test-run_now.R................    3 tests OK 1.0s
-All ok, 9 results (1.5s)
+All ok, 9 results (1.1s)
 > 
 > 
 > proc.time()
    user  system elapsed 
-  0.779   0.440   1.757 
+  0.736   0.459   1.397 

@@ -6,35 +6,28 @@
     GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 * running under: Ubuntu 24.04.4 LTS
 * using session charset: UTF-8
-* current time: 2026-07-23 20:34:24 UTC
+* current time: 2026-07-24 19:51:48 UTC
 * using options ‘--no-manual --as-cran’
 * checking for file ‘later2test/DESCRIPTION’ ... OK
 * checking extension type ... Package
 * this is package ‘later2test’ version ‘0.1’
 * package encoding: UTF-8
-* checking CRAN incoming feasibility ... [4s/5s] WARNING
+* checking CRAN incoming feasibility ... [4s/7s] WARNING
 Maintainer: ‘Mauricio Vargas Sepulveda <m.vargas.sepulveda@gmail.com>’
 
 New submission
 
 Strong dependencies not in the CRAN or BioC software repositories:
   later2
-
-Checking URLs failed with message:
-  there is no package called ‘curl’
-
-Checking DOIs failed with message:
-  there is no package called ‘curl’
 * checking package namespace information ... OK
-* checking package dependencies ... INFO
-Packages suggested but not available for checking: 'knitr', 'rmarkdown'
+* checking package dependencies ... OK
 * checking if this is a source package ... OK
 * checking if there is a namespace ... OK
-* checking for .dll and .exe files ... OK
+* checking for executable files ... OK
 * checking for hidden files and directories ... OK
 * checking for portable file names ... OK
 * checking for sufficient/correct file permissions ... OK
-* checking whether package ‘later2test’ can be installed ... [11s/6s] OK
+* checking whether package ‘later2test’ can be installed ... [11s/7s] OK
 * used C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
 * checking C++ specification ... INFO
   specified C++20
@@ -49,7 +42,7 @@ Packages suggested but not available for checking: 'knitr', 'rmarkdown'
 * checking R files for syntax errors ... OK
 * checking whether the package can be loaded ... [1s/0s] OK
 * checking whether the package can be loaded with stated dependencies ... [1s/0s] OK
-* checking whether the package can be unloaded cleanly ... [0s/0s] OK
+* checking whether the package can be unloaded cleanly ... [1s/0s] OK
 * checking whether the namespace can be loaded with stated dependencies ... [1s/0s] OK
 * checking whether the namespace can be unloaded cleanly ... [1s/0s] OK
 * checking loading without being on the library search path ... [1s/0s] OK
@@ -58,7 +51,7 @@ Packages suggested but not available for checking: 'knitr', 'rmarkdown'
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
-* checking R code for possible problems ... [12s/3s] OK
+* checking R code for possible problems ... [12s/4s] OK
 * checking Rd files ... [1s/0s] OK
 * checking Rd metadata ... OK
 * checking Rd line widths ... OK

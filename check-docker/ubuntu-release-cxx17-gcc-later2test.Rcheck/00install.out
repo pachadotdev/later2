@@ -8,15 +8,6 @@ specified C++17
 using C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
 using C++17
 g++ -std=c++17 -pedantic-errors -Wall -Wextra -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c cpp4r.cpp -o cpp4r.o
-cpp4r.cpp:66:34: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
-   66 |     {"_later2test_launchBgTask", (DL_FUNC) &_later2test_launchBgTask, 1},
-      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cpp4r.cpp:68:31: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
-   68 |     {"_later2test_cpp_error", (DL_FUNC) &_later2test_cpp_error, 1},
-      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cpp4r.cpp:69:30: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP, SEXP, SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
-   69 |     {"_later2test_asyncFib", (DL_FUNC) &_later2test_asyncFib, 3},
-      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 g++ -std=c++17 -pedantic-errors -Wall -Wextra -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c later2test.cpp -o later2test.o
 g++ -std=c++17 -pedantic-errors -Wall -Wextra -shared -L/opt/R/4.6.0/lib/R/lib -L/usr/local/lib -o later2test.so cpp4r.o later2test.o -fopenmp -L/opt/R/4.6.0/lib/R/lib -lR
 installing to /check/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs

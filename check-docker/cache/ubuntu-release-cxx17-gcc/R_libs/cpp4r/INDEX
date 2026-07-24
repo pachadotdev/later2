@@ -1,3 +1,4 @@
+cpp4r-package           Title: Header-Only 'C++' and 'R' Interface
 pkg_template            Start a new project with the cpp4r package
                         template
 register                Generates wrappers for registered C++ functions

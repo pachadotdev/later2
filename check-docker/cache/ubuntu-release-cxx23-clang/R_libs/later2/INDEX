@@ -1,6 +1,8 @@
 create_loop             Private event loops
 is.promise              Determine whether an object is a promise
 later                   Executes a function later
+later2-package          Utilities for Scheduling Functions to Execute
+                        Later with Event Loops
 later_fd                Executes a function when a file descriptor is
                         ready
 next_op_secs            Relative time to next scheduled operation
