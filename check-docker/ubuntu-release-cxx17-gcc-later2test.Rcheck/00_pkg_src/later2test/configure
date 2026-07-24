@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo "Running configure script"
+
+# Allow the C++ standard declared via CXX_STD to be overridden at install
+# time (e.g. by scripts/check.sh, which pins it to whichever standard is
+# currently under test: CXX17/CXX20/CXX23). Falls back to CXX23, later2test's
+# normal default, when unset.
+CXX_STD="${LATER2TEST_CXX_STD:-CXX23}"
+echo "Using CXX_STD=$CXX_STD"
+
+sed -e "s|@cxx_std@|$CXX_STD|" src/Makevars.in > src/Makevars
+
+# Success
+exit 0

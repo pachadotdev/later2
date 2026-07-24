@@ -30,8 +30,8 @@ fi
 export R_MAKEVARS_USER="${MAKEVARS_FILE}"
 
 # Ensure results directory and set per-iteration log
-mkdir -p "./check-gcc-clang"
-LOG="./check-gcc-clang/check-${std}-${compiler}.log"
+mkdir -p "./check-docker"
+LOG="./check-docker/check-${std}-${compiler}.log"
 
 # clear previous log if it exists
 rm -f "${LOG}"
@@ -57,7 +57,7 @@ R CMD check --as-cran --no-manual "${TARBALL}" || true
 
 # If there was an error, copy the install log to the results directory for inspection
 if [ -f "./later2test.Rcheck/00install.out" ]; then
-	cp "./later2test.Rcheck/00install.out" "./check-gcc-clang/install-${std}-${compiler}.log"
+	cp "./later2test.Rcheck/00install.out" "./check-docker/install-${std}-${compiler}.log"
 	echo "=== BEGIN 00install.out ==="
 	cat "./later2test.Rcheck/00install.out"
 	echo "=== END 00install.out ==="

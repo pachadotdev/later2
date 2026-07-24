@@ -9,5 +9,7 @@ echo "==============================="
 echo "Preparing C++ code with $std standard and $compiler compiler"
 echo ""
 
-# Patch CXX_STD in later2test/src/Makevars
-sed -i "s/^CXX_STD = .*/CXX_STD = ${std}/" ./later2test/src/Makevars
+# Regenerate later2test/src/Makevars from Makevars.in, pinned to $std, via
+# the package's own configure script (the same one R CMD INSTALL runs from a
+# tarball) so this local check exercises the same code path as check.sh.
+(cd ./later2test && LATER2TEST_CXX_STD="$std" ./configure)

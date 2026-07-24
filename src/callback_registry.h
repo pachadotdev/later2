@@ -93,7 +93,7 @@ private:
 typedef std::shared_ptr<Callback> Callback_sp;
 
 template <typename T> struct pointer_less_than {
-  const bool operator()(const T a, const T b) const { return *a < *b; }
+  bool operator()(const T a, const T b) const { return *a < *b; }
 };
 
 // Stores R function callbacks, ordered by timestamp.

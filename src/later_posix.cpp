@@ -81,7 +81,7 @@ public:
   }
 };
 
-static void async_input_handler(void *data) {
+static void async_input_handler(void *) {
   ASSERT_MAIN_THREAD()
   set_fd(false);
 
@@ -139,7 +139,7 @@ static InputHandler *dummyInputHandlerHandle;
 // If the real input handler has been removed, the dummy input handler removes
 // itself. The real input handler cannot remove both; otherwise a segfault
 // could occur.
-static void remove_dummy_handler(void *data) {
+static void remove_dummy_handler(void *) {
   ASSERT_MAIN_THREAD()
   removeInputHandler(&R_InputHandlers, dummyInputHandlerHandle);
   if (dummy_pipe_in > 0) {

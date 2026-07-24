@@ -8,18 +8,18 @@ for std in CXX23 CXX20 CXX17; do
     echo "==============================="
     echo "Checking C++ code with $std standard and $compiler compiler"
 
-    mkdir -p ./check-gcc-clang
+    mkdir -p ./check-docker
 
     ./scripts/check_prepare.sh "$std" "$compiler"
 
-    touch ./check-gcc-clang/check-results.md
+    touch ./check-docker/check-results.md
 
     # Run check, but don't exit on failure
     if ! ./scripts/check_run.sh "$std" "$compiler"; then
       echo "WARNING: check_run.sh failed for $std standard with $compiler, continuing..."
-      echo "$std + $compiler = fail" >> ./check-gcc-clang/check-results.md || true
+      echo "$std + $compiler = fail" >> ./check-docker/check-results.md || true
     else
-      echo "$std + $compiler = ok" >> ./check-gcc-clang/check-results.md || true
+      echo "$std + $compiler = ok" >> ./check-docker/check-results.md || true
     fi
 
     ./scripts/check_restore.sh "$std" "$compiler"

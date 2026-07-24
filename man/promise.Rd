@@ -29,7 +29,7 @@ of the computation. If the task fails, call `reject(reason)`, where
 p1 <- promise(function(resolve, reject) {
   later(function() resolve(runif(1)), delay = 2)
 })
-p1 |> then(print)
+then(p1, print)
 run_now(3)
 
 }

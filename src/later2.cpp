@@ -1,3 +1,4 @@
+#include <cstring>
 #include <memory>
 #include <queue>
 
@@ -354,11 +355,30 @@ extern "C" int execLaterFdNative(void (*)(int *, void *), void *, int,
                                  struct pollfd *, double, int);
 extern "C" int apiVersion();
 
-[[cpp4r::init]] void later_init(DllInfo *dll) {
-  R_RegisterCCallable("later2", "execLaterNative2", (DL_FUNC)&execLaterNative2);
+namespace {
+// R_RegisterCCallable requires a DL_FUNC (void (*)()), which necessarily
+// differs from the real signature of each callable. A direct cast between
+// incompatible function pointer types triggers -Wcast-function-type, and
+// CRAN's checks disallow suppressing that with compiler pragmas. Reinterpret
+// the pointer by copying its bytes instead: this never casts between
+// function pointer types (memcpy's arguments are ordinary object pointers to
+// the local function-pointer variables), so it is warning-free and portable
+// across the platforms R supports.
+template <typename Fn> DL_FUNC to_dl_func(Fn fn) {
+  static_assert(sizeof(DL_FUNC) == sizeof(Fn),
+                "function pointer size mismatch");
+  DL_FUNC out;
+  std::memcpy(&out, &fn, sizeof(out));
+  return out;
+}
+} // namespace
+
+[[cpp4r::init]] void later_init(DllInfo *) {
+  R_RegisterCCallable("later2", "execLaterNative2",
+                      to_dl_func(&execLaterNative2));
   R_RegisterCCallable("later2", "execLaterFdNative",
-                      (DL_FUNC)&execLaterFdNative);
-  R_RegisterCCallable("later2", "apiVersion", (DL_FUNC)&apiVersion);
+                      to_dl_func(&execLaterFdNative));
+  R_RegisterCCallable("later2", "apiVersion", to_dl_func(&apiVersion));
 }
 
 extern "C" int apiVersion() { return LATER2_DLL_API_VERSION; }

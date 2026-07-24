@@ -7,6 +7,7 @@
 *.dll
 inst/doc
 src/Makevars
+later2test/src/Makevars
 CRAN-RELEASE
 docs
 .cache

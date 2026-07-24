@@ -24,7 +24,6 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    rlang,
     tinytest
 Depends: R(>= 4.0.0)
 Description: Unit tests that use the 'later2' API to test the behaviour of

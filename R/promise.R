@@ -314,7 +314,7 @@ finallyToRejected <- function(onFinally) {
 #' p1 <- promise(function(resolve, reject) {
 #'   later(function() resolve(runif(1)), delay = 2)
 #' })
-#' p1 |> then(print)
+#' then(p1, print)
 #' run_now(3)
 #'
 #' @export

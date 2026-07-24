@@ -7,8 +7,8 @@ compiler=${2:-gcc}
 
 echo "Restoring files for $std and $compiler"
 
-# Restore CXX_STD to default
-sed -i 's/^CXX_STD = .*/CXX_STD = CXX23/' ./later2test/src/Makevars
+# Restore CXX_STD to later2test's default (CXX23)
+(cd ./later2test && ./configure)
 
 # Clear check files
 rm -rf ./later2test.Rcheck || true

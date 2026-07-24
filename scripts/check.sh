@@ -1,0 +1,305 @@
+#!/usr/bin/env bash
+# Docker-based R CMD check for later2 / later2test.
+#
+# Two modes, selected by whether a C++ standard is given as the 2nd arg:
+#
+#   check.sh <image>              Full CRAN-style check using the image's
+#                                  default toolchain, e.g. "gcc16" for the
+#                                  latest GCC, or "rocky8" / "debian10" for
+#                                  other platforms.
+#
+#   check.sh <image> <std> [cc]   Also pins CXX to a single C++ standard
+#                                  (cxx11|cxx14|cxx17|cxx20|cxx23) with
+#                                  compiler "gcc" (default) or "clang", to
+#                                  confirm clean compilation, e.g.
+#                                  "check.sh ubuntu-release cxx17 clang".
+#
+# Usage: check.sh <rhub-image> [cxx-std] [gcc|clang]
+set -euo pipefail
+
+IMAGE="${1:?Usage: $0 <rhub-image> [cxx-std] [gcc|clang]}"
+STD="${2:-}"
+COMPILER="${3:-gcc}"
+
+case "$STD" in
+  "" ) STD_FLAG="" ;;
+  cxx11) STD_FLAG="-std=c++11 -pedantic-errors -Wall -Wextra" ;;
+  cxx14) STD_FLAG="-std=c++14 -pedantic-errors -Wall -Wextra" ;;
+  cxx17) STD_FLAG="-std=c++17 -pedantic-errors -Wall -Wextra" ;;
+  cxx20) STD_FLAG="-std=c++20 -pedantic-errors -Wall -Wextra" ;;
+  cxx23) STD_FLAG="-std=c++23 -pedantic-errors -Wall -Wextra" ;;
+  *) echo "Unknown C++ standard: $STD (expected cxx11|cxx14|cxx17|cxx20|cxx23)"; exit 1 ;;
+esac
+
+case "$COMPILER" in
+  gcc|clang) ;;
+  *) echo "Unknown compiler: $COMPILER (expected gcc|clang)"; exit 1 ;;
+esac
+
+if [ -n "${FULL_IMAGE_OVERRIDE:-}" ]; then
+  FULL_IMAGE="$FULL_IMAGE_OVERRIDE"
+else
+  FULL_IMAGE="ghcr.io/r-hub/containers/${IMAGE}:latest"
+fi
+
+SUFFIX="${IMAGE}${STD:+-$STD-$COMPILER}"
+LOG_DIR="./check-docker"
+LOG="${LOG_DIR}/${SUFFIX}.log"
+CACHE_DIR="$(pwd)/check-docker/cache/${SUFFIX}"
+CHECK_DIR=$(mktemp -d)
+
+mkdir -p "$LOG_DIR"
+mkdir -p "$CACHE_DIR"
+trap 'rm -rf "$CHECK_DIR"' EXIT
+
+echo "==============================="
+if [ -n "$STD" ]; then
+  echo "Docker check: $IMAGE (forcing ${STD}, ${COMPILER})"
+else
+  echo "Docker check: $IMAGE (default toolchain)"
+fi
+echo "==============================="
+
+if ! docker image inspect "$FULL_IMAGE" >/dev/null 2>&1; then
+  echo "Pulling $FULL_IMAGE..."
+  if ! docker pull "$FULL_IMAGE" >/dev/null 2>&1; then
+    echo "Initial pull failed for $FULL_IMAGE"
+    # If the image is the r-hub GHCR image and pull was denied, try common fallbacks
+    FALLBACK=""
+    if [[ "${FULL_IMAGE}" == ghcr.io/r-hub/containers/rocky8:* || "${IMAGE}" == "rocky8" ]]; then
+      FALLBACK="docker.io/rockylinux/rockylinux:8"
+    elif [[ "${IMAGE}" == "debian10" ]]; then
+      FALLBACK="docker.io/library/debian:10-slim"
+    else
+      # Try a docker.io mirror of the same path if present
+      FALLBACK="docker.io/${IMAGE}:latest"
+    fi
+
+    if [ -n "${FALLBACK}" ]; then
+      echo "Attempting fallback image: ${FALLBACK}"
+      if docker pull "${FALLBACK}" >/dev/null 2>&1; then
+        echo "Using fallback image ${FALLBACK}"
+        FULL_IMAGE="${FALLBACK}"
+      else
+        echo "Fallback pull failed for ${FALLBACK}; aborting."
+        exit 1
+      fi
+    else
+      echo "No fallback available; aborting."
+      exit 1
+    fi
+  fi
+else
+  echo "Using cached image $FULL_IMAGE"
+fi
+
+echo "Building package tarballs..."
+
+# tinydev::pkg_build()/devtools::build()/pkg_document() call
+# roxygen2::roxygenise(), which for packages with compiled code triggers a
+# full (often colorized, ANSI escape-laden) "R CMD INSTALL" *on the host*
+# (using the host's own default compiler/CXX_STD, unrelated to the
+# std/compiler this script is about to test inside Docker) to load the DLL.
+# That output goes to stdout, so capturing the tarball path via
+# `$(Rscript -e 'cat(...)')` directly would capture the noise too, producing
+# a garbled path; it's also just confusing to see in the console, since it
+# looks like (but isn't) the actual pinned-compiler check. Send it all to a
+# dedicated build log instead, and have each Rscript call write its result to
+# a temp file, then read the path back.
+BUILD_LOG="${LOG_DIR}/${SUFFIX}-build.log"
+: > "$BUILD_LOG"
+CPP4R_TARBALL_FILE=$(mktemp)
+LATER2_TARBALL_FILE=$(mktemp)
+LATER2TEST_TARBALL_FILE=$(mktemp)
+trap 'rm -rf "$CHECK_DIR" "$CPP4R_TARBALL_FILE" "$LATER2_TARBALL_FILE" "$LATER2TEST_TARBALL_FILE"' EXIT
+
+Rscript -e 'cpp4r::register("./later2test")' >>"$BUILD_LOG" 2>&1
+Rscript -e 'tinydev::pkg_document("./later2test")' >>"$BUILD_LOG" 2>&1
+Rscript -e "writeLines(tinydev::pkg_build('../cpp4r'), '${CPP4R_TARBALL_FILE}')" >>"$BUILD_LOG" 2>&1
+Rscript -e "writeLines(tinydev::pkg_build('.'), '${LATER2_TARBALL_FILE}')" >>"$BUILD_LOG" 2>&1
+Rscript -e "writeLines(tinydev::pkg_build('./later2test'), '${LATER2TEST_TARBALL_FILE}')" >>"$BUILD_LOG" 2>&1
+
+CPP4R_TARBALL=$(cat "$CPP4R_TARBALL_FILE")
+LATER2_TARBALL=$(cat "$LATER2_TARBALL_FILE")
+LATER2TEST_TARBALL=$(cat "$LATER2TEST_TARBALL_FILE")
+
+CPP4R_FILE=$(basename "$CPP4R_TARBALL")
+LATER2_FILE=$(basename "$LATER2_TARBALL")
+LATER2TEST_FILE=$(basename "$LATER2TEST_TARBALL")
+
+cp "$CPP4R_TARBALL" "$CHECK_DIR/"
+cp "$LATER2_TARBALL" "$CHECK_DIR/"
+cp "$LATER2TEST_TARBALL" "$CHECK_DIR/"
+
+# Create a minimal R script that installs an explicit list of packages when run inside the container
+cat > "$CHECK_DIR/install_required.R" <<'R_EOF'
+user_lib <- strsplit(Sys.getenv('R_LIBS_USER'), ':')[[1]][1]
+.libPaths(c(user_lib, .libPaths()))
+repos_snapshot_env <- Sys.getenv('RSPM_SNAPSHOT', '')
+if (nzchar(repos_snapshot_env)) {
+  if (grepl('^https?://', repos_snapshot_env)) {
+    options(repos = c(CRAN = repos_snapshot_env))
+  } else {
+    options(repos = c(CRAN = paste0('https://packagemanager.rstudio.com/cran/', repos_snapshot_env)))
+  }
+} else {
+  options(repos = c(CRAN = 'https://cloud.r-project.org'))
+}
+
+if (!requireNamespace('tinytest', quietly = TRUE)) {
+  install.packages('tinytest', lib = user_lib)
+}
+
+if (!requireNamespace('desc', quietly = TRUE)) {
+  install.packages('desc', lib = user_lib)
+}
+
+R_EOF
+
+# When a C++ standard was requested, build the shell snippet that pins CXX to
+# it inside the container. Left empty to use the image's default toolchain.
+#
+# Built from a fully-quoted heredoc (so nothing is expanded/escaped here) plus
+# plain text substitutions, to keep the "evaluate later, inside the
+# container" bits (bare $GXX/$GCC) free of backslash-escaping gymnastics.
+MAKEVARS_STEP=""
+if [ -n "$STD_FLAG" ]; then
+  if [ "$COMPILER" = "clang" ]; then
+    GXX_LINE='GXX="clang++"'
+    GCC_LINE='GCC="clang"'
+  else
+    GXX_LINE='GXX=$(R CMD config CXX | awk '"'"'{print $1}'"'"')'
+    GCC_LINE='GCC=$(R CMD config CC  | awk '"'"'{print $1}'"'"')'
+  fi
+
+  MAKEVARS_STEP=$(cat <<'HEREDOC'
+
+      # R installations often bake the default standard into CXX itself
+      # (e.g. CXX = g++ -std=gnu++20); `awk '{print $1}'` strips any such
+      # flags, keeping just the bare compiler binary. The desired standard is
+      # then applied exactly once via the CXX*STD variables, which R appends
+      # to CXX* when invoking the compiler (baking it into CXX* too would
+      # duplicate the flags on the command line).
+      __GXX_LINE__
+      __GCC_LINE__
+      mkdir -p ~/.R
+      {
+        echo "CC=$GCC"
+        echo "CXX=$GXX"
+        echo "CXXSTD=__STD_FLAG__"
+        echo "CXX11=$GXX"
+        echo "CXX11STD=__STD_FLAG__"
+        echo "CXX14=$GXX"
+        echo "CXX14STD=__STD_FLAG__"
+        echo "CXX17=$GXX"
+        echo "CXX17STD=__STD_FLAG__"
+        echo "CXX20=$GXX"
+        echo "CXX20STD=__STD_FLAG__"
+        echo "CXX23=$GXX"
+        echo "CXX23STD=__STD_FLAG__"
+      } > ~/.R/Makevars
+HEREDOC
+)
+  MAKEVARS_STEP="${MAKEVARS_STEP//__GXX_LINE__/$GXX_LINE}"
+  MAKEVARS_STEP="${MAKEVARS_STEP//__GCC_LINE__/$GCC_LINE}"
+  MAKEVARS_STEP="${MAKEVARS_STEP//__STD_FLAG__/$STD_FLAG}"
+fi
+
+# Extra system packages to install so the requested compiler is available.
+EXTRA_APT_PKGS=""
+EXTRA_DNF_PKGS=""
+EXTRA_ZYPPER_PKGS=""
+if [ "$COMPILER" = "clang" ]; then
+  # clang needs LLVM's OpenMP runtime (libomp) explicitly: unlike gcc, whose
+  # -fopenmp support (libgomp) ships with the gcc package itself, clang's
+  # -fopenmp links against -lomp, which isn't installed by the "clang"
+  # package alone.
+  EXTRA_APT_PKGS="clang libomp-dev"
+  EXTRA_DNF_PKGS="clang libomp-devel"
+  EXTRA_ZYPPER_PKGS="clang libomp-devel"
+fi
+
+# later2test/configure regenerates src/Makevars from Makevars.in, honoring
+# this env var for CXX_STD (defaulting to CXX23 when unset/empty). Without
+# this, later2test's Makevars always declared "CXX_STD = CXX23" regardless
+# of which standard MAKEVARS_STEP was actually pinning CXX23STD (etc.) to,
+# which is why R's own install log printed the confusing "specified/using
+# C++23" even during a cxx17/cxx20 check. Pinning CXX_STD to match keeps
+# that message accurate.
+LATER2TEST_CXX_STD=""
+if [ -n "$STD" ]; then
+  LATER2TEST_CXX_STD=$(echo "$STD" | tr '[:lower:]' '[:upper:]')
+fi
+
+clear
+
+DOCKER_RC=0
+docker run --rm \
+  -v "${CHECK_DIR}:/check" \
+  -v "${CACHE_DIR}:/cache" \
+  "$FULL_IMAGE" \
+  bash -c "
+    set -euo pipefail
+    show_logs_and_fix_perms() {
+      echo '=== 00install.out ==='
+      cat /check/later2test.Rcheck/00install.out || true
+      echo '=== 00check.log ==='
+      cat /check/later2test.Rcheck/00check.log || true
+      chmod -R a+rwX /check
+    }
+    trap show_logs_and_fix_perms EXIT
+    export R_LIBS_USER=/cache/R_libs
+    export R_LIBS=/cache/R_libs
+    # Debian/Ubuntu's r-base Makeconf honors DEB_BUILD_OPTIONS=noopt by
+    # rebuilding CFLAGS/CXXFLAGS as '-UNDEBUG -Wall -pedantic -g -O0',
+    # overriding the normal -O2. That -O0 then conflicts with the image's
+    # hardened -D_FORTIFY_SOURCE=3 default (glibc requires -O1+ for it to
+    # take effect), producing a '#warning' on every compile. Clearing it
+    # restores normal -O2 optimized builds inside the container.
+    unset DEB_BUILD_OPTIONS
+    mkdir -p /cache/R_libs
+    # Install minimal system build deps needed by R packages (libuv for 'fs')
+    if command -v apt-get >/dev/null 2>&1; then
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update -qq || true
+      apt-get install -y --no-install-recommends \
+        libuv1-dev libxml2-dev pkg-config gfortran libcurl4-openssl-dev ${EXTRA_APT_PKGS} || true
+    elif command -v dnf >/dev/null 2>&1 || command -v yum >/dev/null 2>&1; then
+      PKG_MGR=\$(command -v dnf 2>/dev/null || echo yum)
+      \$PKG_MGR -y install libuv-devel libxml2-devel pkgconfig gcc-gfortran libcurl-devel ${EXTRA_DNF_PKGS} || true
+    elif command -v zypper >/dev/null 2>&1; then
+      zypper --non-interactive install libuv libxml2-devel pkg-config gcc-fortran libcurl-devel ${EXTRA_ZYPPER_PKGS} || true
+    fi
+
+    # Install system deps (xml2, etc) and R package deps before writing
+    # ~/.R/Makevars so packages with C++ code (diffobj, etc) compile with the
+    # image's default standard instead of the one under test.
+    if [ -f /check/install_required.R ]; then Rscript /check/install_required.R || true; fi
+${MAKEVARS_STEP}
+    # Remove stale locks and old cpp4r/later2/later2test before reinstalling
+    rm -rf /cache/R_libs/00LOCK-* /cache/R_libs/cpp4r /cache/R_libs/later2 /cache/R_libs/later2test
+    R CMD INSTALL --library=/cache/R_libs /check/${CPP4R_FILE}
+    R CMD INSTALL --library=/cache/R_libs /check/${LATER2_FILE}
+    export LATER2TEST_CXX_STD='${LATER2TEST_CXX_STD}'
+    R CMD INSTALL --no-staged-install --library=/cache/R_libs /check/${LATER2TEST_FILE}
+    cd /check
+    export _R_CHECK_FORCE_SUGGESTS_=false
+    R CMD check --as-cran --no-manual ${LATER2TEST_FILE}
+  " 2>&1 | grep -v 'readelf: Warning:' | tee "${CHECK_DIR}/docker.log" || DOCKER_RC="${PIPESTATUS[0]}"
+
+cp "${CHECK_DIR}/docker.log" "$LOG"
+
+if [ -d "${CHECK_DIR}/later2test.Rcheck" ]; then
+  RCHECK_DEST="${LOG_DIR}/${SUFFIX}-later2test.Rcheck"
+  rm -rf "$RCHECK_DEST"
+  cp -r "${CHECK_DIR}/later2test.Rcheck" "$RCHECK_DEST"
+  rm "$BUILD_LOG"
+  echo "Rcheck directory saved to: ${RCHECK_DEST}"
+fi
+
+echo "==============================="
+echo "Check complete. Log: $LOG"
+echo "==============================="
+
+exit $DOCKER_RC
+

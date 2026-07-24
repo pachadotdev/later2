@@ -1,0 +1,355 @@
+Reading package lists...
+Building dependency tree...
+Reading state information...
+pkg-config is already the newest version (1.8.1-2build1).
+gfortran is already the newest version (4:13.2.0-7ubuntu1).
+gfortran set to manually installed.
+The following additional packages will be installed:
+  curl libcurl3t64-gnutls libcurl4t64 libuv1t64 libxml2
+Suggested packages:
+  libcurl4-doc libidn-dev libkrb5-dev libldap2-dev librtmp-dev libssh2-1-dev
+  libssl-dev
+The following NEW packages will be installed:
+  libcurl4-openssl-dev libuv1-dev libuv1t64 libxml2-dev
+The following packages will be upgraded:
+  curl libcurl3t64-gnutls libcurl4t64 libxml2
+4 upgraded, 4 newly installed, 0 to remove and 42 not upgraded.
+Need to get 3,128 kB of archives.
+After this operation, 6,233 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libxml2 amd64 2.9.14+dfsg-1.3ubuntu3.8 [764 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble/main amd64 libuv1t64 amd64 1.48.0-1.1build1 [97.3 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 curl amd64 8.5.0-2ubuntu10.11 [226 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcurl4t64 amd64 8.5.0-2ubuntu10.11 [342 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcurl3t64-gnutls amd64 8.5.0-2ubuntu10.11 [334 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcurl4-openssl-dev amd64 8.5.0-2ubuntu10.11 [446 kB]
+Get:7 http://archive.ubuntu.com/ubuntu noble/main amd64 libuv1-dev amd64 1.48.0-1.1build1 [136 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libxml2-dev amd64 2.9.14+dfsg-1.3ubuntu3.8 [782 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 3,128 kB in 1s (4,969 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 19926 files and directories currently installed.)
+Preparing to unpack .../0-libxml2_2.9.14+dfsg-1.3ubuntu3.8_amd64.deb ...
+Unpacking libxml2:amd64 (2.9.14+dfsg-1.3ubuntu3.8) over (2.9.14+dfsg-1.3ubuntu3.7) ...
+Selecting previously unselected package libuv1t64:amd64.
+Preparing to unpack .../1-libuv1t64_1.48.0-1.1build1_amd64.deb ...
+Unpacking libuv1t64:amd64 (1.48.0-1.1build1) ...
+Preparing to unpack .../2-curl_8.5.0-2ubuntu10.11_amd64.deb ...
+Unpacking curl (8.5.0-2ubuntu10.11) over (8.5.0-2ubuntu10.9) ...
+Preparing to unpack .../3-libcurl4t64_8.5.0-2ubuntu10.11_amd64.deb ...
+Unpacking libcurl4t64:amd64 (8.5.0-2ubuntu10.11) over (8.5.0-2ubuntu10.9) ...
+Preparing to unpack .../4-libcurl3t64-gnutls_8.5.0-2ubuntu10.11_amd64.deb ...
+Unpacking libcurl3t64-gnutls:amd64 (8.5.0-2ubuntu10.11) over (8.5.0-2ubuntu10.9) ...
+Selecting previously unselected package libcurl4-openssl-dev:amd64.
+Preparing to unpack .../5-libcurl4-openssl-dev_8.5.0-2ubuntu10.11_amd64.deb ...
+Unpacking libcurl4-openssl-dev:amd64 (8.5.0-2ubuntu10.11) ...
+Selecting previously unselected package libuv1-dev:amd64.
+Preparing to unpack .../6-libuv1-dev_1.48.0-1.1build1_amd64.deb ...
+Unpacking libuv1-dev:amd64 (1.48.0-1.1build1) ...
+Selecting previously unselected package libxml2-dev:amd64.
+Preparing to unpack .../7-libxml2-dev_2.9.14+dfsg-1.3ubuntu3.8_amd64.deb ...
+Unpacking libxml2-dev:amd64 (2.9.14+dfsg-1.3ubuntu3.8) ...
+Setting up libcurl4t64:amd64 (8.5.0-2ubuntu10.11) ...
+Setting up libuv1t64:amd64 (1.48.0-1.1build1) ...
+Setting up libcurl3t64-gnutls:amd64 (8.5.0-2ubuntu10.11) ...
+Setting up libcurl4-openssl-dev:amd64 (8.5.0-2ubuntu10.11) ...
+Setting up curl (8.5.0-2ubuntu10.11) ...
+Setting up libxml2:amd64 (2.9.14+dfsg-1.3ubuntu3.8) ...
+Setting up libuv1-dev:amd64 (1.48.0-1.1build1) ...
+Setting up libxml2-dev:amd64 (2.9.14+dfsg-1.3ubuntu3.8) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.7) ...
+* installing *source* package ‘cpp4r’ ...
+** this is package ‘cpp4r’ version ‘1.1.0’
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (cpp4r)
+* installing *source* package ‘later2’ ...
+** this is package ‘later2’ version ‘0.1’
+** using staged installation
+Running configure script
+-latomic linker flag not needed.
+** libs
+using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+using C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c callback_registry.cpp -o callback_registry.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c cpp4r.cpp -o cpp4r.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c debug.cpp -o debug.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c fd.cpp -o fd.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c later2.cpp -o later2.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c later_posix.cpp -o later_posix.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c later_win32.cpp -o later_win32.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c timer_posix.cpp -o timer_posix.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c timestamp_unix.cpp -o timestamp_unix.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c timestamp_win32.cpp -o timestamp_win32.o
+gcc -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2  -c tinycthread.c -o tinycthread.o
+g++ -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG -pthread -DSTRICT_R_HEADERS  -I'/cache/R_libs/cpp4r/include' -I/usr/local/include    -fpic  -g -O2   -c wref.cpp -o wref.o
+g++ -shared -L/opt/R/4.6.0/lib/R/lib -L/usr/local/lib -o later2.so callback_registry.o cpp4r.o debug.o fd.o later2.o later_posix.o later_win32.o timer_posix.o timestamp_unix.o timestamp_win32.o tinycthread.o wref.o -pthread -L/opt/R/4.6.0/lib/R/lib -lR
+installing to /cache/R_libs/00LOCK-later2/00new/later2/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (later2)
+* installing *source* package ‘later2test’ ...
+** this is package ‘later2test’ version ‘0.1’
+** using non-staged installation
+Running configure script
+Using CXX_STD=CXX23
+** libs
+specified C++23
+using C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+using C++23
+g++ -std=c++23 -pedantic-errors -Wall -Wextra -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c cpp4r.cpp -o cpp4r.o
+cpp4r.cpp:66:34: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
+   66 |     {"_later2test_launchBgTask", (DL_FUNC) &_later2test_launchBgTask, 1},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cpp4r.cpp:68:31: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
+   68 |     {"_later2test_cpp_error", (DL_FUNC) &_later2test_cpp_error, 1},
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cpp4r.cpp:69:30: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP, SEXP, SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
+   69 |     {"_later2test_asyncFib", (DL_FUNC) &_later2test_asyncFib, 3},
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+g++ -std=c++23 -pedantic-errors -Wall -Wextra -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c later2test.cpp -o later2test.o
+g++ -std=c++23 -pedantic-errors -Wall -Wextra -shared -L/opt/R/4.6.0/lib/R/lib -L/usr/local/lib -o later2test.so cpp4r.o later2test.o -fopenmp -L/opt/R/4.6.0/lib/R/lib -lR
+installing to /cache/R_libs/later2test/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+* DONE (later2test)
+* using log directory ‘/check/later2test.Rcheck’
+* using R version 4.6.0 (2026-04-24)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+    GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+* running under: Ubuntu 24.04.4 LTS
+* using session charset: UTF-8
+* current time: 2026-07-23 20:36:07 UTC
+* using options ‘--no-manual --as-cran’
+* checking for file ‘later2test/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘later2test’ version ‘0.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... [4s/5s] WARNING
+Maintainer: ‘Mauricio Vargas Sepulveda <m.vargas.sepulveda@gmail.com>’
+
+New submission
+
+Strong dependencies not in the CRAN or BioC software repositories:
+  later2
+
+Checking URLs failed with message:
+  there is no package called ‘curl’
+
+Checking DOIs failed with message:
+  there is no package called ‘curl’
+* checking package namespace information ... OK
+* checking package dependencies ... INFO
+Packages suggested but not available for checking: 'knitr', 'rmarkdown'
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for .dll and .exe files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘later2test’ can be installed ... [10s/6s] OK
+* used C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+* checking C++ specification ... OK
+  Not all R platforms support C++23
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... [1s/0s] OK
+* checking whether the package can be loaded with stated dependencies ... [1s/0s] OK
+* checking whether the package can be unloaded cleanly ... [1s/0s] OK
+* checking whether the namespace can be loaded with stated dependencies ... [1s/0s] OK
+* checking whether the namespace can be unloaded cleanly ... [1s/0s] OK
+* checking loading without being on the library search path ... [1s/0s] OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... [12s/3s] OK
+* checking Rd files ... [1s/0s] OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking line endings in shell scripts ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... OK
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
+* checking use of SHLIB_OPENMP_*FLAGS in Makefiles ... OK
+* checking pragmas in C/C++ headers and code ... OK
+* checking compilation flags used ... OK
+* checking compiled code ... OK
+* checking examples ... NONE
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ...
+  Running ‘tinytest.R’ [1s/2s]
+ [2s/2s] OK
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+
+Status: 1 WARNING
+See
+  ‘/check/later2test.Rcheck/00check.log’
+for details.
+
+=== 00install.out ===
+* installing *source* package ‘later2test’ ...
+** this is package ‘later2test’ version ‘0.1’
+** using staged installation
+Running configure script
+Using CXX_STD=CXX23
+** libs
+specified C++23
+using C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+using C++23
+g++ -std=c++23 -pedantic-errors -Wall -Wextra -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c cpp4r.cpp -o cpp4r.o
+cpp4r.cpp:66:34: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
+   66 |     {"_later2test_launchBgTask", (DL_FUNC) &_later2test_launchBgTask, 1},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cpp4r.cpp:68:31: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
+   68 |     {"_later2test_cpp_error", (DL_FUNC) &_later2test_cpp_error, 1},
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cpp4r.cpp:69:30: warning: cast between incompatible function types from ‘SEXPREC* (*)(SEXP, SEXP, SEXP)’ {aka ‘SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)’} to ‘DL_FUNC’ {aka ‘void* (*)()’} [-Wcast-function-type]
+   69 |     {"_later2test_asyncFib", (DL_FUNC) &_later2test_asyncFib, 3},
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+g++ -std=c++23 -pedantic-errors -Wall -Wextra -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG  -I'/cache/R_libs/cpp4r/include' -I'/cache/R_libs/later2/include' -I/usr/local/include   -fopenmp -fpic  -g -O2   -c later2test.cpp -o later2test.o
+g++ -std=c++23 -pedantic-errors -Wall -Wextra -shared -L/opt/R/4.6.0/lib/R/lib -L/usr/local/lib -o later2test.so cpp4r.o later2test.o -fopenmp -L/opt/R/4.6.0/lib/R/lib -lR
+installing to /check/later2test.Rcheck/00LOCK-later2test/00new/later2test/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (later2test)
+=== 00check.log ===
+* using log directory ‘/check/later2test.Rcheck’
+* using R version 4.6.0 (2026-04-24)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+    GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+* running under: Ubuntu 24.04.4 LTS
+* using session charset: UTF-8
+* current time: 2026-07-23 20:36:07 UTC
+* using options ‘--no-manual --as-cran’
+* checking for file ‘later2test/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘later2test’ version ‘0.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... [4s/5s] WARNING
+Maintainer: ‘Mauricio Vargas Sepulveda <m.vargas.sepulveda@gmail.com>’
+
+New submission
+
+Strong dependencies not in the CRAN or BioC software repositories:
+  later2
+
+Checking URLs failed with message:
+  there is no package called ‘curl’
+
+Checking DOIs failed with message:
+  there is no package called ‘curl’
+* checking package namespace information ... OK
+* checking package dependencies ... INFO
+Packages suggested but not available for checking: 'knitr', 'rmarkdown'
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for .dll and .exe files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘later2test’ can be installed ... [10s/6s] OK
+* used C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
+* checking C++ specification ... OK
+  Not all R platforms support C++23
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... [1s/0s] OK
+* checking whether the package can be loaded with stated dependencies ... [1s/0s] OK
+* checking whether the package can be unloaded cleanly ... [1s/0s] OK
+* checking whether the namespace can be loaded with stated dependencies ... [1s/0s] OK
+* checking whether the namespace can be unloaded cleanly ... [1s/0s] OK
+* checking loading without being on the library search path ... [1s/0s] OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... [12s/3s] OK
+* checking Rd files ... [1s/0s] OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking line endings in shell scripts ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... OK
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
+* checking use of SHLIB_OPENMP_*FLAGS in Makefiles ... OK
+* checking pragmas in C/C++ headers and code ... OK
+* checking compilation flags used ... OK
+* checking compiled code ... OK
+* checking examples ... NONE
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... [2s/2s] OK
+  Running ‘tinytest.R’ [1s/2s]
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 1 WARNING

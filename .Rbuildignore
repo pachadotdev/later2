@@ -12,6 +12,6 @@
 ^scripts$
 ^later2test$
 ^Makefile$
-^check-gcc-clang$
+^check-docker$
 ^.*tar\.gz$
 ^LICENSE\.txt$
