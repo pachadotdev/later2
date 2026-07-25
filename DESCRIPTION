@@ -35,4 +35,3 @@ Suggests:
 LinkingTo: cpp4r
 VignetteBuilder: knitr
 Encoding: UTF-8
-Config/roxygen2/version: 8.0.0

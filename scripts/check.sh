@@ -237,12 +237,7 @@ if [ "$COMPILER" = "clang" ]; then
 fi
 
 # later2test/configure regenerates src/Makevars from Makevars.in, honoring
-# this env var for CXX_STD (defaulting to CXX23 when unset/empty). Without
-# this, later2test's Makevars always declared "CXX_STD = CXX23" regardless
-# of which standard MAKEVARS_STEP was actually pinning CXX23STD (etc.) to,
-# which is why R's own install log printed the confusing "specified/using
-# C++23" even during a cxx17/cxx20 check. Pinning CXX_STD to match keeps
-# that message accurate.
+# this env var for CXX_STD (defaulting to CXX23 when unset/empty).
 LATER2TEST_CXX_STD=""
 if [ -n "$STD" ]; then
   LATER2TEST_CXX_STD=$(echo "$STD" | tr '[:lower:]' '[:upper:]')
@@ -292,6 +287,7 @@ docker run --rm \
     # ~/.R/Makevars so packages with C++ code (diffobj, etc) compile with the
     # image's default standard instead of the one under test.
     if [ -f /check/install_required.R ]; then Rscript /check/install_required.R || true; fi
+
     # --as-cran's 'checking CRAN incoming feasibility' step uses the 'curl'
     # R package to verify URLs/DOIs in the docs. It isn't a dependency of
     # any of our packages; without it, URL/DOI verification errors out
@@ -325,4 +321,3 @@ echo "Check complete. Log: $LOG"
 echo "==============================="
 
 exit $DOCKER_RC
-
