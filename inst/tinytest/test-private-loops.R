@@ -1,3 +1,5 @@
+source(system.file("tinytest", "helper.R", package = "later2"))
+
 local({
   # Private event loop changes current_loop() ----
 
@@ -410,7 +412,7 @@ local({
   l <- create_loop()
   later(
     function() {
-      rlang::interrupt()
+      simulate_interrupt()
     },
     loop = l
   )
@@ -425,7 +427,7 @@ local({
   tryCatch(
     {
       with_loop(l, {
-        rlang::interrupt()
+        simulate_interrupt()
       })
     },
     interrupt = function(e) NULL

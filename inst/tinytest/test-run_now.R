@@ -2,6 +2,8 @@
 
 jitter <- 0.017 * 2 # Compensate for imprecision in system timer
 
+source(system.file("tinytest", "helper.R", package = "later2"))
+
 local({
   # run_now waits and returns FALSE if no tasks ----
 
@@ -147,7 +149,7 @@ local({
   tryCatch(
     {
       later(function() {
-        rlang::interrupt()
+        simulate_interrupt()
         Sys.sleep(100)
       })
       run_now()

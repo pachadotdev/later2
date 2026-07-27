@@ -1,12 +1,19 @@
 ---
 title: "Using later from C++"
-author: "Joe Cheng"
+author: "Mauricio Vargas Sepulveda"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  litedown::html_format:
+    options:
+      toc: true
+      number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Using later from C++}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{02 - Setup}
+  %\VignetteEngine{litedown::vignette}
   %\VignetteEncoding{UTF-8}
+editor:
+  markdown:
+    wrap: sentence
 ---
 
 # Using later from C++
