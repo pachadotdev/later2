@@ -4,24 +4,6 @@
 
 #include "cpp4r/declarations.hpp"
 #include <R_ext/Visibility.h>
-#include <cstring>
-
-namespace {
-// R_CallMethodDef requires a DL_FUNC (void (*)()), which necessarily
-// differs from the real signature of each registered function. A direct
-// cast between incompatible function pointer types triggers
-// -Wcast-function-type, and CRAN's checks disallow suppressing that with
-// compiler pragmas. Reinterpret the pointer by copying its bytes instead:
-// this never casts between function pointer types (memcpy's arguments are
-// ordinary object pointers to the local function-pointer variables), so it
-// is warning-free and portable across the platforms R supports.
-template <typename Fn> DL_FUNC cpp4r_to_dl_func(Fn fn) {
-  static_assert(sizeof(DL_FUNC) == sizeof(Fn), "function pointer size mismatch");
-  DL_FUNC out;
-  std::memcpy(&out, &fn, sizeof(out));
-  return out;
-}
-} // namespace
 
 // api_version.h
 int later2_dll_api_version();
@@ -79,13 +61,13 @@ extern "C" SEXP _later2test_testfd() {
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_later2test_later2_dll_api_version", cpp4r_to_dl_func(&_later2test_later2_dll_api_version), 0},
-    {"_later2test_later2_h_api_version", cpp4r_to_dl_func(&_later2test_later2_h_api_version), 0},
-    {"_later2test_launchBgTask", cpp4r_to_dl_func(&_later2test_launchBgTask), 1},
-    {"_later2test_checkLaterOrdering", cpp4r_to_dl_func(&_later2test_checkLaterOrdering), 0},
-    {"_later2test_cpp_error", cpp4r_to_dl_func(&_later2test_cpp_error), 1},
-    {"_later2test_asyncFib", cpp4r_to_dl_func(&_later2test_asyncFib), 3},
-    {"_later2test_testfd", cpp4r_to_dl_func(&_later2test_testfd), 0},
+    {"_later2test_later2_dll_api_version", (DL_FUNC) &_later2test_later2_dll_api_version, 0},
+    {"_later2test_later2_h_api_version", (DL_FUNC) &_later2test_later2_h_api_version, 0},
+    {"_later2test_launchBgTask", (DL_FUNC) &_later2test_launchBgTask, 1},
+    {"_later2test_checkLaterOrdering", (DL_FUNC) &_later2test_checkLaterOrdering, 0},
+    {"_later2test_cpp_error", (DL_FUNC) &_later2test_cpp_error, 1},
+    {"_later2test_asyncFib", (DL_FUNC) &_later2test_asyncFib, 3},
+    {"_later2test_testfd", (DL_FUNC) &_later2test_testfd, 0},
     {NULL, NULL, 0}
 };
 }

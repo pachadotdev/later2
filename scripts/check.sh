@@ -141,7 +141,7 @@ cp "$LATER2TEST_TARBALL" "$CHECK_DIR/"
 cat > "$CHECK_DIR/install_required.R" <<'R_EOF'
 user_lib <- strsplit(Sys.getenv('R_LIBS_USER'), ':')[[1]][1]
 .libPaths(c(user_lib, .libPaths()))
-options(repos = c(CRAN = 'https://cloud.r-project.org'))
+options(repos = c('https://yihui.r-universe.dev', 'https://cloud.r-project.org'))
 
 deps_from_tarball <- function(tarfile, own_names) {
   td <- tempfile()
@@ -269,6 +269,11 @@ docker run --rm \
     # take effect), producing a '#warning' on every compile. Clearing it
     # restores normal -O2 optimized builds inside the container.
     unset DEB_BUILD_OPTIONS
+    RHOME=\$(R RHOME)
+    mkdir -p \"\$RHOME/etc\"
+    cat >> \"\$RHOME/etc/Rprofile.site\" <<'RPROFILE_EOF'
+options(repos = c('https://yihui.r-universe.dev', 'https://cloud.r-project.org'))
+RPROFILE_EOF
     mkdir -p /cache/R_libs
     # Install minimal system build deps needed by R packages (libuv for 'fs')
     if command -v apt-get >/dev/null 2>&1; then
