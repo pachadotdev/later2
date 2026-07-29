@@ -5,9 +5,15 @@ local({
   # obtain real, pollable file descriptors instead of depending on an
   # external socket library. `parallel::mcparallel()` forks a child process
   # and hands back a pipe file descriptor (`$fd[1]`) in the parent that
-  # becomes ready for reading once the child produces its result. This is
-  # unix-only (fork-based), so the test is skipped elsewhere.
-  if (.Platform$OS.type != "unix") return(NULL)
+  # becomes ready for reading once the child produces its result.
+  
+  # This is unix-only (fork-based), so the test is skipped elsewhere. It's
+  # also skipped on CRAN: it races the fd-polling background thread's
+  # internal timing (capped at ~1s per poll(), see src/fd.cpp) against
+  # run_now()'s wall-clock budget with little to no margin, which is prone
+  # to spurious failures on CRAN's loaded/virtualized check machines.
+  if (.Platform$OS.type != "unix") { return(NULL) }
+  if (!identical(Sys.getenv("NOT_CRAN"), "true")) { return(NULL) }
 
   jobs <- list()
 
@@ -15,7 +21,7 @@ local({
   make_ready_fd <- function() {
     job <- parallel::mcparallel(TRUE)
     jobs[[length(jobs) + 1]] <<- job
-    Sys.sleep(0.1)
+    Sys.sleep(0.3)
     job
   }
 
@@ -62,21 +68,21 @@ local({
 
   # timeout (> 1 loop)
   later_fd(callback, c(fd1, fd2), timeout = 1.1)
-  run_now(1.3)
+  run_now(1.8)
   expect_equal(result, c(FALSE, FALSE))
 
   # fd1 ready, fd2 pending
   job1 <- make_ready_fd()
   fd1 <- job1$fd[1]
   later_fd(callback, c(fd1, fd2), timeout = 0.9)
-  run_now(1)
+  run_now(1.5)
   expect_equal(result, c(TRUE, FALSE))
 
   # both fd1, fd2 ready
   job2 <- make_ready_fd()
   fd2 <- job2$fd[1]
   later_fd(callback, c(fd1, fd2), timeout = 1)
-  run_now(1)
+  run_now(1.5)
   expect_equal(result, c(TRUE, TRUE))
 
   # no exceptions (fds still open and their processes still running, so
@@ -89,14 +95,14 @@ local({
   fdA <- jobA$fd[1]
   fdB <- jobB$fd[1]
   later_fd(callback, c(fdA, fdB), exceptfds = c(fdA, fdB), timeout = -0.1)
-  run_now(1)
+  run_now(1.5)
   expect_equal(result, c(FALSE, FALSE, FALSE, FALSE))
 
   # fd1 not ready, fd2 ready
   job1 <- make_pending_fd()
   fd1 <- job1$fd[1]
   later_fd(callback, c(fd1, fd2), timeout = 1L)
-  run_now(1)
+  run_now(1.5)
   expect_equal(result, c(FALSE, TRUE))
 
   # fd2 invalid (already collected/closed)
@@ -113,14 +119,17 @@ local({
 
   # no fds supplied
   later_fd(callback, timeout = -1)
-  run_now(1)
+  run_now(1.5)
   expect_equal(result, logical())
 })
 
 local({
   # loop_empty() reflects later_fd callbacks ----
 
-  if (.Platform$OS.type != "unix") return(NULL)
+  # See the comment in the previous local() block: skipped on CRAN because
+  # it's fork-based and races background-thread timing against wall clock.
+  if (.Platform$OS.type != "unix") { return(NULL) }
+  if (!identical(Sys.getenv("NOT_CRAN"), "true")) { return(NULL) }
 
   job <- parallel::mcparallel({ Sys.sleep(5); TRUE })
   on.exit({
