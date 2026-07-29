@@ -19,3 +19,4 @@ scripts/R-devel
 check-docker/cache/
 check-docker/rchk-packages/
 check-docker/*.Rcheck/
+*.tar.gz
