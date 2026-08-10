@@ -16,17 +16,17 @@
 # this registry to keep the loop objects alive.
 .loops <- new.env(parent = emptyenv())
 
-#' Private event loops
+#' @title Private event loops
 #'
-#' Normally, later uses a global event loop for scheduling and running
-#' functions. However, in some cases, it is useful to create a \emph{private}
-#' event loop to schedule and execute tasks without disturbing the global event
-#' loop. For example, you might have asynchronous code that queries a remote
-#' data source, but want to wait for a full back-and-forth communication to
-#' complete before continuing in your code -- from the caller's perspective, it
-#' should behave like synchronous code, and not do anything with the global
-#' event loop (which could run code unrelated to your operation). To do this,
-#' you would run your asynchronous code using a private event loop.
+#' @description Normally, later uses a global event loop for scheduling and
+#' running functions. However, in some cases, it is useful to create a
+#' \emph{private} event loop to schedule and execute tasks without disturbing
+#' the global event loop. For example, you might have asynchronous code that
+#' queries a remote data source, but want to wait for a full back-and-forth
+#' communication to complete before continuing in your code -- from the caller's
+#' perspective, it should behave like synchronous code, and not do anything with
+#' the global event loop (which could run code unrelated to your operation). To
+#' do this, you would run your asynchronous code using a private event loop.
 #'
 #' \code{create_loop} creates and returns a handle to a private event loop,
 #' which is useful when for scheduling tasks when you do not want to interfere
@@ -49,7 +49,6 @@
 #'
 #' \code{global_loop} returns a handle to the global event loop.
 #'
-#'
 #' @param loop A handle to an event loop.
 #' @param expr An expression to evaluate.
 #' @param parent The parent event loop for the one being created. Whenever the
@@ -58,7 +57,10 @@
 #'   this loop will not have a parent event loop that automatically runs it; the
 #'   only way to run this loop will be by calling \code{\link{run_now}()} on this
 #'   loop.
+#' 
 #' @rdname create_loop
+#' 
+#' @return An object of class `event_loop`.
 #'
 #' @export
 create_loop <- function(parent = current_loop()) {
@@ -164,8 +166,7 @@ global_loop <- function() {
   .globals$global_loop
 }
 
-#' Format an event loop
-#'
+#' @title Format an event loop
 #' @param x An event loop object.
 #' @param ... Further arguments passed to or from other methods (currently
 #'   unused).
@@ -180,8 +181,7 @@ format.event_loop <- function(x, ...) {
   str
 }
 
-#' Print an event loop
-#'
+#' @title Print an event loop
 #' @param x An event loop object.
 #' @param ... Further arguments passed to or from other methods (currently
 #'   unused).
@@ -193,18 +193,18 @@ print.event_loop <- function(x, ...) {
 }
 
 
-#' Executes a function later
+#' @title Executes a function later
 #'
-#' Schedule an R function or formula to run after a specified period of time.
-#' Similar to JavaScript's `setTimeout` function. Like JavaScript, R is
-#' single-threaded so there's no guarantee that the operation will run exactly
-#' at the requested time, only that at least that much time will elapse.
+#' @description Schedule an R function or formula to run after a specified
+#' period of time. Similar to JavaScript's `setTimeout` function. Like
+#' JavaScript, R is single-threaded so there's no guarantee that the operation
+#' will run exactly at the requested time, only that at least that much time
+#' will elapse.
 #'
 #' The mechanism used by this package is inspired by Simon Urbanek's
 #' [background](https://github.com/s-u/background) package and similar code in
 #' Rhttpd.
 #'
-#' @note
 #' To avoid bugs due to reentrancy, by default, scheduled operations only run
 #' when there is no other R code present on the execution stack; i.e., when R is
 #' sitting at the top-level prompt. You can force past-due operations to run at
@@ -284,19 +284,18 @@ create_canceller <- function(id, loop_id) {
   }
 }
 
-#' Executes a function when a file descriptor is ready
+#' @title Executes a function when a file descriptor is ready
 #'
-#' Schedule an R function or formula to run after an indeterminate amount of
-#' time when file descriptors are ready for reading or writing, subject to an
-#' optional timeout.
+#' @description Schedule an R function or formula to run after an indeterminate
+#' amount of time when file descriptors are ready for reading or writing,
+#' subject to an optional timeout.
 #'
 #' On the occasion the system-level `poll` (on Windows `WSAPoll`) returns an
 #' error, the callback will be made on a vector of all `NA`s. This is
 #' indistinguishable from a case where the `poll` succeeds but there are error
-#' conditions pending against each file descriptor.
-#'
-#' If no file descriptors are supplied, the callback is scheduled for immediate
-#' execution and made on the empty logical vector `logical(0)`.
+#' conditions pending against each file descriptor. If no file descriptors are
+#' supplied, the callback is scheduled for immediate execution and made on the
+#' empty logical vector `logical(0)`.
 #'
 #' @param func A function that takes a single argument, a logical vector that
 #'   indicates which file descriptors are ready (a concatenation of `readfds`,
@@ -318,7 +317,10 @@ create_canceller <- function(id, loop_id) {
 #'
 #' @inherit later return note
 #'
-#' @examplesIf .Platform$OS.type == "unix"
+#' @examples
+#' \dontrun{
+#' # Unix-only example
+#' 
 #' # Use the base R 'parallel' package to fork child processes and obtain
 #' # real, pollable file descriptors. A child's `fd` becomes ready for
 #' # reading once the child finishes running.
@@ -371,6 +373,9 @@ create_canceller <- function(id, loop_id) {
 #' later_fd(print, c(fd1, fd2), timeout = 0)
 #' Sys.sleep(0.1)
 #' run_now()
+#' }
+#'
+#' @return A delayed function evaluation.
 #'
 #' @export
 later_fd <- function(
@@ -399,13 +404,14 @@ create_fd_canceller <- function(xptr) {
   }
 }
 
-#' Execute scheduled operations
+#' @title Execute scheduled operations
 #'
-#' Normally, operations scheduled with [later()] will not execute unless/until
-#' no other R code is on the stack (i.e. at the top-level). If you need to run
-#' blocking R code for a long time and want to allow scheduled operations to run
-#' at well-defined points of your own operation, you can call `run_now()` at
-#' those points and any operations that are due to run will do so.
+#' @description Normally, operations scheduled with [later()] will not execute
+#' unless/until no other R code is on the stack (i.e. at the top-level). If you
+#' need to run blocking R code for a long time and want to allow scheduled
+#' operations to run at well-defined points of your own operation, you can call
+#' `run_now()` at those points and any operations that are due to run will do
+#' so.
 #'
 #' If one of the callbacks throws an error, the error will _not_ be caught, and
 #' subsequent callbacks will not be executed (until `run_now()` is called again,
@@ -428,34 +434,31 @@ run_now <- function(timeoutSecs = 0L, all = TRUE, loop = current_loop()) {
   invisible(execCallbacks(timeoutSecs, all, loop$id))
 }
 
-#' Check if later loop is empty
-#'
-#' Returns true if there are currently no callbacks that are scheduled to
+#' @title Check if later loop is empty
+#' @description Returns true if there are currently no callbacks that are scheduled to
 #' execute in the present or future.
-#'
 #' @inheritParams create_loop
 #' @keywords internal
+#' @return A logical value.
 #' @export
 loop_empty <- function(loop = current_loop()) {
   idle(loop$id)
 }
 
-#' Relative time to next scheduled operation
-#'
-#' Returns the duration between now and the earliest operation that is currently
-#' scheduled, in seconds. If the operation is in the past, the value will be
-#' negative. If no operation is currently scheduled, the value will be `Inf`.
-#'
+#' @title Relative time to next scheduled operation
+#' @description Returns the duration between now and the earliest operation that
+#' is currently scheduled, in seconds. If the operation is in the past, the
+#' value will be negative. If no operation is currently scheduled, the value
+#' will be `Inf`.
 #' @inheritParams create_loop
+#' @return A numeric value.
 #' @export
 next_op_secs <- function(loop = current_loop()) {
   nextOpSecs(loop$id)
 }
 
-#' Get the contents of an event loop, as a list
-#'
-#' This function is for debugging only.
-#'
+#' @title Get the contents of an event loop, as a list
+#' @description This function is for debugging only.
 #' @keywords internal
 list_queue <- function(loop = current_loop()) {
   list_queue_(loop$id)

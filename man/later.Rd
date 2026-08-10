@@ -26,16 +26,26 @@ A function, which, if invoked, will cancel the callback. The
 }
 
 \description{
-Schedule an R function or formula to run after a specified period of time.
-Similar to JavaScript's `setTimeout` function. Like JavaScript, R is
-single-threaded so there's no guarantee that the operation will run exactly
-at the requested time, only that at least that much time will elapse.
-}
+Schedule an R function or formula to run after a specified
+period of time. Similar to JavaScript's `setTimeout` function. Like
+JavaScript, R is single-threaded so there's no guarantee that the operation
+will run exactly at the requested time, only that at least that much time
+will elapse.
 
-\details{
 The mechanism used by this package is inspired by Simon Urbanek's
 [background](https://github.com/s-u/background) package and similar code in
 Rhttpd.
+
+To avoid bugs due to reentrancy, by default, scheduled operations only run
+when there is no other R code present on the execution stack; i.e., when R is
+sitting at the top-level prompt. You can force past-due operations to run at
+a time of your choosing by calling [run_now()].
+
+Error handling is not particularly well-defined and may change in the future.
+options(error=browser) should work and errors in `func` should generally not
+crash the R process, but not much else can be said about it at this point.
+If you must have specific behavior occur in the face of errors, put error
+handling logic inside of `func`.
 }
 
 \examples{

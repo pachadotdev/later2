@@ -31,13 +31,11 @@ A new promise.
 }
 
 \description{
-Use `then()` to access the eventual result of a promise (or, if the
-operation fails, the reason for that failure). The call to `then()` is
+Use `then()` to access the eventual result of a promise (or, if
+the operation fails, the reason for that failure). The call to `then()` is
 non-blocking: it returns immediately, and the return value is itself a
 new promise.
-}
 
-\details{
 `catch()` is equivalent to `then()`, but without the `onFulfilled`
 argument; it is typically used at the end of a promise chain to perform
 error handling.

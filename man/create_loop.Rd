@@ -32,19 +32,21 @@ global_loop()
   loop.}
 }
 
-\description{
-Normally, later uses a global event loop for scheduling and running
-functions. However, in some cases, it is useful to create a \emph{private}
-event loop to schedule and execute tasks without disturbing the global event
-loop. For example, you might have asynchronous code that queries a remote
-data source, but want to wait for a full back-and-forth communication to
-complete before continuing in your code -- from the caller's perspective, it
-should behave like synchronous code, and not do anything with the global
-event loop (which could run code unrelated to your operation). To do this,
-you would run your asynchronous code using a private event loop.
+\value{
+An object of class `event_loop`.
 }
 
-\details{
+\description{
+Normally, later uses a global event loop for scheduling and
+running functions. However, in some cases, it is useful to create a
+\emph{private} event loop to schedule and execute tasks without disturbing
+the global event loop. For example, you might have asynchronous code that
+queries a remote data source, but want to wait for a full back-and-forth
+communication to complete before continuing in your code -- from the caller's
+perspective, it should behave like synchronous code, and not do anything with
+the global event loop (which could run code unrelated to your operation). To
+do this, you would run your asynchronous code using a private event loop.
+
 \code{create_loop} creates and returns a handle to a private event loop,
 which is useful when for scheduling tasks when you do not want to interfere
 with the global event loop.

@@ -11,9 +11,14 @@ next_op_secs(loop = current_loop())
 \item{loop}{A handle to an event loop.}
 }
 
+\value{
+A numeric value.
+}
+
 \description{
-Returns the duration between now and the earliest operation that is currently
-scheduled, in seconds. If the operation is in the past, the value will be
-negative. If no operation is currently scheduled, the value will be `Inf`.
+Returns the duration between now and the earliest operation that
+is currently scheduled, in seconds. If the operation is in the past, the
+value will be negative. If no operation is currently scheduled, the value
+will be `Inf`.
 }
 

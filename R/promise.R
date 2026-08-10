@@ -293,18 +293,18 @@ finallyToRejected <- function(onFinally) {
   }
 }
 
-#' Create a new promise object
+#' @title Create a new promise object
 #'
-#' `promise()` creates a new promise, synchronized with later2's event loop
-#' (instead of the `later` package's event loop, as the `promises` package
-#' does). A promise is a placeholder object for the eventual result (or
+#' @description `promise()` creates a new promise, synchronized with later2's
+#' event loop (instead of the `later` package's event loop, as the `promises`
+#' package does). A promise is a placeholder object for the eventual result (or
 #' error) of an asynchronous operation.
 #'
 #' The `action` function should be a piece of code that returns quickly, but
 #' initiates a potentially long-running, asynchronous task. If/when the task
-#' successfully completes, call `resolve(value)` where `value` is the result
-#' of the computation. If the task fails, call `reject(reason)`, where
-#' `reason` is either an error object or a character string.
+#' successfully completes, call `resolve(value)` where `value` is the result of
+#' the computation. If the task fails, call `reject(reason)`, where `reason` is
+#' either an error object or a character string.
 #'
 #' @param action A function with signature `function(resolve, reject)`.
 #'
@@ -348,20 +348,16 @@ promise <- function(action) {
   )
 }
 
-#' Determine whether an object is a promise
-#'
+#' @title Determine whether an object is a promise
 #' @param x An R object to test.
-#'
 #' @return `TRUE` if `x` is a promise object created by [promise()], `FALSE`
 #'   otherwise.
-#'
 #' @export
 is.promise <- function(x) {
   inherits(x, "promise")
 }
 
-#' Format a promise
-#'
+#' @title Format a promise
 #' @param x A promise object.
 #' @param ... Further arguments passed to or from other methods (currently
 #'   unused).
@@ -372,11 +368,10 @@ format.promise <- function(x, ...) {
   attr(x, "promise_impl", exact = TRUE)$format()
 }
 
-#' Print a promise
-#'
+#' @title Print a promise
 #' @param x A promise object.
-#' @param ... Further arguments passed to or from other methods (currently
-#'   unused).
+#' @param ... Further arguments passed to or from other methods (just for S3
+#' complicance, unused)
 #' @return `NULL`, invisibly. Called for its side effect of printing.
 #' @keywords internal
 #' @exportS3Method
@@ -384,10 +379,10 @@ print.promise <- function(x, ...) {
   cat(paste(format(x), collapse = "\n"), "\n", sep = "")
 }
 
-#' Access the results of a promise
-#'
-#' Use `then()` to access the eventual result of a promise (or, if the
-#' operation fails, the reason for that failure). The call to `then()` is
+#' @title Access the results of a promise
+#' 
+#' @description Use `then()` to access the eventual result of a promise (or, if
+#' the operation fails, the reason for that failure). The call to `then()` is
 #' non-blocking: it returns immediately, and the return value is itself a
 #' new promise.
 #'

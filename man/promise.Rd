@@ -16,18 +16,16 @@ A promise object (see [then()]).
 }
 
 \description{
-`promise()` creates a new promise, synchronized with later2's event loop
-(instead of the `later` package's event loop, as the `promises` package
-does). A promise is a placeholder object for the eventual result (or
+`promise()` creates a new promise, synchronized with later2's
+event loop (instead of the `later` package's event loop, as the `promises`
+package does). A promise is a placeholder object for the eventual result (or
 error) of an asynchronous operation.
-}
 
-\details{
 The `action` function should be a piece of code that returns quickly, but
 initiates a potentially long-running, asynchronous task. If/when the task
-successfully completes, call `resolve(value)` where `value` is the result
-of the computation. If the task fails, call `reject(reason)`, where
-`reason` is either an error object or a character string.
+successfully completes, call `resolve(value)` where `value` is the result of
+the computation. If the task fails, call `reject(reason)`, where `reason` is
+either an error object or a character string.
 }
 
 \examples{

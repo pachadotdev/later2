@@ -10,8 +10,8 @@
 \arguments{
 \item{x}{A promise object.}
 
-\item{...}{Further arguments passed to or from other methods (currently
-  unused).}
+\item{...}{Further arguments passed to or from other methods (just for S3
+complicance, unused)}
 }
 
 \value{

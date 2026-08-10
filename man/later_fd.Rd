@@ -39,19 +39,79 @@ later_fd(
 \item{loop}{A handle to an event loop. Defaults to the currently-active loop.}
 }
 
-\description{
-Schedule an R function or formula to run after an indeterminate amount of
-time when file descriptors are ready for reading or writing, subject to an
-optional timeout.
+\value{
+A delayed function evaluation.
 }
 
-\details{
+\description{
+Schedule an R function or formula to run after an indeterminate
+amount of time when file descriptors are ready for reading or writing,
+subject to an optional timeout.
+
 On the occasion the system-level `poll` (on Windows `WSAPoll`) returns an
 error, the callback will be made on a vector of all `NA`s. This is
 indistinguishable from a case where the `poll` succeeds but there are error
-conditions pending against each file descriptor.
+conditions pending against each file descriptor. If no file descriptors are
+supplied, the callback is scheduled for immediate execution and made on the
+empty logical vector `logical(0)`.
+}
 
-If no file descriptors are supplied, the callback is scheduled for immediate
-execution and made on the empty logical vector `logical(0)`.
+\examples{
+\dontrun{
+# Unix-only example
+
+# Use the base R 'parallel' package to fork child processes and obtain
+# real, pollable file descriptors. A child's `fd` becomes ready for
+# reading once the child finishes running.
+
+# 1. timeout: prints FALSE, FALSE
+job1 <- parallel::mcparallel({
+  Sys.sleep(1)
+  TRUE
+})
+job2 <- parallel::mcparallel({
+  Sys.sleep(1)
+  TRUE
+})
+fd1 <- job1$fd[1]
+fd2 <- job2$fd[1]
+later_fd(print, c(fd1, fd2), timeout = 0.1)
+Sys.sleep(0.2)
+run_now()
+
+# 2. fd1 ready: prints TRUE, FALSE
+job1 <- parallel::mcparallel(TRUE)
+fd1 <- job1$fd[1]
+Sys.sleep(0.1)
+later_fd(print, c(fd1, fd2), timeout = 1)
+Sys.sleep(0.1)
+run_now()
+
+# 3. both ready: prints TRUE, TRUE
+job2 <- parallel::mcparallel(TRUE)
+fd2 <- job2$fd[1]
+Sys.sleep(0.1)
+later_fd(print, c(fd1, fd2), timeout = 1)
+Sys.sleep(0.1)
+run_now()
+
+# 4. fd2 ready: prints FALSE, TRUE
+parallel::mccollect(job1)
+job1 <- parallel::mcparallel({
+  Sys.sleep(1)
+  TRUE
+})
+fd1 <- job1$fd[1]
+later_fd(print, c(fd1, fd2), timeout = 1)
+Sys.sleep(0.1)
+run_now()
+
+# 5. fds invalid: prints NA, NA
+parallel::mccollect(job1)
+parallel::mccollect(job2)
+later_fd(print, c(fd1, fd2), timeout = 0)
+Sys.sleep(0.1)
+run_now()
+}
 }
 

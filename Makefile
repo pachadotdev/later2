@@ -10,7 +10,6 @@ install:
 check:
 	@Rscript -e 'tinydev::pkg_install("../cpp4r");'
 	@Rscript -e 'tinydev::pkg_check(".");'
-	@Rscript -e 'tinydev::pkg_install(".");'
 	@Rscript -e 'tinydev::pkg_check("./later2test");'
 
 site:
